@@ -5,17 +5,18 @@
 [ext_resource type="Texture2D" uid="uid://el4axjyyt653" path="res://Assets/CrashMoji_Crate_emoji.png" id="2_go701"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
+size = Vector2(128, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5a7ea"]
 size = Vector2(1146, 85)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8j60k"]
-size = Vector2(506, 443)
+size = Vector2(506, 460)
 
 [node name="World" type="Node2D" unique_id=780093096]
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1260519867]
-position = Vector2(22, 624)
+position = Vector2(22, 626)
 scale = Vector2(0.25, 0.25)
 script = ExtResource("1_5a7ea")
 metadata/_edit_group_ = true
@@ -27,24 +28,12 @@ texture = ExtResource("1_a02cp")
 shape = SubResource("RectangleShape2D_go701")
 
 [node name="Floor" type="StaticBody2D" parent="." unique_id=1681230138]
-position = Vector2(15, 654)
+position = Vector2(10, 655)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor" unique_id=849973079]
 position = Vector2(563, 32.5)
 shape = SubResource("RectangleShape2D_5a7ea")
-
-[node name="Box" type="Area2D" parent="." unique_id=325614194]
-position = Vector2(195, 620)
-scale = Vector2(0.1, 0.1)
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Box" unique_id=1725054193]
-position = Vector2(0, 2.5)
-shape = SubResource("RectangleShape2D_8j60k")
-
-[node name="Sprite2D" type="Sprite2D" parent="Box" unique_id=964169316]
-texture = ExtResource("2_go701")
 
 [node name="BackWall" type="StaticBody2D" parent="." unique_id=970034832]
 z_index = -1
@@ -67,3 +56,15 @@ metadata/_edit_group_ = true
 position = Vector2(-19, 93)
 scale = Vector2(0.703125, 2.453125)
 texture = ExtResource("1_a02cp")
+
+[node name="Box" type="StaticBody2D" parent="." unique_id=367064578]
+position = Vector2(186.99998, 605)
+scale = Vector2(0.25, 0.25)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Box" unique_id=155504764]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_8j60k")
+
+[node name="Sprite2D" type="Sprite2D" parent="Box" unique_id=259464857]
+texture = ExtResource("2_go701")
