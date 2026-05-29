@@ -28,7 +28,7 @@ ProjectUISoundController="*uid://cc37235kj4384"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/maaacks_menus_template/plugin.cfg")
+enabled=PackedStringArray("res://addons/maaacks_menus_template/plugin.cfg", "res://addons/pixel_editor/plugin.cfg")
 
 [input]
 
