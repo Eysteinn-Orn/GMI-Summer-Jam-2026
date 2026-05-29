@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dge6pfcs4hnqa"]
+
+[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="1_2qbga"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d1u8y"]
+radius = 63.007935
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2qbga"]
+radius = 215.59453
+
+[node name="TopDownTest" type="Node2D" unique_id=1073058387]
+
+[node name="Vampy" type="Node2D" parent="." unique_id=1116008982]
+
+[node name="Sprite2D" type="Sprite2D" parent="Vampy" unique_id=88765630]
+texture = ExtResource("1_2qbga")
+
+[node name="Area2D" type="Area2D" parent="Vampy" unique_id=950061440]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Vampy/Area2D" unique_id=42650125]
+shape = SubResource("CircleShape2D_d1u8y")
+
+[node name="PetRock" type="Node2D" parent="." unique_id=655463023]
+
+[node name="Area2D" type="Area2D" parent="PetRock" unique_id=1229518914]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PetRock/Area2D" unique_id=1875925227]
+shape = SubResource("CircleShape2D_2qbga")
