@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csypmul38dvl0"
-path="res://.godot/imported/tower1.png-4ed1ef52f439528d664f92d2d293ef4a.ctex"
+uid="uid://cvcgw7q3sgdhp"
+path="res://.godot/imported/magicbook1.png-6d371973fae7722f14e1bb5f594e7304.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/tower1.png"
-dest_files=["res://.godot/imported/tower1.png-4ed1ef52f439528d664f92d2d293ef4a.ctex"]
+source_file="res://Assets/sprites/magicbook1.png"
+dest_files=["res://.godot/imported/magicbook1.png-6d371973fae7722f14e1bb5f594e7304.ctex"]
 
 [params]
 

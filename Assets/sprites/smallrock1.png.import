@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csypmul38dvl0"
-path="res://.godot/imported/tower1.png-4ed1ef52f439528d664f92d2d293ef4a.ctex"
+uid="uid://drb3atko3dy8"
+path="res://.godot/imported/smallrock1.png-33cfb03a6208592cfaa8ada696d56f3f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/tower1.png"
-dest_files=["res://.godot/imported/tower1.png-4ed1ef52f439528d664f92d2d293ef4a.ctex"]
+source_file="res://Assets/sprites/smallrock1.png"
+dest_files=["res://.godot/imported/smallrock1.png-33cfb03a6208592cfaa8ada696d56f3f.ctex"]
 
 [params]
 

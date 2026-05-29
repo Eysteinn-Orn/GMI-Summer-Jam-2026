@@ -330,6 +330,15 @@ class PixelEditor:
         self.swatch = tk.Label(right, height=2, relief="solid", bd=1)
         self.swatch.pack(fill="x")
 
+        # Type or paste a #rrggbb / #rrggbbaa (or shorthand #rgb) hex code.
+        self.hex_var = tk.StringVar()
+        self.hex_entry = tk.Entry(right, textvariable=self.hex_var, bg="#1e1e1e",
+                                  fg="white", insertbackground="white", relief="flat",
+                                  justify="center")
+        self.hex_entry.pack(fill="x", pady=(2, 0))
+        self.hex_entry.bind("<Return>", self.apply_hex_entry)
+        self.hex_entry.bind("<FocusOut>", self.apply_hex_entry)
+
         # Hue / saturation / value spectrum bars; click or drag to choose.
         self.bar_canvas = {}
         self.bar_imgs = {}
@@ -472,7 +481,9 @@ class PixelEditor:
         self.commit_float()
 
     def defocus_name(self, event):
-        if event.widget is not self.name_entry:
+        # Clicking off any text field hands focus back to the canvas so the
+        # single-key tool shortcuts work again; clicking into one keeps it.
+        if not isinstance(event.widget, tk.Entry):
             self.root.focus_set()
 
     def on_wheel(self, event):
@@ -489,6 +500,8 @@ class PixelEditor:
     def update_swatch(self):
         r, g, b, _ = self.color
         self.swatch.configure(bg=f"#{r:02x}{g:02x}{b:02x}")
+        if hasattr(self, "hex_var"):
+            self.hex_var.set(self.color_hex())
 
     def gradient_image(self, ch, w):
         cols = []
@@ -543,6 +556,18 @@ class PixelEditor:
         self.color = [r, g, b, a]
         self.update_swatch()
         self.draw_bars()
+
+    def apply_hex_entry(self, _event=None):
+        """Adopt the hex typed/pasted into the field; revert it if it's junk.
+        Accepts an optional leading # and 3- (shorthand), 6-, or 8-digit codes."""
+        s = self.hex_var.get().strip().lstrip("#")
+        if len(s) == 3:
+            s = "".join(c * 2 for c in s)
+        if len(s) in (6, 8) and all(c in "0123456789abcdefABCDEF" for c in s):
+            self.set_color_hex("#" + s.lower())
+        else:
+            self.hex_var.set(self.color_hex())
+        return "break"  # don't also trigger the global <Return> handler
 
     def add_current_to_palette(self):
         hexc = self.color_hex()
