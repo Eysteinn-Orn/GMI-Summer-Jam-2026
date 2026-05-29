@@ -216,7 +216,7 @@ class PixelEditor:
         self.frame = 0
 
         self.color = [177, 62, 83, 255]  # #b13e53
-        self.hsv_vals = {"H": 0.0, "S": 0.0, "V": 0.0}  # 0..1 each
+        self.hsv_vals = {"H": 0.0, "S": 0.0, "V": 0.0, "A": 1.0}  # 0..1 each
         self.tool = tk.StringVar(value="pencil")
 
         self.undo_stack = []
@@ -261,13 +261,10 @@ class PixelEditor:
             return b
 
         btn(bar, "New", self.new_canvas)
-        btn(bar, "Open", self.open_png)
-        btn(bar, "Save", self.save_current)
-        btn(bar, "Save As", lambda: self.save_current(force_dialog=True))
         btn(bar, "Export Sheet", self.export_spritesheet)
         tk.Frame(bar, width=12, bg="#2b2b2b").pack(side="left")
-        btn(bar, "Undo", self.undo)
-        btn(bar, "Redo", self.redo)
+        btn(bar, "Undo  U", self.undo)
+        btn(bar, "Redo  Y", self.redo)
         tk.Frame(bar, width=12, bg="#2b2b2b").pack(side="left")
         btn(bar, "Zoom -", lambda: self.set_zoom(self.zoom - 2))
         btn(bar, "Zoom +", lambda: self.set_zoom(self.zoom + 2))
@@ -312,30 +309,31 @@ class PixelEditor:
         self.canvas.bind("<B2-Motion>", self.on_mmb_drag)
         self.canvas.bind("<ButtonRelease-2>", lambda e: self.pan_end())
         self.canvas.bind("<MouseWheel>", self.on_wheel)          # wheel = zoom (Win/Mac)
-        self.canvas.bind("<Button-4>", lambda e: self.set_zoom(self.zoom + 2))  # Linux up
-        self.canvas.bind("<Button-5>", lambda e: self.set_zoom(self.zoom - 2))  # Linux down
+        self.canvas.bind("<Button-4>", lambda e: self.set_zoom(self.zoom + 2, e))  # Linux up
+        self.canvas.bind("<Button-5>", lambda e: self.set_zoom(self.zoom - 2, e))  # Linux down
 
         # Right column: colour + frames.
-        right = tk.Frame(body, bg="#2b2b2b")
+        right = tk.Frame(body, bg="#2b2b2b", width=self.BAR_W)
         right.pack(side="right", fill="y")
+        right.pack_propagate(False)
 
         tk.Label(right, text="COLOUR", bg="#2b2b2b", fg="#ccc").pack(pady=(8, 2))
         self.swatch = tk.Label(right, height=2, relief="solid", bd=1)
-        self.swatch.pack(padx=6, fill="x")
+        self.swatch.pack(fill="x")
 
         # Hue / saturation / value spectrum bars; click or drag to choose.
         self.bar_canvas = {}
         self.bar_imgs = {}
-        for ch in ("H", "S", "V"):
-            c = tk.Canvas(right, width=self.BAR_W, height=self.BAR_H, bg="#2b2b2b",
+        for ch in ("H", "S", "V", "A"):
+            c = tk.Canvas(right, height=self.BAR_H, bg="#2b2b2b",
                           highlightthickness=0, cursor="sb_h_double_arrow")
-            c.pack(padx=6, pady=2)
+            c.pack(fill="x", pady=2)
             c.bind("<Button-1>", lambda e, ch=ch: self.bar_set(ch, e))
             c.bind("<B1-Motion>", lambda e, ch=ch: self.bar_set(ch, e))
             self.bar_canvas[ch] = c
 
         self.palette_frame = tk.Frame(right, bg="#2b2b2b")
-        self.palette_frame.pack(pady=(6, 0))
+        self.palette_frame.pack(fill="x")
         self.palette = load_palette()
         self.render_palette()
 
@@ -359,13 +357,15 @@ class PixelEditor:
         tk.Label(right, text="FILE", bg="#2b2b2b", fg="#ccc").pack(pady=(12, 2))
         self.name_var = tk.StringVar()
         namerow = tk.Frame(right, bg="#2b2b2b")
-        namerow.pack(fill="x", padx=6)
+        namerow.pack(fill="x")
         self.name_entry = tk.Entry(namerow, textvariable=self.name_var, bg="#1e1e1e",
                                    fg="white", insertbackground="white", relief="flat")
         self.name_entry.pack(side="left", fill="x", expand=True)
         tk.Label(namerow, text=".png", bg="#2b2b2b", fg="#888").pack(side="left")
-        tk.Button(namerow, text="Save", command=self.save_current, bg="#3c3c3c",
-                  fg="white", relief="flat", padx=4).pack(side="left", padx=(4, 0))
+        saverow = tk.Frame(right, bg="#2b2b2b")
+        saverow.pack(fill="x")
+        tk.Button(saverow, text="Save", command=self.save_current, bg="#3c3c3c",
+                  fg="white", relief="flat", padx=4).pack(fill="x")
 
         files_wrap = tk.Frame(right, bg="#2b2b2b")
         files_wrap.pack(fill="both", expand=True, padx=6, pady=(4, 8))
@@ -427,7 +427,8 @@ class PixelEditor:
         for child in self.palette_frame.winfo_children():
             child.destroy()
         for i, hexc in enumerate(self.palette):
-            cell = tk.Frame(self.palette_frame, bg=hexc,
+            bg = hexc[:7]
+            cell = tk.Frame(self.palette_frame, bg=bg,
                             width=self.SWATCH, height=self.SWATCH,
                             highlightbackground="#1e1e1e", highlightthickness=1)
             cell.grid(row=i // self.PAL_COLS, column=i % self.PAL_COLS)
@@ -466,54 +467,71 @@ class PixelEditor:
             self.root.focus_set()
 
     def on_wheel(self, event):
-        self.set_zoom(self.zoom + (2 if event.delta > 0 else -2))
+        self.set_zoom(self.zoom + (2 if event.delta > 0 else -2), event)
 
     # -- Colour -------------------------------------------------------------
 
     def color_hex(self):
-        r, g, b, _ = self.color
-        return f"#{r:02x}{g:02x}{b:02x}"
+        r, g, b, a = self.color
+        if a == 255:
+            return f"#{r:02x}{g:02x}{b:02x}"
+        return f"#{r:02x}{g:02x}{b:02x}{a:02x}"
 
     def update_swatch(self):
-        self.swatch.configure(bg=self.color_hex())
+        r, g, b, _ = self.color
+        self.swatch.configure(bg=f"#{r:02x}{g:02x}{b:02x}")
 
-    def gradient_image(self, ch):
+    def gradient_image(self, ch, w):
         cols = []
-        for x in range(self.BAR_W):
-            t = x / (self.BAR_W - 1)
-            h, s, v = self.hsv_vals["H"], self.hsv_vals["S"], self.hsv_vals["V"]
-            r, g, b = colorsys.hsv_to_rgb(t if ch == "H" else h,
-                                          t if ch == "S" else s,
-                                          t if ch == "V" else v)
-            cols.append("#%02x%02x%02x" % (round(r * 255), round(g * 255), round(b * 255)))
-        img = tk.PhotoImage(width=self.BAR_W, height=self.BAR_H)
+        for x in range(w):
+            t = x / max(w - 1, 1)
+            if ch == "A":
+                r, g, b = colorsys.hsv_to_rgb(self.hsv_vals["H"], self.hsv_vals["S"], self.hsv_vals["V"])
+                cr, cg, cb = round(r * 255), round(g * 255), round(b * 255)
+                bg = 0xd4 if (x // 8) % 2 == 0 else 0xbd
+                rr = round(bg * (1 - t) + cr * t)
+                gg = round(bg * (1 - t) + cg * t)
+                bb = round(bg * (1 - t) + cb * t)
+                cols.append("#%02x%02x%02x" % (rr, gg, bb))
+            else:
+                h, s, v = self.hsv_vals["H"], self.hsv_vals["S"], self.hsv_vals["V"]
+                r, g, b = colorsys.hsv_to_rgb(t if ch == "H" else h,
+                                              t if ch == "S" else s,
+                                              t if ch == "V" else v)
+                cols.append("#%02x%02x%02x" % (round(r * 255), round(g * 255), round(b * 255)))
+        img = tk.PhotoImage(width=w, height=self.BAR_H)
         img.put(" ".join(["{" + " ".join(cols) + "}"] * self.BAR_H))
         return img
 
     def draw_bars(self):
         for ch, c in self.bar_canvas.items():
-            self.bar_imgs[ch] = self.gradient_image(ch)  # keep a ref alive
+            w = c.winfo_width()
+            if w < 2:
+                w = self.BAR_W
+            self.bar_imgs[ch] = self.gradient_image(ch, w)
             c.delete("all")
             c.create_image(0, 0, anchor="nw", image=self.bar_imgs[ch])
-            mx = round(self.hsv_vals[ch] * (self.BAR_W - 1))
+            mx = round(self.hsv_vals[ch] * (w - 1))
             c.create_rectangle(mx - 2, 0, mx + 2, self.BAR_H - 1, outline="#fff")
             c.create_line(mx, 0, mx, self.BAR_H, fill="#000")
 
     def apply_hsv(self):
         r, g, b = colorsys.hsv_to_rgb(*(self.hsv_vals[k] for k in "HSV"))
-        self.color = [round(r * 255), round(g * 255), round(b * 255), 255]
+        self.color = [round(r * 255), round(g * 255), round(b * 255), round(self.hsv_vals["A"] * 255)]
         self.update_swatch()
         self.draw_bars()
 
     def bar_set(self, ch, event):
-        self.hsv_vals[ch] = min(max(event.x / (self.BAR_W - 1), 0.0), 1.0)
+        w = event.widget.winfo_width()
+        self.hsv_vals[ch] = min(max(event.x / max(w - 1, 1), 0.0), 1.0)
         self.apply_hsv()
 
     def set_color_hex(self, hexc):
         r, g, b = int(hexc[1:3], 16), int(hexc[3:5], 16), int(hexc[5:7], 16)
+        a = int(hexc[7:9], 16) if len(hexc) > 7 else 255
         h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
-        self.hsv_vals = {"H": h, "S": s, "V": v}
-        self.color = [r, g, b, 255]  # exact, not the HSV round-trip
+        self.hsv_vals = {"H": h, "S": s, "V": v, "A": a / 255}
+        self.color = [r, g, b, a]
         self.update_swatch()
         self.draw_bars()
 
@@ -591,9 +609,20 @@ class PixelEditor:
             for x in range(self.w):
                 self.refresh_cell(x, y)
 
-    def set_zoom(self, z):
+    def set_zoom(self, z, event=None):
+        old_z = self.zoom
         self.zoom = max(2, min(48, z))
-        self.rebuild_canvas()
+        if self.zoom == old_z:
+            return
+        if event:
+            cx = self.canvas.canvasx(event.x)
+            cy = self.canvas.canvasy(event.y)
+            px, py = cx / old_z, cy / old_z
+            self.rebuild_canvas()
+            self.canvas.xview_moveto((px * self.zoom - event.x) / (self.w * self.zoom))
+            self.canvas.yview_moveto((py * self.zoom - event.y) / (self.h * self.zoom))
+        else:
+            self.rebuild_canvas()
 
     def toggle_grid(self):
         self.show_grid = not self.show_grid
