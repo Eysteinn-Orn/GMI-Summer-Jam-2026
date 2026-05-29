@@ -10,7 +10,7 @@ metadata={
 
 [deps]
 
-source_file="res://assets/sprites/locked gate.png"
+source_file="res://Assets/sprites/locked gate.png"
 dest_files=["res://.godot/imported/locked gate.png-5189b80a01d9fed29cb40b0acfac12fc.ctex"]
 
 [params]

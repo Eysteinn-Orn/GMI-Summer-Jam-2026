@@ -2,7 +2,7 @@
 """Pixel art editor for the GMI Summer Jam vampire game.
 
 A self-contained tkinter pixel editor that reads and writes PNG sprites in the
-project's conventional Godot sprite folder (res://assets/sprites/). PNGs are the
+project's conventional Godot sprite folder (res://Assets/sprites/). PNGs are the
 format Godot imports as Texture2D, so anything saved here is usable directly by
 Sprite2D / AnimatedSprite2D / AtlasTexture.
 
@@ -142,14 +142,14 @@ def load_png(path):
 # ---------------------------------------------------------------------------
 
 def find_sprites_dir():
-    """Walk up from this file to the Godot project root, return assets/sprites."""
+    """Walk up from this file to the Godot project root, return Assets/sprites."""
     here = os.path.dirname(os.path.abspath(__file__))
     root = here
     while root != os.path.dirname(root):
         if os.path.exists(os.path.join(root, "project.godot")):
             break
         root = os.path.dirname(root)
-    sprites = os.path.join(root, "assets", "sprites")
+    sprites = os.path.join(root, "Assets", "sprites")
     os.makedirs(sprites, exist_ok=True)
     return sprites
 
@@ -250,6 +250,15 @@ class PixelEditor:
     # -- UI construction ----------------------------------------------------
 
     def build_ui(self):
+        # tk's defaults give buttons a near-white focus-highlight border and a
+        # light-gray pressed/hover background; recolour both to dark grays so
+        # nothing flashes bright against the dark UI.
+        for cls in ("Button", "Radiobutton"):
+            self.root.option_add(f"*{cls}.highlightBackground", "#1a1a1a")
+            self.root.option_add(f"*{cls}.highlightColor", "#1a1a1a")
+            self.root.option_add(f"*{cls}.activeBackground", "#555555")
+            self.root.option_add(f"*{cls}.activeForeground", "white")
+
         bar = tk.Frame(self.root, bg="#2b2b2b")
         bar.pack(side="top", fill="x")
 
