@@ -164,8 +164,7 @@ DEFAULT_PALETTE = [
     "#6d2f8f", "#a24bc2", "#d77bba",
 ]
 
-# The palette is remembered between sessions / resets in the user's home dir.
-PALETTE_FILE = os.path.join(os.path.expanduser("~"), ".gmi_pixel_editor_palette.json")
+PALETTE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "palette.json")
 
 
 def load_palette():
