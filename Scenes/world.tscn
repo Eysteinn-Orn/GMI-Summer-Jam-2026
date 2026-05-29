@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d2y852kokepd6"]
 
-[ext_resource type="Script" uid="uid://w6ddejfsys0m" path="res://Scripts/Player.gd" id="1_5a7ea"]
+[ext_resource type="Script" uid="uid://w6ddejfsys0m" path="res://scripts/Player.gd" id="1_5a7ea"]
 [ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="1_a02cp"]
-[ext_resource type="Texture2D" uid="uid://el4axjyyt653" path="res://Assets/CrashMoji_Crate_emoji.png" id="2_go701"]
+[ext_resource type="Texture2D" uid="uid://el4axjyyt653" path="res://assets/CrashMoji_Crate_emoji.png" id="2_go701"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
 size = Vector2(128, 128)

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://drb3atko3dy8"
-path="res://.godot/imported/smallrock1.png-33cfb03a6208592cfaa8ada696d56f3f.ctex"
+path="res://.godot/imported/smallrock1.png-dfe0b00cf824583467b26ed81fdd822a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/smallrock1.png"
-dest_files=["res://.godot/imported/smallrock1.png-33cfb03a6208592cfaa8ada696d56f3f.ctex"]
+source_file="res://assets/sprites/smallrock1.png"
+dest_files=["res://.godot/imported/smallrock1.png-dfe0b00cf824583467b26ed81fdd822a.ctex"]
 
 [params]
 

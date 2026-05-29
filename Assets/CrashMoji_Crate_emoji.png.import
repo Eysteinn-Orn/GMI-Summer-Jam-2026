@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://el4axjyyt653"
-path="res://.godot/imported/CrashMoji_Crate_emoji.png-623cbeb81ec9211b410686f62403b19d.ctex"
+path="res://.godot/imported/CrashMoji_Crate_emoji.png-b29677f0b4988b4a847a1b76cb329e0b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CrashMoji_Crate_emoji.png"
-dest_files=["res://.godot/imported/CrashMoji_Crate_emoji.png-623cbeb81ec9211b410686f62403b19d.ctex"]
+source_file="res://assets/CrashMoji_Crate_emoji.png"
+dest_files=["res://.godot/imported/CrashMoji_Crate_emoji.png-b29677f0b4988b4a847a1b76cb329e0b.ctex"]
 
 [params]
 

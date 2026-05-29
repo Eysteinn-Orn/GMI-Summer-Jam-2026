@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjeelv2nim2en"
-path="res://.godot/imported/locked gate.png-dcabeb5b4b712eab6dd837d2f38c0978.ctex"
+path="res://.godot/imported/locked gate.png-5189b80a01d9fed29cb40b0acfac12fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/locked gate.png"
-dest_files=["res://.godot/imported/locked gate.png-dcabeb5b4b712eab6dd837d2f38c0978.ctex"]
+source_file="res://assets/sprites/locked gate.png"
+dest_files=["res://.godot/imported/locked gate.png-5189b80a01d9fed29cb40b0acfac12fc.ctex"]
 
 [params]
 

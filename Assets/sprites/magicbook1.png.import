@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvcgw7q3sgdhp"
-path="res://.godot/imported/magicbook1.png-6d371973fae7722f14e1bb5f594e7304.ctex"
+path="res://.godot/imported/magicbook1.png-795bf6fb5dfbdce54db3ff02a6526322.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/magicbook1.png"
-dest_files=["res://.godot/imported/magicbook1.png-6d371973fae7722f14e1bb5f594e7304.ctex"]
+source_file="res://assets/sprites/magicbook1.png"
+dest_files=["res://.godot/imported/magicbook1.png-795bf6fb5dfbdce54db3ff02a6526322.ctex"]
 
 [params]
 
