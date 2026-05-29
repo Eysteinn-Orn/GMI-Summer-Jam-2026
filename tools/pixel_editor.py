@@ -584,6 +584,14 @@ class PixelEditor:
             bb = int(bb * (1 - t) + b * t)
         return f"#{br:02x}{bg:02x}{bb:02x}"
 
+    def view_margin(self):
+        """Padding (screen px) added around the art on every side so the view
+        can pan past its edges. Half a viewport lets any edge pixel be scrolled
+        to the centre — without it, edge pixels of a large sprite stay pinned
+        against the viewport border and are awkward to draw on."""
+        return (max(self.canvas.winfo_width() // 2, 200),
+                max(self.canvas.winfo_height() // 2, 200))
+
     def rebuild_canvas(self):
         self.w_var.set(str(self.w))
         self.h_var.set(str(self.h))
@@ -597,7 +605,8 @@ class PixelEditor:
                     x * z, y * z, (x + 1) * z, (y + 1) * z,
                     fill=self.display_hex(x, y), outline=outline, width=1)
                 self.rects[(x, y)] = rid
-        self.canvas.configure(scrollregion=(0, 0, self.w * z, self.h * z))
+        mx, my = self.view_margin()
+        self.canvas.configure(scrollregion=(-mx, -my, self.w * z + mx, self.h * z + my))
         if self.sel:
             self.draw_sel_outline()
 
@@ -619,8 +628,9 @@ class PixelEditor:
             cy = self.canvas.canvasy(event.y)
             px, py = cx / old_z, cy / old_z
             self.rebuild_canvas()
-            self.canvas.xview_moveto((px * self.zoom - event.x) / (self.w * self.zoom))
-            self.canvas.yview_moveto((py * self.zoom - event.y) / (self.h * self.zoom))
+            mx, my = self.view_margin()
+            self.canvas.xview_moveto((px * self.zoom - event.x + mx) / (self.w * self.zoom + 2 * mx))
+            self.canvas.yview_moveto((py * self.zoom - event.y + my) / (self.h * self.zoom + 2 * my))
         else:
             self.rebuild_canvas()
 
