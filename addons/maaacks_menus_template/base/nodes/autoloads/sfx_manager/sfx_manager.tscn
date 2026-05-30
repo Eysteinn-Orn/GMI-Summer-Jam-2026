@@ -1,6 +1,29 @@
 [gd_scene format=3 uid="uid://tftbibsfd5dt"]
 
 [ext_resource type="Script" uid="uid://c2kgk43pai7jt" path="res://addons/maaacks_menus_template/base/nodes/autoloads/sfx_manager/sfx_manager.gd" id="1_fhuye"]
+[ext_resource type="AudioStream" uid="uid://djxb6q20vgytu" path="res://Assets/sounds/dashing-001.wav" id="2_107rd"]
+[ext_resource type="AudioStream" uid="uid://bert1klamlufa" path="res://Assets/sounds/dashing-002.wav" id="3_p0tnw"]
+[ext_resource type="AudioStream" uid="uid://dnob30lt6mfem" path="res://Assets/sounds/dashing-003.wav" id="4_ebg51"]
+[ext_resource type="AudioStream" uid="uid://b2et33hdue2yc" path="res://Assets/sounds/dashing-004.wav" id="5_vm5t0"]
+[ext_resource type="AudioStream" uid="uid://d1b2fwwhapfu6" path="res://Assets/sounds/stepping-001.wav" id="6_ebg51"]
+[ext_resource type="AudioStream" uid="uid://dvthfi6bot3bv" path="res://Assets/sounds/stepping-002.wav" id="7_vm5t0"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_8ncoo"]
+streams_count = 4
+stream_0/stream = ExtResource("2_107rd")
+stream_1/stream = ExtResource("3_p0tnw")
+stream_2/stream = ExtResource("4_ebg51")
+stream_3/stream = ExtResource("5_vm5t0")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_w0pux"]
+random_pitch = 1.0594631
+streams_count = 2
+stream_0/stream = ExtResource("6_ebg51")
+stream_1/stream = ExtResource("7_vm5t0")
 
 [node name="SfxManager" type="Node" unique_id=1854900148]
 script = ExtResource("1_fhuye")
+sound_files = Dictionary[String, AudioStream]({
+"step": SubResource("AudioStreamRandomizer_w0pux"),
+"vamp_jump": SubResource("AudioStreamRandomizer_8ncoo")
+})

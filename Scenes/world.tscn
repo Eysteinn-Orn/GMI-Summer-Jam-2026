@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d2y852kokepd6"]
 
-[ext_resource type="Script" uid="uid://w6ddejfsys0m" path="res://scripts/Player.gd" id="1_5a7ea"]
+[ext_resource type="Script" uid="uid://w6ddejfsys0m" path="res://Scripts/Player.gd" id="1_5a7ea"]
 [ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="1_a02cp"]
-[ext_resource type="Texture2D" uid="uid://el4axjyyt653" path="res://assets/CrashMoji_Crate_emoji.png" id="2_go701"]
+[ext_resource type="Texture2D" uid="uid://el4axjyyt653" path="res://Assets/CrashMoji_Crate_emoji.png" id="2_go701"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
 size = Vector2(128, 128)
@@ -26,6 +26,10 @@ texture = ExtResource("1_a02cp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1367244326]
 shape = SubResource("RectangleShape2D_go701")
+
+[node name="StepSoundTimer" type="Timer" parent="CharacterBody2D" unique_id=350726802]
+wait_time = 0.3
+one_shot = true
 
 [node name="Floor" type="StaticBody2D" parent="." unique_id=1681230138]
 position = Vector2(10, 655)
@@ -68,3 +72,5 @@ shape = SubResource("RectangleShape2D_8j60k")
 
 [node name="Sprite2D" type="Sprite2D" parent="Box" unique_id=259464857]
 texture = ExtResource("2_go701")
+
+[connection signal="timeout" from="CharacterBody2D/StepSoundTimer" to="CharacterBody2D" method="_on_step_sound_timer_timeout"]
