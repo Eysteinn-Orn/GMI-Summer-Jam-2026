@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://tftbibsfd5dt"]
+
+[ext_resource type="Script" uid="uid://c2kgk43pai7jt" path="res://addons/maaacks_menus_template/base/nodes/autoloads/sfx_manager/sfx_manager.gd" id="1_fhuye"]
+
+[node name="SfxManager" type="Node" unique_id=1854900148]
+script = ExtResource("1_fhuye")
