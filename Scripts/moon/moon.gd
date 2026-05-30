@@ -43,18 +43,6 @@ func _on_body_exited(body):
 		player_inside = false
 		print("Exited shadow")
 
-
-#func _on_area_2d_body_entered(body: Node2D) -> void:
-	#if body == player:
-		#player_inside = true
-		#print("Entered shadow")
-#
-#func _on_area_2d_body_exited(body: Node2D) -> void:
-	#if body == player:
-		#player_inside = false
-		#print("Exited shadow")
-
-
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	print("Entered shadow")
 	pass # Replace with function body.
