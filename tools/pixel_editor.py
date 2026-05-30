@@ -8,10 +8,11 @@ Sprite2D / AnimatedSprite2D / AtlasTexture.
 
 Run with:  python3 tools/pixel_editor.py
 
-Features: pencil / eraser / flood-fill / eyedropper / line / rectangle tools,
-editable palette + colour picker, zoom + pixel grid, transparency, undo/redo,
-animation frames with onion-skinning, single-frame PNG save and horizontal
-spritesheet export.
+Features: pencil / flood-fill / eyedropper / line / rectangle tools, an erase
+mode (any tool draws transparent), lasso or box copy/move selections, editable
+palette + colour picker, zoom + pixel grid, transparency, undo/redo, animation
+frames with onion-skinning, single-frame PNG save and horizontal spritesheet
+export.
 
 No third-party dependency is required: Pillow is used when present, otherwise a
 small stdlib (zlib) PNG codec is used so every teammate can run it as-is.
@@ -20,7 +21,10 @@ small stdlib (zlib) PNG codec is used so every teammate can run it as-is.
 import colorsys
 import json
 import os
+import re
 import struct
+import subprocess
+import threading
 import zlib
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -187,6 +191,187 @@ def save_palette(palette):
 
 
 # ---------------------------------------------------------------------------
+# Geometry for the lasso selection.
+# ---------------------------------------------------------------------------
+
+def convex_hull(points):
+    """Andrew's monotone chain — returns the hull vertices of `points` in order."""
+    pts = sorted(set(points))
+    if len(pts) <= 2:
+        return pts
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    lower = []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+    upper = []
+    for p in reversed(pts):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+    return lower[:-1] + upper[:-1]
+
+
+def point_in_hull(hull, x, y):
+    """True if (x, y) lies inside or on the convex polygon `hull`."""
+    sign = 0
+    for i in range(len(hull)):
+        ax, ay = hull[i]
+        bx, by = hull[(i + 1) % len(hull)]
+        d = (bx - ax) * (y - ay) - (by - ay) * (x - ax)
+        if d != 0:
+            s = 1 if d > 0 else -1
+            if sign and s != sign:
+                return False
+            sign = s
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Pixel-buffer transforms (rotate / flip / scale / perspective warp).
+# ---------------------------------------------------------------------------
+
+def rotate_cw(w, h, pixels):
+    nw, nh = h, w
+    out = [None] * (nw * nh)
+    for y in range(h):
+        for x in range(w):
+            out[x * nw + (h - 1 - y)] = list(pixels[y * w + x])
+    return nw, nh, out
+
+
+def rotate_ccw(w, h, pixels):
+    nw, nh = h, w
+    out = [None] * (nw * nh)
+    for y in range(h):
+        for x in range(w):
+            out[(w - 1 - x) * nw + y] = list(pixels[y * w + x])
+    return nw, nh, out
+
+
+def flip_h(w, h, pixels):
+    out = [None] * (w * h)
+    for y in range(h):
+        for x in range(w):
+            out[y * w + (w - 1 - x)] = list(pixels[y * w + x])
+    return w, h, out
+
+
+def flip_v(w, h, pixels):
+    out = [None] * (w * h)
+    for y in range(h):
+        for x in range(w):
+            out[(h - 1 - y) * w + x] = list(pixels[y * w + x])
+    return w, h, out
+
+
+def scale_nn(w, h, pixels, nw, nh):
+    out = [None] * (nw * nh)
+    for ny in range(nh):
+        sy = min(ny * h // nh, h - 1)
+        for nx in range(nw):
+            sx = min(nx * w // nw, w - 1)
+            out[ny * nw + nx] = list(pixels[sy * w + sx])
+    return nw, nh, out
+
+
+def solve_homography(src_pts, dst_pts):
+    """8-point DLT: coefficients mapping dst->src for an inverse perspective warp."""
+    rows, rhs = [], []
+    for (sx, sy), (dx, dy) in zip(src_pts, dst_pts):
+        rows.append([dx, dy, 1, 0, 0, 0, -sx * dx, -sx * dy])
+        rhs.append(sx)
+        rows.append([0, 0, 0, dx, dy, 1, -sy * dx, -sy * dy])
+        rhs.append(sy)
+    n = 8
+    M = [rows[i][:] + [rhs[i]] for i in range(n)]
+    for col in range(n):
+        best = max(range(col, n), key=lambda r: abs(M[r][col]))
+        M[col], M[best] = M[best], M[col]
+        if abs(M[col][col]) < 1e-12:
+            return None
+        for row in range(n):
+            if row != col:
+                fac = M[row][col] / M[col][col]
+                for j in range(n + 1):
+                    M[row][j] -= fac * M[col][j]
+    return tuple(M[i][n] / M[i][i] for i in range(n))
+
+
+def perspective_warp(sw, sh, src_pixels, dst_corners):
+    """Warp an sw*sh pixel buffer into the quadrilateral dst_corners (TL/TR/BR/BL).
+    Corners use inclusive pixel-index coordinates.
+    Returns (ow, oh, out_pixels, ox, oy)."""
+    src_pts = [(0, 0), (sw - 1, 0), (sw - 1, sh - 1), (0, sh - 1)]
+    xs = [p[0] for p in dst_corners]
+    ys = [p[1] for p in dst_corners]
+    ox, oy = int(min(xs)), int(min(ys))
+    ow = int(max(xs)) - ox + 1
+    oh = int(max(ys)) - oy + 1
+    coeffs = solve_homography(src_pts, dst_corners)
+    if not coeffs:
+        return sw, sh, [list(p) for p in src_pixels], 0, 0
+    a, b, c, d, e, f, g, h = coeffs
+    out = [list(TRANSPARENT)] * (ow * oh)
+    SS = 3
+    for py in range(oh):
+        for px in range(ow):
+            r_acc, g_acc, b_acc, a_acc, count = 0, 0, 0, 0, 0
+            for sj in range(SS):
+                for si in range(SS):
+                    dx = px + ox + (si + 0.5) / SS - 0.5
+                    dy = py + oy + (sj + 0.5) / SS - 0.5
+                    den = g * dx + h * dy + 1
+                    if abs(den) < 1e-12:
+                        continue
+                    sx_f = (a * dx + b * dy + c) / den
+                    sy_f = (d * dx + e * dy + f) / den
+                    ix = max(0, min(sw - 1, int(sx_f + 0.5)))
+                    iy = max(0, min(sh - 1, int(sy_f + 0.5)))
+                    if -0.5 <= sx_f <= sw - 0.5 and -0.5 <= sy_f <= sh - 0.5:
+                        sp = src_pixels[iy * sw + ix]
+                        r_acc += sp[0]; g_acc += sp[1]
+                        b_acc += sp[2]; a_acc += sp[3]
+                        count += 1
+            if count > 0:
+                out[py * ow + px] = [
+                    r_acc // count, g_acc // count,
+                    b_acc // count, a_acc // count]
+    return ow, oh, out, ox, oy
+
+
+# Runs in a subprocess so GLib.MainLoop + DBusGMainLoop work without threading
+# context issues.  Prints '#rrggbb' on success, nothing on cancel/error.
+_PORTAL_PICK_SCRIPT = """\
+import dbus, sys
+from dbus.mainloop.glib import DBusGMainLoop
+from gi.repository import GLib
+DBusGMainLoop(set_as_default=True)
+loop = GLib.MainLoop()
+bus = dbus.SessionBus()
+portal = dbus.Interface(
+    bus.get_object("org.freedesktop.portal.Desktop",
+                   "/org/freedesktop/portal/desktop"),
+    "org.freedesktop.portal.Screenshot")
+req_path = portal.PickColor("", dbus.Dictionary({}, signature="sv"))
+req = dbus.Interface(
+    bus.get_object("org.freedesktop.portal.Desktop", req_path),
+    "org.freedesktop.portal.Request")
+def cb(response, results):
+    if response == 0 and "color" in results:
+        r, g, b = (round(float(c) * 255) for c in results["color"])
+        print(f"#{r:02x}{g:02x}{b:02x}")
+    loop.quit()
+req.connect_to_signal("Response", cb)
+GLib.timeout_add(120_000, loop.quit)
+loop.run()
+"""
+
+# ---------------------------------------------------------------------------
 # Editor.
 # ---------------------------------------------------------------------------
 
@@ -226,15 +411,21 @@ class PixelEditor:
         self.stroke_start = None
         self.stroke_backup = None  # snapshot for live shape preview
 
-        # Floating copy/move selection: {x, y, w, h, buf, mode} or None.
+        # Floating copy/move selection: {x, y, w, h, buf, mode, hull} or None.
         self.sel = None
         self.cm_grab = None          # cursor offset within a grabbed selection
-        self.rubber = None           # (x0, y0, x1, y1) during marquee drag
+        self.lasso_select = True     # True: trace a convex-hull region; False: box
+        self.rubber = None           # (x0, y0, x1, y1) during a box-marquee drag
+        self.lasso_pts = None        # traced points during a lasso drag
         self.sel_outline_id = None
         self.rubber_id = None
         self.resize_visible = False
         self.repeat_id = None  # pending after() for a held-down resize button
         self.panning = False   # dragging in the margin to pan the view
+        self._pil_picking = False
+        self.warp = None
+        self.warp_handle_ids = []
+        self.warp_active = None
 
         self.build_ui()
         self.rebuild_canvas()
@@ -279,6 +470,7 @@ class PixelEditor:
         btn(bar, "Zoom +", lambda: self.set_zoom(self.zoom + 2))
         self.grid_btn = btn(bar, "Grid: on", self.toggle_grid)
         self.onion_btn = btn(bar, "Onion: off", self.toggle_onion)
+        self.select_btn = btn(bar, "Select: lasso", self.toggle_select_mode)
 
         self.status = tk.Label(bar, text="", bg="#2b2b2b", fg="#aaa")
         self.status.pack(side="right", padx=8)
@@ -289,18 +481,24 @@ class PixelEditor:
         # Tool column.
         tools = tk.Frame(body, bg="#2b2b2b")
         tools.pack(side="left", fill="y")
-        for name, label in [("pencil", "Pencil  B"), ("eraser", "Eraser  E"),
+        for name, label in [("pencil", "Pencil  B"),
                             ("fill", "Fill  G"), ("picker", "Picker  Q"),
                             ("line", "Line  L"), ("rect", "Rect  R"),
                             ("rectfill", "Rect Fill  F"), ("copy", "Copy  C"),
-                            ("move", "Move  M")]:
+                            ("move", "Move  M"), ("warp", "Warp  W")]:
             tk.Radiobutton(tools, text=label, value=name, variable=self.tool,
                            indicatoron=False, width=12, bg="#3c3c3c", fg="white",
                            selectcolor="#7a2233", relief="flat",
                            anchor="w", padx=6, pady=4).pack(fill="x", padx=3, pady=1)
+        # Erase isn't a tool — it just makes the active colour transparent, so
+        # whichever tool is selected (pencil, fill, line, rect) erases.
+        tk.Button(tools, text="Erase  E", command=self.set_transparent, width=12,
+                  bg="#3c3c3c", fg="white", relief="flat", anchor="w",
+                  padx=6, pady=4).pack(fill="x", padx=3, pady=(6, 1))
 
         # Canvas resize controls, pinned to the end of the sidebar.
         self.build_resize_controls(tools)
+        self.build_transform_controls(tools)
 
         # Canvas with scrollbars.
         center = tk.Frame(body, bg="#1e1e1e")
@@ -338,6 +536,12 @@ class PixelEditor:
         self.hex_entry.pack(fill="x", pady=(2, 0))
         self.hex_entry.bind("<Return>", self.apply_hex_entry)
         self.hex_entry.bind("<FocusOut>", self.apply_hex_entry)
+
+        self.pick_screen_btn = tk.Button(right, text="Pick Screen  P",
+                  command=self.enter_screen_pick,
+                  bg="#3c3c3c", fg="white", relief="flat",
+                  padx=4, pady=2)
+        self.pick_screen_btn.pack(fill="x", pady=(2, 0))
 
         # Hue / saturation / value spectrum bars; click or drag to choose.
         self.bar_canvas = {}
@@ -441,6 +645,62 @@ class PixelEditor:
         widget.bind("<ButtonPress-1>", lambda _e: tick(350))  # initial delay, then fast
         widget.bind("<ButtonRelease-1>", stop)
 
+    def build_transform_controls(self, parent):
+        wrap = tk.Frame(parent, bg="#2b2b2b")
+        wrap.pack(side="bottom", fill="x", pady=(4, 0))
+        tk.Label(wrap, text="TRANSFORM", bg="#2b2b2b", fg="#ccc").pack()
+        pairs = [
+            ("Rot CW", lambda: self.apply_transform(rotate_cw),
+             "Rot CCW", lambda: self.apply_transform(rotate_ccw)),
+            ("Flip H", lambda: self.apply_transform(flip_h),
+             "Flip V", lambda: self.apply_transform(flip_v)),
+            ("2×", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, w * 2, h * 2)),
+             "½×", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, max(1, w // 2), max(1, h // 2)))),
+            ("Wide", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, w * 2, h)),
+             "Narrow", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, max(1, w // 2), h))),
+            ("Tall", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, w, h * 2)),
+             "Short", lambda: self.apply_transform(
+                 lambda w, h, p: scale_nn(w, h, p, w, max(1, h // 2)))),
+        ]
+        for left_text, left_cmd, right_text, right_cmd in pairs:
+            row = tk.Frame(wrap, bg="#2b2b2b")
+            row.pack(fill="x", padx=4, pady=1)
+            tk.Button(row, text=left_text, command=left_cmd, width=6,
+                      relief="flat", bg="#3c3c3c", fg="white").pack(
+                          side="left", expand=True, fill="x", padx=1)
+            tk.Button(row, text=right_text, command=right_cmd, width=6,
+                      relief="flat", bg="#3c3c3c", fg="white").pack(
+                          side="left", expand=True, fill="x", padx=1)
+
+    def apply_transform(self, fn):
+        if self.sel:
+            nw, nh, npx = fn(self.sel["w"], self.sel["h"], self.sel["buf"])
+            if nw > self.MAX_DIM or nh > self.MAX_DIM:
+                self.status.configure(text=f"Transform exceeds {self.MAX_DIM}px")
+                return
+            self.sel["w"], self.sel["h"], self.sel["buf"] = nw, nh, npx
+            self.sel["hull"] = None
+            self.refresh_all()
+            self.draw_sel_outline()
+        else:
+            nw, nh, npx = fn(self.w, self.h, self.pixels)
+            if nw > self.MAX_DIM or nh > self.MAX_DIM:
+                self.status.configure(text=f"Transform exceeds {self.MAX_DIM}px")
+                return
+            self.push_undo()
+            resized = nw != self.w or nh != self.h
+            self.w, self.h = nw, nh
+            self.frames[self.frame] = npx
+            if resized:
+                self.rebuild_canvas()
+            else:
+                self.refresh_all()
+
     def render_palette(self):
         for child in self.palette_frame.winfo_children():
             child.destroy()
@@ -457,11 +717,13 @@ class PixelEditor:
         return isinstance(self.root.focus_get(), tk.Entry)
 
     def bind_keys(self):
-        binds = {"b": "pencil", "e": "eraser", "g": "fill", "i": "picker",
+        binds = {"b": "pencil", "g": "fill", "i": "picker",
                  "q": "picker", "l": "line", "r": "rect", "f": "rectfill",
-                 "c": "copy", "m": "move"}
+                 "c": "copy", "m": "move", "w": "warp"}
         for key, name in binds.items():
             self.root.bind(key, lambda e, n=name: self.tool.set(n) if not self.typing() else None)
+        self.root.bind("e", lambda e: self.set_transparent() if not self.typing() else None)
+        self.root.bind("p", lambda e: self.enter_screen_pick() if not self.typing() else None)
         # Clicking anywhere that isn't the name box drops its keyboard focus.
         self.root.bind("<Button-1>", self.defocus_name, add="+")
         self.tool.trace_add("write", lambda *a: self.on_tool_change())
@@ -497,9 +759,20 @@ class PixelEditor:
             return f"#{r:02x}{g:02x}{b:02x}"
         return f"#{r:02x}{g:02x}{b:02x}{a:02x}"
 
+    def set_transparent(self):
+        """E / Erase: make the active colour fully transparent so any tool —
+        pencil, fill, line, rect — erases by drawing transparent pixels."""
+        self.color = list(TRANSPARENT)
+        self.hsv_vals["A"] = 0.0
+        self.update_swatch()
+        self.draw_bars()
+
     def update_swatch(self):
-        r, g, b, _ = self.color
-        self.swatch.configure(bg=f"#{r:02x}{g:02x}{b:02x}")
+        r, g, b, a = self.color
+        if a == 0:
+            self.swatch.configure(bg=self.CHECK_LIGHT, text="erase", fg="#555")
+        else:
+            self.swatch.configure(bg=f"#{r:02x}{g:02x}{b:02x}", text="")
         if hasattr(self, "hex_var"):
             self.hex_var.set(self.color_hex())
 
@@ -570,11 +843,141 @@ class PixelEditor:
         return "break"  # don't also trigger the global <Return> handler
 
     def add_current_to_palette(self):
+        if self.color[3] == 0:
+            return  # erasing (transparent) isn't a palette colour
         hexc = self.color_hex()
         if hexc not in self.palette:
             self.palette.append(hexc)
             save_palette(self.palette)
             self.render_palette()
+
+    def enter_screen_pick(self):
+        """gcolor3-style screen colour picker.
+        Linux: delegates to xcolor/grabc so the pointer is fully free (cross-workspace).
+        macOS/Windows (or Linux fallback): PIL ImageGrab + grab_set_global."""
+        self.pick_screen_btn.configure(text="Picking…", state="disabled")
+        self.status.configure(text="Click anywhere to pick — Esc cancels")
+        threading.Thread(target=self._screen_pick_worker, daemon=True).start()
+
+    def _screen_pick_worker(self):
+        """Try pickers in order: XDG portal → CLI tools → PIL grab."""
+        # 1. XDG Desktop Portal PickColor — compositor-native, cross-workspace,
+        #    works on GNOME/KDE/Hyprland; requires python-dbus + python-gobject.
+        hexc = self._pick_via_portal()
+        if hexc:
+            self.root.after(0, lambda h=hexc: self._screen_pick_done(h))
+            return
+        # 2. CLI pickers (X11 / XWayland).
+        for cmd, parse in [
+            (["hyprpicker"],        lambda s: "#" + s.strip().lstrip("#")),
+            (["xcolor", "-s", "0"], lambda s: s.strip()),
+            (["grabc"],             lambda s: "#" + s.strip().lstrip("#")),
+        ]:
+            try:
+                r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+                if r.returncode == 0:
+                    m = re.search(r'#?([0-9a-fA-F]{6})', r.stdout)
+                    if m:
+                        hexc = "#" + m.group(1).lower()
+                        self.root.after(0, lambda h=hexc: self._screen_pick_done(h))
+                        return
+            except (FileNotFoundError, subprocess.TimeoutExpired):
+                pass
+        # 3. PIL grab (macOS / Windows / X11 with scrot).
+        self.root.after(0, self._start_pil_pick)
+
+    def _pick_via_portal(self):
+        """Run the portal script in a subprocess — clean GLib context, no
+        threading issues.  Returns '#rrggbb' on success, None otherwise."""
+        import sys
+        try:
+            r = subprocess.run(
+                [sys.executable, "-c", _PORTAL_PICK_SCRIPT],
+                capture_output=True, text=True, timeout=125,
+            )
+            m = re.search(r'#([0-9a-fA-F]{6})', r.stdout)
+            if m:
+                return "#" + m.group(1).lower()
+        except Exception:
+            pass
+        return None
+
+    def _start_pil_pick(self):
+        """Grab the pointer globally and sample a single pixel with PIL on click."""
+        try:
+            from PIL import ImageGrab
+            self._pil_ig = ImageGrab
+        except ImportError:
+            self._screen_pick_done(None)
+            return
+        self._pil_picking = True
+        self.root.configure(cursor="crosshair")
+        self.root.grab_set_global()
+        self._pil_btn_id = self.root.bind("<Button-1>", self._pil_click, add=True)
+        self._pil_esc_id = self.root.bind("<Escape>",   lambda e: self._end_pil_pick(None), add=True)
+
+    def _pil_click(self, _event):
+        x, y = self.root.winfo_pointerx(), self.root.winfo_pointery()
+        # Release the grab before sampling — on Linux the active grab can block
+        # scrot / XCB from accessing the display, so we must free it first.
+        self._release_pil_grab()
+        self._screen_pick_done(self._sample_pixel(x, y))
+
+    def _end_pil_pick(self, hexc):
+        self._release_pil_grab()
+        self._screen_pick_done(hexc)
+
+    def _release_pil_grab(self):
+        self._pil_picking = False
+        self.root.configure(cursor="")
+        try:
+            self.root.grab_release()
+        except Exception:
+            pass
+        self.root.unbind("<Button-1>", self._pil_btn_id)
+        self.root.unbind("<Escape>",   self._pil_esc_id)
+
+    def _sample_pixel(self, x, y):
+        """Return '#rrggbb' at screen position (x, y). Tries multiple backends."""
+        # 1. PIL ImageGrab — native on macOS/Windows; needs XCB or scrot on Linux.
+        try:
+            img = self._pil_ig.grab(bbox=(x, y, x + 1, y + 1))
+            r, g, b = img.getpixel((0, 0))[:3]
+            return f"#{r:02x}{g:02x}{b:02x}"
+        except Exception:
+            pass
+        # 2. Python-Xlib — pure-Python X11, no scrot needed (pip install python-xlib).
+        try:
+            from Xlib import display, X
+            d = display.Display()
+            raw = d.screen().root.get_image(x, y, 1, 1, X.ZPixmap, 0xffffffff)
+            px = raw.data  # bytes; little-endian x86 ZPixmap = [B, G, R, pad]
+            if len(px) >= 3:
+                return f"#{px[2]:02x}{px[1]:02x}{px[0]:02x}"
+        except Exception:
+            pass
+        # 3. ImageMagick import — common on Linux/macOS developer machines.
+        try:
+            r = subprocess.run(
+                ["import", "-window", "root", "-crop", f"1x1+{x}+{y}",
+                 "-depth", "8", "txt:-"],
+                capture_output=True, text=True, timeout=5,
+            )
+            m = re.search(r'#([0-9a-fA-F]{6})', r.stdout)
+            if m:
+                return "#" + m.group(1).lower()
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+        return None
+
+    def _screen_pick_done(self, hexc):
+        self.pick_screen_btn.configure(text="Pick Screen  P", state="normal")
+        if hexc:
+            self.set_color_hex(hexc)
+        else:
+            self.status.configure(
+                text="No picker found — install python-dbus + python-gobject "
+                     "(portal), or hyprpicker / xcolor / grabc")
 
     def remove_from_palette(self, hexc):
         if hexc in self.palette:
@@ -632,6 +1035,7 @@ class PixelEditor:
         self.canvas.delete("all")
         self.rects.clear()
         self.sel_outline_id = self.rubber_id = None
+        self.warp_handle_ids = []
         z, outline = self.zoom, ("#3a3a3a" if self.show_grid and self.zoom >= 6 else "")
         for y in range(self.h):
             for x in range(self.w):
@@ -643,6 +1047,8 @@ class PixelEditor:
         self.canvas.configure(scrollregion=(-mx, -my, self.w * z + mx, self.h * z + my))
         if self.sel:
             self.draw_sel_outline()
+        if self.warp:
+            self.draw_warp_handles()
 
     def refresh_cell(self, x, y):
         self.canvas.itemconfigure(self.rects[(x, y)], fill=self.display_hex(x, y))
@@ -677,6 +1083,13 @@ class PixelEditor:
         self.onion = not self.onion
         self.onion_btn.configure(text=f"Onion: {'on' if self.onion else 'off'}")
         self.refresh_all()
+
+    def toggle_select_mode(self):
+        """Switch copy/move between a convex-hull lasso and a rectangular box."""
+        self.cancel_rubber()
+        self.rubber = self.lasso_pts = None
+        self.lasso_select = not self.lasso_select
+        self.select_btn.configure(text=f"Select: {'lasso' if self.lasso_select else 'box'}")
 
     # -- Mouse / drawing ----------------------------------------------------
 
@@ -741,10 +1154,20 @@ class PixelEditor:
         self.panning = False
 
     def on_press(self, event):
+        if self._pil_picking:
+            return
+        if self.tool.get() == "warp" and self.warp:
+            handle = self.hit_warp_handle(event)
+            if handle is not None:
+                self.warp_active = handle
+                return
         if self.outside_grid(event):
             self.pan_start(event)
             return
         tool = self.tool.get()
+        if tool == "warp":
+            self.warp_press(event)
+            return
         if tool in ("copy", "move"):
             self.cm_press(event)
             return
@@ -759,11 +1182,10 @@ class PixelEditor:
             self.update_swatch()
         else:
             self.push_undo()
-            if tool != "eraser":
-                self.add_current_to_palette()  # drawing a colour records it
-            if tool in ("pencil", "eraser"):
+            self.add_current_to_palette()  # drawing a colour records it
+            if tool == "pencil":
                 self.last_px = (x, y)
-                self.paint(x, y, TRANSPARENT if tool == "eraser" else self.color)
+                self.paint(x, y, self.color)
             elif tool == "fill":
                 self.flood_fill(x, y, self.color)
             elif tool in ("line", "rect", "rectfill"):
@@ -775,6 +1197,9 @@ class PixelEditor:
             self.pan_move(event)
             return
         tool = self.tool.get()
+        if tool == "warp":
+            self.warp_drag(event)
+            return
         if tool in ("copy", "move"):
             self.cm_drag(event)
             return
@@ -782,10 +1207,9 @@ class PixelEditor:
         if px is None:
             return
         x, y = px
-        if tool in ("pencil", "eraser") and self.last_px:
-            color = TRANSPARENT if tool == "eraser" else self.color
+        if tool == "pencil" and self.last_px:
             for (lx, ly) in self.line_points(*self.last_px, x, y):
-                self.paint(lx, ly, color)
+                self.paint(lx, ly, self.color)
             self.last_px = (x, y)
         elif tool in ("line", "rect", "rectfill") and self.stroke_start:
             self.frames[self.frame] = [list(p) for p in self.stroke_backup]
@@ -796,7 +1220,10 @@ class PixelEditor:
         if self.panning:
             self.pan_end()
         else:
-            if self.tool.get() in ("copy", "move"):
+            tool = self.tool.get()
+            if tool == "warp":
+                self.warp_release(event)
+            elif tool in ("copy", "move"):
                 self.cm_release(event)
             self.last_px = None
             self.stroke_start = None
@@ -861,10 +1288,7 @@ class PixelEditor:
 
     def cm_press(self, event):
         if self.sel is None:
-            px = self.event_pixel(event)
-            if px:
-                self.rubber = (px[0], px[1], px[0], px[1])
-                self.draw_rubber()
+            self.start_marquee(event)
         else:
             rx, ry = self.event_pixel(event, clamp=False)
             s = self.sel
@@ -872,17 +1296,28 @@ class PixelEditor:
                 self.cm_grab = (rx - s["x"], ry - s["y"])  # picked up the selection
             else:
                 self.commit_float()  # clicked away → stamp it, start a new marquee
-                px = self.event_pixel(event)
-                if px:
-                    self.rubber = (px[0], px[1], px[0], px[1])
-                    self.draw_rubber()
+                self.start_marquee(event)
+
+    def start_marquee(self, event):
+        px = self.event_pixel(event)
+        if px:
+            if self.lasso_select:
+                self.lasso_pts = [px]
+            else:
+                self.rubber = (px[0], px[1], px[0], px[1])
+            self.draw_marquee()
 
     def cm_drag(self, event):
         if self.rubber:
             px = self.event_pixel(event)
             if px:
                 self.rubber = (self.rubber[0], self.rubber[1], px[0], px[1])
-                self.draw_rubber()
+                self.draw_marquee()
+        elif self.lasso_pts is not None:
+            px = self.event_pixel(event)
+            if px and px != self.lasso_pts[-1]:
+                self.lasso_pts.append(px)
+                self.draw_marquee()
         elif self.sel and self.cm_grab:
             rx, ry = self.event_pixel(event, clamp=False)
             self.sel["x"] = rx - self.cm_grab[0]
@@ -892,28 +1327,51 @@ class PixelEditor:
 
     def cm_release(self, event):
         if self.rubber:
-            self.lift_selection(self.tool.get())
+            self.lift_box(self.tool.get())
             self.rubber = None
+        elif self.lasso_pts is not None:
+            self.lift_hull(self.tool.get())
+            self.lasso_pts = None
         elif self.sel and self.cm_grab:
             self.commit_float()  # dropping the dragged selection ends the operation
         self.cm_grab = None
 
-    def lift_selection(self, mode):
-        x0, y0, x1, y1 = self.rubber
-        sx, sy = min(x0, x1), min(y0, y1)
-        w, h = abs(x1 - x0) + 1, abs(y1 - y0) + 1
-        self.cancel_rubber()
-        buf = [list(self.pixels[(sy + j) * self.w + (sx + i)])
+    def make_selection(self, sx, sy, w, h, mode, inside, hull):
+        """Lift the pixels of a region (`inside[j*w+i]` flags which cells belong)
+        into a floating selection, clearing the source when moving."""
+        buf = [list(self.pixels[(sy + j) * self.w + (sx + i)]) if inside[j * w + i]
+               else list(TRANSPARENT)
                for j in range(h) for i in range(w)]
         if mode == "move":
             self.push_undo()
             for j in range(h):
                 for i in range(w):
-                    self.pixels[(sy + j) * self.w + (sx + i)] = list(TRANSPARENT)
+                    if inside[j * w + i]:
+                        self.pixels[(sy + j) * self.w + (sx + i)] = list(TRANSPARENT)
         self.sel = {"x": sx, "y": sy, "ox": sx, "oy": sy,
-                    "w": w, "h": h, "buf": buf, "mode": mode}
+                    "w": w, "h": h, "buf": buf, "mode": mode, "hull": hull}
         self.refresh_all()
         self.draw_sel_outline()
+
+    def lift_box(self, mode):
+        x0, y0, x1, y1 = self.rubber
+        sx, sy = min(x0, x1), min(y0, y1)
+        w, h = abs(x1 - x0) + 1, abs(y1 - y0) + 1
+        self.cancel_rubber()
+        self.make_selection(sx, sy, w, h, mode, [True] * (w * h), None)
+
+    def lift_hull(self, mode):
+        hull = convex_hull(self.lasso_pts)
+        self.cancel_rubber()
+        if len(hull) >= 3:
+            xs, ys = [p[0] for p in hull], [p[1] for p in hull]
+            sx, sy = min(xs), min(ys)
+            w, h = max(xs) - sx + 1, max(ys) - sy + 1
+            center_hull = [(hx + 0.5, hy + 0.5) for (hx, hy) in hull]
+            inside = [point_in_hull(center_hull, sx + i + 0.5, sy + j + 0.5)
+                      for j in range(h) for i in range(w)]
+            rel = [(hx - sx, hy - sy) for (hx, hy) in hull]
+            self.make_selection(sx, sy, w, h, mode, inside, rel)
 
     def stamp(self, ox, oy):
         s = self.sel
@@ -934,11 +1392,16 @@ class PixelEditor:
             self.sel = None
             self.clear_sel_outline()
             self.refresh_all()
+        if self.warp:
+            self.clear_warp_handles()
+            self.warp = None
 
     def cancel_selection(self):
         """Esc: discard the selection (a moved one snaps back to its origin)."""
         self.cancel_rubber()
-        if self.sel:
+        if self.warp:
+            self.commit_float()
+        elif self.sel:
             if self.sel["mode"] == "move":
                 self.stamp(self.sel["ox"], self.sel["oy"])
             self.sel = None
@@ -950,56 +1413,200 @@ class PixelEditor:
         return self.canvas.create_rectangle(x * z, y * z, (x + w) * z, (y + h) * z,
                                             outline=color, width=2, dash=(4, 3))
 
+    def draw_hull(self, hull, color):
+        """Outline a convex polygon given in pixel coords; None if degenerate."""
+        if len(hull) < 3:
+            return None
+        z = self.zoom
+        coords = [c * z for (hx, hy) in hull for c in (hx + 0.5, hy + 0.5)]
+        return self.canvas.create_polygon(coords, outline=color, fill="",
+                                          width=2, dash=(4, 3))
+
     def draw_sel_outline(self):
         self.clear_sel_outline()
         if self.sel:
-            self.sel_outline_id = self.draw_box(
-                self.sel["x"], self.sel["y"], self.sel["w"], self.sel["h"], "#ffd700")
+            if self.sel.get("hull"):
+                ox, oy = self.sel["x"], self.sel["y"]
+                self.sel_outline_id = self.draw_hull(
+                    [(ox + hx, oy + hy) for (hx, hy) in self.sel["hull"]], "#ffd700")
+            else:
+                self.sel_outline_id = self.draw_box(
+                    self.sel["x"], self.sel["y"], self.sel["w"], self.sel["h"], "#ffd700")
 
     def clear_sel_outline(self):
         if self.sel_outline_id:
             self.canvas.delete(self.sel_outline_id)
             self.sel_outline_id = None
 
-    def draw_rubber(self):
+    def draw_marquee(self):
         self.cancel_rubber()
         if self.rubber:
             x0, y0, x1, y1 = self.rubber
             self.rubber_id = self.draw_box(
                 min(x0, x1), min(y0, y1), abs(x1 - x0) + 1, abs(y1 - y0) + 1, "#41a6f6")
+        elif self.lasso_pts:
+            self.rubber_id = self.draw_hull(convex_hull(self.lasso_pts), "#41a6f6")
 
     def cancel_rubber(self):
         if self.rubber_id:
             self.canvas.delete(self.rubber_id)
             self.rubber_id = None
 
+    # -- Warp / perspective tool -----------------------------------------------
+
+    def warp_press(self, event):
+        if self.warp:
+            self.commit_float()
+        px = self.event_pixel(event)
+        if px:
+            self.rubber = (px[0], px[1], px[0], px[1])
+            self.draw_marquee()
+
+    def warp_drag(self, event):
+        if self.warp_active is not None:
+            px = self.event_pixel(event, clamp=False)
+            if px:
+                cx, cy = px
+                cx = max(-self.w, min(self.w * 2, cx))
+                cy = max(-self.h, min(self.h * 2, cy))
+                self.warp["corners"][self.warp_active] = (cx, cy)
+                self.update_warp_preview()
+        elif self.rubber:
+            px = self.event_pixel(event)
+            if px:
+                self.rubber = (self.rubber[0], self.rubber[1], px[0], px[1])
+                self.draw_marquee()
+
+    def warp_release(self, event):
+        if self.warp_active is not None:
+            self.warp_active = None
+        elif self.rubber:
+            self.start_warp()
+            self.rubber = None
+
+    def start_warp(self):
+        x0, y0, x1, y1 = self.rubber
+        sx, sy = min(x0, x1), min(y0, y1)
+        sw = abs(x1 - x0) + 1
+        sh = abs(y1 - y0) + 1
+        self.cancel_rubber()
+        self.push_undo()
+        buf = []
+        for j in range(sh):
+            for i in range(sw):
+                px, py = sx + i, sy + j
+                if 0 <= px < self.w and 0 <= py < self.h:
+                    buf.append(list(self.pixels[py * self.w + px]))
+                    self.pixels[py * self.w + px] = list(TRANSPARENT)
+                else:
+                    buf.append(list(TRANSPARENT))
+        self.warp = {
+            "src_w": sw, "src_h": sh, "src_buf": buf,
+            "corners": [(sx, sy), (sx + sw - 1, sy),
+                        (sx + sw - 1, sy + sh - 1), (sx, sy + sh - 1)],
+            "origin": (sx, sy),
+        }
+        self.sel = {
+            "x": sx, "y": sy, "ox": sx, "oy": sy,
+            "w": sw, "h": sh, "buf": [list(p) for p in buf],
+            "mode": "move", "hull": None,
+        }
+        self.refresh_all()
+        self.draw_sel_outline()
+        self.draw_warp_handles()
+
+    def update_warp_preview(self):
+        corners = self.warp["corners"]
+        xs = [c[0] for c in corners]
+        ys = [c[1] for c in corners]
+        bw = int(max(xs)) - int(min(xs)) + 1
+        bh = int(max(ys)) - int(min(ys)) + 1
+        if bw > self.MAX_DIM * 2 or bh > self.MAX_DIM * 2 or bw < 1 or bh < 1:
+            return
+        ow, oh, out, ox, oy = perspective_warp(
+            self.warp["src_w"], self.warp["src_h"],
+            self.warp["src_buf"], corners)
+        self.sel = {
+            "x": ox, "y": oy,
+            "ox": self.warp["origin"][0], "oy": self.warp["origin"][1],
+            "w": ow, "h": oh, "buf": out,
+            "mode": "move", "hull": None,
+        }
+        self.refresh_all()
+        self.draw_sel_outline()
+        self.draw_warp_handles()
+
+    def hit_warp_handle(self, event):
+        if not self.warp:
+            return None
+        z = self.zoom
+        hz = z // 2
+        threshold = max(5, z)
+        ex = self.canvas.canvasx(event.x)
+        ey = self.canvas.canvasy(event.y)
+        for i, (cx, cy) in enumerate(self.warp["corners"]):
+            hx, hy = cx * z + hz, cy * z + hz
+            if abs(ex - hx) <= threshold and abs(ey - hy) <= threshold:
+                return i
+        return None
+
+    def draw_warp_handles(self):
+        self.clear_warp_handles()
+        if not self.warp:
+            return
+        z = self.zoom
+        hz = z // 2
+        corners = self.warp["corners"]
+        coords = []
+        for cx, cy in corners:
+            coords.extend([cx * z + hz, cy * z + hz])
+        quad_id = self.canvas.create_polygon(
+            coords, outline="#ff4444", fill="", width=1, dash=(3, 3))
+        self.warp_handle_ids.append(quad_id)
+        r = max(3, z // 3)
+        for cx, cy in corners:
+            hx, hy = cx * z + hz, cy * z + hz
+            hid = self.canvas.create_oval(
+                hx - r, hy - r, hx + r, hy + r,
+                fill="#ff4444", outline="white", width=1)
+            self.warp_handle_ids.append(hid)
+
+    def clear_warp_handles(self):
+        for hid in self.warp_handle_ids:
+            self.canvas.delete(hid)
+        self.warp_handle_ids = []
+
     # -- Undo / redo --------------------------------------------------------
 
     def snapshot(self):
-        return (self.frame, [list(p) for p in self.pixels])
+        return (self.frame, self.w, self.h, [list(p) for p in self.pixels])
 
     def push_undo(self):
         self.undo_stack.append(self.snapshot())
         del self.undo_stack[:-100]
         self.redo_stack.clear()
 
+    def _restore(self, snap):
+        fi, w, h, px = snap
+        resized = w != self.w or h != self.h
+        self.frame = fi
+        self.w, self.h = w, h
+        self.frames[fi] = px
+        self.update_frame_label()
+        if resized:
+            self.rebuild_canvas()
+        else:
+            self.refresh_all()
+
     def undo(self):
         if self.undo_stack:
             self.redo_stack.append(self.snapshot())
-            fi, px = self.undo_stack.pop()
-            self.frame = fi
-            self.frames[fi] = px
-            self.update_frame_label()
-            self.refresh_all()
+            self._restore(self.undo_stack.pop())
 
     def redo(self):
         if self.redo_stack:
             self.undo_stack.append(self.snapshot())
-            fi, px = self.redo_stack.pop()
-            self.frame = fi
-            self.frames[fi] = px
-            self.update_frame_label()
-            self.refresh_all()
+            self._restore(self.redo_stack.pop())
 
     # -- Frames -------------------------------------------------------------
 
