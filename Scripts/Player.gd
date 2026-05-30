@@ -13,6 +13,7 @@ func _physics_process(delta):
 	# Jump
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = jump_velocity
+		SfxManager.create_sound("vamp_jump")
 
 	# Left / Right movement
 	var direction = Input.get_axis("Left", "Right")
@@ -21,5 +22,5 @@ func _physics_process(delta):
 		velocity.x = direction * speed
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
-
+	
 	move_and_slide()
