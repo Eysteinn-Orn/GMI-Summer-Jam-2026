@@ -23,8 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://csypmul38dvl0" path="res://Assets/sprites/tower1.png" id="20_tower1"]
 [ext_resource type="Texture2D" uid="uid://8ia6o2m2et28" path="res://Assets/sprites/tree1.png" id="21_tree1"]
 [ext_resource type="Texture2D" uid="uid://5opdwd5ojbr5" path="res://Assets/sprites/tree2.png" id="22_tree2"]
-[ext_resource type="Texture2D" path="res://Assets/sprites/vampire1.png" id="23_vampire"]
-[ext_resource type="Script" path="res://Scripts/dolly_zoom_ui.gd" id="24_dolly"]
+[ext_resource type="Texture2D" uid="uid://citb58e0gomgu" path="res://Assets/sprites/vampire1.png" id="23_vampire"]
+[ext_resource type="Script" uid="uid://dqm6bjxrjv5wh" path="res://Scripts/dolly_zoom_ui.gd" id="24_dolly"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_player"]
 size = Vector3(128, 128, 128)
@@ -77,7 +77,6 @@ modulate = Color(1, 1, 1, 0.286275)
 pixel_size = 1.0
 no_depth_test = true
 texture_filter = 0
-render_priority = 0
 texture = ExtResource("2_icon")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Shadow" unique_id=340159001]
@@ -262,9 +261,10 @@ render_priority = 1
 texture = ExtResource("14_light1")
 script = ExtResource("6_grounded")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=959700789]
 
-[node name="CameraControls" type="Control" parent="UI"]
+[node name="CameraControls" type="Control" parent="UI" unique_id=950732953]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -273,8 +273,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("24_dolly")
 
-[node name="DollyLabel" type="Label" parent="UI/CameraControls"]
-anchors_preset = 1
+[node name="DollyLabel" type="Label" parent="UI/CameraControls" unique_id=262640718]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -90.0
@@ -284,9 +284,9 @@ offset_bottom = 30.0
 text = "Dolly"
 horizontal_alignment = 1
 
-[node name="DollySlider" type="ColorRect" parent="UI/CameraControls"]
+[node name="DollySlider" type="ColorRect" parent="UI/CameraControls" unique_id=617354344]
+layout_mode = 0
 anchor_left = 1.0
-anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -80.0
@@ -295,8 +295,8 @@ offset_right = -60.0
 offset_bottom = -30.0
 color = Color(0.3, 0.3, 0.3, 0.6)
 
-[node name="AngleLabel" type="Label" parent="UI/CameraControls"]
-anchors_preset = 1
+[node name="AngleLabel" type="Label" parent="UI/CameraControls" unique_id=1616870807]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -50.0
@@ -306,9 +306,9 @@ offset_bottom = 30.0
 text = "Angle"
 horizontal_alignment = 1
 
-[node name="AngleSlider" type="ColorRect" parent="UI/CameraControls"]
+[node name="AngleSlider" type="ColorRect" parent="UI/CameraControls" unique_id=797859457]
+layout_mode = 0
 anchor_left = 1.0
-anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -40.0
