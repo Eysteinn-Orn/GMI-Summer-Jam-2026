@@ -12,7 +12,7 @@ func remove_sound(instance: AudioStreamPlayer) -> void:
 ## Play a sound by it's key. Returns the instance node.
 ##
 ## [param sound] references an AudioStream in [member sound_files].
-func create_sound(sound: String) -> AudioStreamPlayer:
+func create_sound(sound: String, db: float = 0.0) -> AudioStreamPlayer:
 	var instance = AudioStreamPlayer.new()
 	var i : int = 1
 	instance.bus = &"SFX"
@@ -25,6 +25,7 @@ func create_sound(sound: String) -> AudioStreamPlayer:
 		audio_stream_players[sound].push_front(instance)
 		i = audio_stream_players[sound].size()
 	instance.name = sound + str(i)
+	instance.volume_db = db
 	add_child(instance)
 	instance.play()
 	return instance
