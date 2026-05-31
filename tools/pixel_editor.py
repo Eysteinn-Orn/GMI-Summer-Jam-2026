@@ -406,7 +406,11 @@ class PixelEditor:
 
         self.undo_stack = []
         self.redo_stack = []
-        self.rects = {}        # (x, y) -> canvas item id
+        self._img_base = None   # 1:1 PhotoImage (w x h)
+        self._img_zoomed = None # zoomed PhotoImage (w*z x h*z)
+        self._img_id = None     # canvas item id for the image
+        self._grid_ids = []     # canvas item ids for grid lines
+        self._rezoom_pending = False
         self.last_px = None    # last painted pixel during a drag
         self.stroke_start = None
         self.stroke_backup = None  # snapshot for live shape preview
@@ -1033,30 +1037,65 @@ class PixelEditor:
         self.w_var.set(str(self.w))
         self.h_var.set(str(self.h))
         self.canvas.delete("all")
-        self.rects.clear()
         self.sel_outline_id = self.rubber_id = None
         self.warp_handle_ids = []
-        z, outline = self.zoom, ("#3a3a3a" if self.show_grid and self.zoom >= 6 else "")
-        for y in range(self.h):
-            for x in range(self.w):
-                rid = self.canvas.create_rectangle(
-                    x * z, y * z, (x + 1) * z, (y + 1) * z,
-                    fill=self.display_hex(x, y), outline=outline, width=1)
-                self.rects[(x, y)] = rid
+        self._grid_ids = []
+        self._img_base = tk.PhotoImage(width=self.w, height=self.h)
+        self._build_base_image()
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self._img_id = self.canvas.create_image(0, 0, anchor="nw",
+                                                 image=self._img_zoomed)
+        self._draw_grid()
         mx, my = self.view_margin()
-        self.canvas.configure(scrollregion=(-mx, -my, self.w * z + mx, self.h * z + my))
+        self.canvas.configure(scrollregion=(-mx, -my, self.w * self.zoom + mx,
+                                            self.h * self.zoom + my))
         if self.sel:
             self.draw_sel_outline()
         if self.warp:
             self.draw_warp_handles()
 
+    def _build_base_image(self):
+        rows = []
+        for y in range(self.h):
+            rows.append("{" + " ".join(self.display_hex(x, y)
+                                       for x in range(self.w)) + "}")
+        self._img_base.put(" ".join(rows))
+
+    def _draw_grid(self):
+        for gid in self._grid_ids:
+            self.canvas.delete(gid)
+        self._grid_ids = []
+        if not self.show_grid or self.zoom < 6:
+            return
+        z = self.zoom
+        color = "#3a3a3a"
+        for x in range(self.w + 1):
+            self._grid_ids.append(
+                self.canvas.create_line(x * z, 0, x * z, self.h * z,
+                                        fill=color, width=1))
+        for y in range(self.h + 1):
+            self._grid_ids.append(
+                self.canvas.create_line(0, y * z, self.w * z, y * z,
+                                        fill=color, width=1))
+
+    def _schedule_rezoom(self):
+        if not self._rezoom_pending:
+            self._rezoom_pending = True
+            self.root.after_idle(self._do_rezoom)
+
+    def _do_rezoom(self):
+        self._rezoom_pending = False
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self.canvas.itemconfigure(self._img_id, image=self._img_zoomed)
+
     def refresh_cell(self, x, y):
-        self.canvas.itemconfigure(self.rects[(x, y)], fill=self.display_hex(x, y))
+        self._img_base.put(self.display_hex(x, y), to=(x, y))
+        self._schedule_rezoom()
 
     def refresh_all(self):
-        for y in range(self.h):
-            for x in range(self.w):
-                self.refresh_cell(x, y)
+        self._build_base_image()
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self.canvas.itemconfigure(self._img_id, image=self._img_zoomed)
 
     def set_zoom(self, z, event=None):
         old_z = self.zoom
@@ -1077,7 +1116,7 @@ class PixelEditor:
     def toggle_grid(self):
         self.show_grid = not self.show_grid
         self.grid_btn.configure(text=f"Grid: {'on' if self.show_grid else 'off'}")
-        self.rebuild_canvas()
+        self._draw_grid()
 
     def toggle_onion(self):
         self.onion = not self.onion

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6p2gpeygq7wc"
-path.s3tc="res://.godot/imported/boulder2.png-070ab212f4c13d56f720f068f51f91d0.s3tc.ctex"
+uid="uid://ck2xgfwp5ptyi"
+path.s3tc="res://.godot/imported/paths2.png-9fe99dcea985a0813d9b3179df7da658.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/sprites/boulder2.png"
-dest_files=["res://.godot/imported/boulder2.png-070ab212f4c13d56f720f068f51f91d0.s3tc.ctex"]
+source_file="res://Assets/sprites/paths2.png"
+dest_files=["res://.godot/imported/paths2.png-9fe99dcea985a0813d9b3179df7da658.s3tc.ctex"]
 
 [params]
 

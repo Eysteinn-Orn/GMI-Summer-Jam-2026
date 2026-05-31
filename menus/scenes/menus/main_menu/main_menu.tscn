@@ -9,3 +9,10 @@
 script = ExtResource("2_i8spl")
 options_packed_scene = ExtResource("3_qe0nm")
 credits_packed_scene = ExtResource("4_mov4g")
+
+[node name="NewGame25DButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Game 2.5D"
+
+[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/NewGame25DButton" to="." method="_on_new_game_25d_button_pressed"]

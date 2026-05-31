@@ -30,6 +30,9 @@ func _input(event : InputEvent) -> void:
 		return
 	super._input(event)
 
+func _on_new_game_25d_button_pressed() -> void:
+	SceneLoader.load_scene("res://Scenes/world_25d.tscn")
+
 func _ready() -> void:
 	super._ready()
 	animation_state_machine = $MenuAnimationTree.get("parameters/playback")

@@ -341,6 +341,11 @@ lock = true
 [node name="VersionContainer" parent="VersionMargin" parent_id_path=PackedInt32Array(1732528471) index="0" unique_id=1603969262]
 modulate = Color(1, 1, 1, 0)
 
+[node name="NewGame25DButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Game 2.5D"
+
 [node name="MouseFilter" type="Control" parent="." index="8" unique_id=33285267]
 layout_mode = 1
 anchors_preset = 15
@@ -350,3 +355,5 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/NewGame25DButton" to="." method="_on_new_game_25d_button_pressed"]

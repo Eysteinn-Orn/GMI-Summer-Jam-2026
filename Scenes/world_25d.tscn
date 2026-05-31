@@ -1,0 +1,318 @@
+[gd_scene format=3 uid="uid://b6c85w5oobh06"]
+
+[ext_resource type="Script" uid="uid://qspg54whb6o5" path="res://Scripts/player_25d.gd" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_icon"]
+[ext_resource type="Texture2D" uid="uid://b28on2mo0n60v" path="res://Assets/background/backgroundTest1.webp" id="3_bg"]
+[ext_resource type="Script" uid="uid://0lcr01fdedlu" path="res://Scripts/moon_25d.gd" id="4_moon"]
+[ext_resource type="Script" uid="uid://dsjipyi4poahh" path="res://Scripts/camera_25d.gd" id="5_camera"]
+[ext_resource type="Texture2D" uid="uid://bupu4a5bdovn4" path="res://Assets/sprites/bat1.png" id="6_bat1"]
+[ext_resource type="Script" uid="uid://byqtuqwxkk6nt" path="res://Scripts/grounded_sprite_25d.gd" id="6_grounded"]
+[ext_resource type="Texture2D" uid="uid://b4efvrka7r1bs" path="res://Assets/sprites/boulder1.png" id="7_boulder1"]
+[ext_resource type="Texture2D" uid="uid://6p2gpeygq7wc" path="res://Assets/sprites/boulder2.png" id="8_boulder2"]
+[ext_resource type="Texture2D" uid="uid://d35wxtv371v48" path="res://Assets/sprites/brickwall1.png" id="9_brickwall1"]
+[ext_resource type="Texture2D" uid="uid://dg0we3y03rk1t" path="res://Assets/sprites/cart1.png" id="10_cart1"]
+[ext_resource type="Texture2D" uid="uid://bq8itg2nsmey8" path="res://Assets/sprites/castle1.png" id="11_castle1"]
+[ext_resource type="Texture2D" uid="uid://uco2eyivq2rw" path="res://Assets/sprites/house1.png" id="12_house1"]
+[ext_resource type="Texture2D" uid="uid://clm05kxa0ynh4" path="res://Assets/sprites/house2.png" id="13_house2"]
+[ext_resource type="Texture2D" uid="uid://cbpd2db27w5t0" path="res://Assets/sprites/light1.png" id="14_light1"]
+[ext_resource type="Texture2D" uid="uid://bjeelv2nim2en" path="res://Assets/sprites/locked gate.png" id="15_lockedgate"]
+[ext_resource type="Texture2D" uid="uid://cvcgw7q3sgdhp" path="res://Assets/sprites/magicbook1.png" id="16_magicbook1"]
+[ext_resource type="Texture2D" uid="uid://eu53lfyraxny" path="res://Assets/sprites/paths1.png" id="17_paths1"]
+[ext_resource type="Texture2D" uid="uid://ck2xgfwp5ptyi" path="res://Assets/sprites/paths2.png" id="18_paths2"]
+[ext_resource type="Texture2D" uid="uid://drb3atko3dy8" path="res://Assets/sprites/smallrock1.png" id="19_smallrock1"]
+[ext_resource type="Texture2D" uid="uid://csypmul38dvl0" path="res://Assets/sprites/tower1.png" id="20_tower1"]
+[ext_resource type="Texture2D" uid="uid://8ia6o2m2et28" path="res://Assets/sprites/tree1.png" id="21_tree1"]
+[ext_resource type="Texture2D" uid="uid://5opdwd5ojbr5" path="res://Assets/sprites/tree2.png" id="22_tree2"]
+[ext_resource type="Texture2D" path="res://Assets/sprites/vampire1.png" id="23_vampire"]
+[ext_resource type="Script" path="res://Scripts/dolly_zoom_ui.gd" id="24_dolly"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_player"]
+size = Vector3(128, 128, 128)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shadow"]
+size = Vector3(128, 128, 128)
+
+[node name="World25D" type="Node3D" unique_id=1442481068]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=159689159]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 22, 680, 1803)
+fov = 15.0
+script = ExtResource("5_camera")
+target = NodePath("../SirKnight")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1227336949]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 100, 100)
+
+[node name="Ground" type="Sprite3D" parent="." unique_id=1077889450]
+transform = Transform3D(2.5657244, 0, 0, 0, 0, 1, 0, -2.674419, 0, 67.73724, -1, 492.43127)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = -1
+texture = ExtResource("3_bg")
+
+[node name="SirKnight" type="CharacterBody3D" parent="." unique_id=1036543977]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 22, 0, 626)
+collision_mask = 0
+script = ExtResource("1_player")
+
+[node name="Sprite3D" type="Sprite3D" parent="SirKnight" unique_id=1248449064]
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("23_vampire")
+script = ExtResource("6_grounded")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SirKnight" unique_id=1157189737]
+shape = SubResource("BoxShape3D_player")
+
+[node name="Shadow" type="CharacterBody3D" parent="." unique_id=1735003167]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 350, 0, 337)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_moon")
+
+[node name="Sprite3D" type="Sprite3D" parent="Shadow" unique_id=1886973806]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1, 0)
+modulate = Color(1, 1, 1, 0.286275)
+pixel_size = 1.0
+no_depth_test = true
+texture_filter = 0
+render_priority = 0
+texture = ExtResource("2_icon")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shadow" unique_id=340159001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -343.89896, 0, 112.91315)
+shape = SubResource("BoxShape3D_shadow")
+
+[node name="Sprites" type="Node3D" parent="." unique_id=713217086]
+
+[node name="bat1" type="Sprite3D" parent="Sprites" unique_id=1908936485]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -200, 0, 513.6084)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("6_bat1")
+script = ExtResource("6_grounded")
+
+[node name="boulder1" type="Sprite3D" parent="Sprites" unique_id=1696450917]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -100, 0, 534.35803)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("7_boulder1")
+script = ExtResource("6_grounded")
+
+[node name="boulder2" type="Sprite3D" parent="Sprites" unique_id=1022408458]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 466.1978)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("8_boulder2")
+script = ExtResource("6_grounded")
+
+[node name="brickwall1" type="Sprite3D" parent="Sprites" unique_id=368572713]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 100, 0, 402.36462)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("9_brickwall1")
+script = ExtResource("6_grounded")
+
+[node name="cart1" type="Sprite3D" parent="Sprites" unique_id=550380739]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 200, 0, 455.76498)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("10_cart1")
+script = ExtResource("6_grounded")
+
+[node name="castle1" type="Sprite3D" parent="Sprites" unique_id=1762972001]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 300, 166.44676, 372.98962)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("11_castle1")
+script = ExtResource("6_grounded")
+
+[node name="house1" type="Sprite3D" parent="Sprites" unique_id=1185486294]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -348.13266, 80.43202, 413.14206)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("12_house1")
+script = ExtResource("6_grounded")
+
+[node name="house2" type="Sprite3D" parent="Sprites" unique_id=2037398057]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -198.40451, 78.82193, 190.7121)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("13_house2")
+script = ExtResource("6_grounded")
+
+[node name="light1" type="Sprite3D" parent="Sprites" unique_id=1988345134]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -88.738174, 0, 471.80298)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="locked_gate" type="Sprite3D" parent="Sprites" unique_id=1407275622]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -201.12836, 0, 372.53082)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("15_lockedgate")
+script = ExtResource("6_grounded")
+
+[node name="magicbook1" type="Sprite3D" parent="Sprites" unique_id=2028600954]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 78.961945, 0, 502.67706)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("16_magicbook1")
+script = ExtResource("6_grounded")
+
+[node name="paths1" type="Sprite3D" parent="Sprites" unique_id=256646131]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 893.6542, 0, 200)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("17_paths1")
+script = ExtResource("6_grounded")
+
+[node name="paths2" type="Sprite3D" parent="Sprites" unique_id=1659994816]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 1004.33374, 0, 100)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("18_paths2")
+script = ExtResource("6_grounded")
+
+[node name="smallrock1" type="Sprite3D" parent="Sprites" unique_id=1887988796]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -100, 0, 465.1211)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("19_smallrock1")
+script = ExtResource("6_grounded")
+
+[node name="tower1" type="Sprite3D" parent="Sprites" unique_id=797303544]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 126.67929, 66.74063, 217.65671)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("20_tower1")
+script = ExtResource("6_grounded")
+
+[node name="tree1" type="Sprite3D" parent="Sprites" unique_id=1916443322]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -272.9607, 0, 464.37445)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("21_tree1")
+script = ExtResource("6_grounded")
+
+[node name="tree2" type="Sprite3D" parent="Sprites" unique_id=115792827]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -78.09958, 0, 281.42102)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("22_tree2")
+script = ExtResource("6_grounded")
+
+[node name="light2" type="Sprite3D" parent="Sprites" unique_id=2005381389]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 195.28471, 0, 462.22955)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="light3" type="Sprite3D" parent="Sprites" unique_id=1335500531]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 33.62301, 0, 462.20856)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="light4" type="Sprite3D" parent="Sprites" unique_id=1412736471]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -250.05573, 0, 328.01056)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="light5" type="Sprite3D" parent="Sprites" unique_id=224196875]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -250.80527, 0, 731.26447)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="light6" type="Sprite3D" parent="Sprites" unique_id=1940510358]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -256.8113, 0, 516.24493)
+pixel_size = 1.0
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("14_light1")
+script = ExtResource("6_grounded")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CameraControls" type="Control" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("24_dolly")
+
+[node name="DollyLabel" type="Label" parent="UI/CameraControls"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -90.0
+offset_top = 10.0
+offset_right = -50.0
+offset_bottom = 30.0
+text = "Dolly"
+horizontal_alignment = 1
+
+[node name="DollySlider" type="ColorRect" parent="UI/CameraControls"]
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -30.0
+color = Color(0.3, 0.3, 0.3, 0.6)
+
+[node name="AngleLabel" type="Label" parent="UI/CameraControls"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 30.0
+text = "Angle"
+horizontal_alignment = 1
+
+[node name="AngleSlider" type="ColorRect" parent="UI/CameraControls"]
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = 30.0
+offset_right = -20.0
+offset_bottom = -30.0
+color = Color(0.3, 0.3, 0.3, 0.6)
