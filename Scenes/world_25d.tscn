@@ -45,6 +45,7 @@ transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 100, 10
 
 [node name="Ground" type="Sprite3D" parent="." unique_id=1077889450]
 transform = Transform3D(2.5657244, 0, 0, 0, 0, 1, 0, -2.674419, 0, 67.73724, -1, 492.43127)
+visible = false
 pixel_size = 1.0
 texture_filter = 0
 render_priority = -1
