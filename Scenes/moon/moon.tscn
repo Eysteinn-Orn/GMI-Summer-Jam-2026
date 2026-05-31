@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://gya1aixo1sal"]
+
+[ext_resource type="Script" uid="uid://bwtowwhyq24tg" path="res://Scripts/moon/moon.gd" id="1_4shwn"]
+[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_420bj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
+size = Vector2(128, 128)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8j60k"]
+radius = 67.89166
+
+[node name="Shadow" type="CharacterBody2D" unique_id=324293011]
+modulate = Color(1, 1, 1, 0.28627452)
+scale = Vector2(1.25, 1.25)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_4shwn")
+speed = 125.0
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=993156164]
+texture = ExtResource("2_420bj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2013428004]
+shape = SubResource("RectangleShape2D_go701")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=2120093844]
+position = Vector2(-1.5999985, -0.79999995)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1361091333]
+shape = SubResource("CircleShape2D_8j60k")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
