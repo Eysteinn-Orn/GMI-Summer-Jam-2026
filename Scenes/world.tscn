@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d2y852kokepd6"]
 
 [ext_resource type="Script" uid="uid://c3bb25pd2gt3m" path="res://Scripts/vampire/vampy.gd" id="1_5a7ea"]
-[ext_resource type="Texture2D" uid="uid://b28on2mo0n60v" path="res://Assets/background/backgroundTest1.webp" id="1_8j60k"]
+[ext_resource type="PackedScene" uid="uid://cxo0fehxe60ne" path="res://Scenes/maps/grass.tscn" id="1_8j60k"]
 [ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="1_a02cp"]
 [ext_resource type="Script" uid="uid://bwtowwhyq24tg" path="res://Scripts/moon/moon.gd" id="4_8j60k"]
 
@@ -13,10 +13,7 @@ radius = 67.89166
 
 [node name="World" type="Node2D" unique_id=780093096]
 
-[node name="Ground" type="Sprite2D" parent="." unique_id=68738812]
-position = Vector2(577, 326)
-scale = Vector2(2.3833332, 2.303887)
-texture = ExtResource("1_8j60k")
+[node name="Playground" parent="." unique_id=231246929 instance=ExtResource("1_8j60k")]
 
 [node name="SirKnight" type="CharacterBody2D" parent="." unique_id=1260519867]
 position = Vector2(22, 626)
