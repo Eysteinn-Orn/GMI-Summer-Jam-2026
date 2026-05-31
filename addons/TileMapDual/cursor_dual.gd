@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 	if Input.is_action_pressed("quick_action_2"):
 		terrain = 2
 	# Clicking the 0 key activates the background terrain
-	if Input.is_action_pressed("quick_action_0"):
+	if Input.is_action_pressed("quick_action_3"):
 		terrain = 0
 
 	if Input.is_action_pressed("left_click"):
