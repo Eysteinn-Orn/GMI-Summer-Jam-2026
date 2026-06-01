@@ -11,12 +11,14 @@ process_mode = 3
 script = ExtResource("1_c8aok")
 
 [node name="PauseMenu" parent="." unique_id=6629802 instance=ExtResource("2_a2qjc")]
+visible = false
 unique_name_in_owner = true
 process_mode = 3
 custom_minimum_size = Vector2(256, 312)
 script = ExtResource("3_xji41")
 options_menu_scene = ExtResource("4_tf3kx")
-main_menu_scene_path = ""
+main_menu_scene_path = "res://menus/scenes/opening/opening.tscn"
+exclusive_background_color = Color(0, 0, 0, 0)
 restart_confirmation_node_path = NodePath("../RestartConfirmation")
 main_menu_confirmation_node_path = NodePath("../MainMenuConfirmation")
 exit_confirmation_node_path = NodePath("../ExitConfirmation")

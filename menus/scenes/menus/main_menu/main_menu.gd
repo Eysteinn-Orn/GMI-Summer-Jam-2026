@@ -1,6 +1,6 @@
 extends MainMenu
 
-const WORLD_25D_SCENE := "res://Scenes/world_25d.tscn"
+const LEVEL_SELECT_SCENE := preload("res://menus/scenes/menus/level_select/level_select.tscn")
 
-func _on_new_game_25d_button_pressed() -> void:
-	SceneLoader.load_scene(WORLD_25D_SCENE)
+func _on_level_select_button_pressed() -> void:
+	_open_sub_menu(LEVEL_SELECT_SCENE)

@@ -26,6 +26,7 @@ SceneLoader="*uid://cbwmrnp0af35y"
 ProjectMusicController="*uid://r5t485lr3p7t"
 ProjectUISoundController="*uid://cc37235kj4384"
 SFX="*uid://coo06qpcx1ocq"
+PauseMenuLayer="*res://menus/scenes/windows/pause_menu_layer.tscn"
 
 [editor_plugins]
 
@@ -118,6 +119,12 @@ copy_path="res://menus/"
 [physics]
 
 3d/physics_engine="Jolt Physics"
+
+[importer_defaults]
+
+texture={
+"mipmaps/generate": false
+}
 
 [rendering]
 

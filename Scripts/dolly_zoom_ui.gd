@@ -32,7 +32,7 @@ func _ready() -> void:
 	_update_angle_thumb(rad_to_deg(abs(_cam.rotation.x)) if _cam else 30.0)
 
 func _update_dolly_thumb(fov: float) -> void:
-	var t := (fov - 5.0) / 85.0
+	var t := (fov - 7.0) / 83.0
 	var h := ($DollySlider as ColorRect).size.y
 	_dolly_thumb.position.y = (1.0 - t) * h - 3
 
@@ -58,11 +58,11 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if _dragging_dolly:
 			var rect := ($DollySlider as ColorRect).get_global_rect()
-			var t := 1.0 - clampf((event.position.y - rect.position.y) / rect.size.y, 0.05, 0.95)
-			_apply_dolly_zoom(lerpf(5.0, 90.0, t))
+			var t := 1.0 - clampf((event.position.y - rect.position.y) / rect.size.y, 0.0, 1.0)
+			_apply_dolly_zoom(lerpf(7.0, 90.0, t))
 		elif _dragging_angle:
 			var rect := ($AngleSlider as ColorRect).get_global_rect()
-			var t := 1.0 - clampf((event.position.y - rect.position.y) / rect.size.y, 0.05, 0.95)
+			var t := 1.0 - clampf((event.position.y - rect.position.y) / rect.size.y, 0.0, 1.0)
 			_apply_angle(lerpf(1.0, 90.0, t))
 
 func _apply_dolly_zoom(new_fov: float) -> void:
