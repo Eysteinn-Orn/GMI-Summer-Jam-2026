@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://cscd2vrqmp8ls"]
 
 [ext_resource type="Script" uid="uid://c3bb25pd2gt3m" path="res://Scripts/vampire/vampy.gd" id="1_yq822"]
-[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_wptyn"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_271be"]
+load_path = "res://.godot/imported/vampire1.png-032c1e748e80d1baf87497d17a9a2bfc.s3tc.ctex"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
 size = Vector2(128, 128)
 
-[node name="SirKnight" type="CharacterBody2D" unique_id=233018022]
+[node name="Vampire" type="CharacterBody2D" unique_id=233018022]
 scale = Vector2(0.25, 0.25)
 collision_mask = 4
 script = ExtResource("1_yq822")
@@ -14,7 +16,8 @@ speed = 300.0
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=606085279]
-texture = ExtResource("2_wptyn")
+texture_filter = 1
+texture = SubResource("CompressedTexture2D_271be")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1776260982]
 shape = SubResource("RectangleShape2D_go701")
