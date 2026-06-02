@@ -386,7 +386,8 @@ class PixelEditor:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("GMI Jam — Pixel Editor")
+        self._tk = root.winfo_toplevel()
+        self.active = True
 
         self.sprites_dir = find_sprites_dir()
         self.path = None  # current file path, if saved/opened
@@ -641,10 +642,10 @@ class PixelEditor:
         """Fire `action` on press, then keep firing while the button is held."""
         def tick(delay):
             action()
-            self.repeat_id = self.root.after(delay, lambda: tick(70))
+            self.repeat_id = self._tk.after(delay, lambda: tick(70))
         def stop(_e):
             if self.repeat_id is not None:
-                self.root.after_cancel(self.repeat_id)
+                self._tk.after_cancel(self.repeat_id)
                 self.repeat_id = None
         widget.bind("<ButtonPress-1>", lambda _e: tick(350))  # initial delay, then fast
         widget.bind("<ButtonRelease-1>", stop)
@@ -718,28 +719,33 @@ class PixelEditor:
             cell.bind("<Button-3>", lambda e, c=hexc: self.remove_from_palette(c))
 
     def typing(self):
-        return isinstance(self.root.focus_get(), tk.Entry)
+        return isinstance(self._tk.focus_get(), tk.Entry)
+
+    def _key_guard(self, fn):
+        def handler(e):
+            if self.active and not self.typing():
+                fn()
+        return handler
 
     def bind_keys(self):
         binds = {"b": "pencil", "g": "fill", "i": "picker",
                  "q": "picker", "l": "line", "r": "rect", "f": "rectfill",
                  "c": "copy", "m": "move", "w": "warp"}
         for key, name in binds.items():
-            self.root.bind(key, lambda e, n=name: self.tool.set(n) if not self.typing() else None)
-        self.root.bind("e", lambda e: self.set_transparent() if not self.typing() else None)
-        self.root.bind("p", lambda e: self.enter_screen_pick() if not self.typing() else None)
-        # Clicking anywhere that isn't the name box drops its keyboard focus.
-        self.root.bind("<Button-1>", self.defocus_name, add="+")
+            self._tk.bind(key, self._key_guard(lambda n=name: self.tool.set(n)), add="+")
+        self._tk.bind("e", self._key_guard(self.set_transparent), add="+")
+        self._tk.bind("p", self._key_guard(self.enter_screen_pick), add="+")
+        self._tk.bind("<Button-1>", self.defocus_name, add="+")
         self.tool.trace_add("write", lambda *a: self.on_tool_change())
-        self.root.bind("u", lambda e: self.undo() if not self.typing() else None)
-        self.root.bind("y", lambda e: self.redo() if not self.typing() else None)
-        self.root.bind("<Return>", lambda e: self.commit_float())
-        self.root.bind("<Escape>", lambda e: self.cancel_selection())
-        self.root.bind("<Control-z>", lambda e: self.undo())
-        self.root.bind("<Control-y>", lambda e: self.redo())
-        self.root.bind("<Control-s>", lambda e: self.save_current())
-        self.root.bind("<plus>", lambda e: self.set_zoom(self.zoom + 2))
-        self.root.bind("<minus>", lambda e: self.set_zoom(self.zoom - 2))
+        self._tk.bind("u", self._key_guard(self.undo), add="+")
+        self._tk.bind("y", self._key_guard(self.redo), add="+")
+        self._tk.bind("<Return>", lambda e: self.commit_float() if self.active else None, add="+")
+        self._tk.bind("<Escape>", lambda e: self.cancel_selection() if self.active else None, add="+")
+        self._tk.bind("<Control-z>", lambda e: self.undo() if self.active else None, add="+")
+        self._tk.bind("<Control-y>", lambda e: self.redo() if self.active else None, add="+")
+        self._tk.bind("<Control-s>", lambda e: self.save_current() if self.active else None, add="+")
+        self._tk.bind("<plus>", lambda e: self.set_zoom(self.zoom + 2) if self.active else None, add="+")
+        self._tk.bind("<minus>", lambda e: self.set_zoom(self.zoom - 2) if self.active else None, add="+")
 
     def on_tool_change(self):
         """Switching tools finalises any floating selection in place."""
@@ -747,10 +753,8 @@ class PixelEditor:
         self.commit_float()
 
     def defocus_name(self, event):
-        # Clicking off any text field hands focus back to the canvas so the
-        # single-key tool shortcuts work again; clicking into one keeps it.
         if not isinstance(event.widget, tk.Entry):
-            self.root.focus_set()
+            self._tk.focus_set()
 
     def on_wheel(self, event):
         self.set_zoom(self.zoom + (2 if event.delta > 0 else -2), event)
@@ -869,7 +873,7 @@ class PixelEditor:
         #    works on GNOME/KDE/Hyprland; requires python-dbus + python-gobject.
         hexc = self._pick_via_portal()
         if hexc:
-            self.root.after(0, lambda h=hexc: self._screen_pick_done(h))
+            self._tk.after(0, lambda h=hexc: self._screen_pick_done(h))
             return
         # 2. CLI pickers (X11 / XWayland).
         for cmd, parse in [
@@ -883,12 +887,12 @@ class PixelEditor:
                     m = re.search(r'#?([0-9a-fA-F]{6})', r.stdout)
                     if m:
                         hexc = "#" + m.group(1).lower()
-                        self.root.after(0, lambda h=hexc: self._screen_pick_done(h))
+                        self._tk.after(0, lambda h=hexc: self._screen_pick_done(h))
                         return
             except (FileNotFoundError, subprocess.TimeoutExpired):
                 pass
         # 3. PIL grab (macOS / Windows / X11 with scrot).
-        self.root.after(0, self._start_pil_pick)
+        self._tk.after(0, self._start_pil_pick)
 
     def _pick_via_portal(self):
         """Run the portal script in a subprocess — clean GLib context, no
@@ -915,13 +919,13 @@ class PixelEditor:
             self._screen_pick_done(None)
             return
         self._pil_picking = True
-        self.root.configure(cursor="crosshair")
-        self.root.grab_set_global()
-        self._pil_btn_id = self.root.bind("<Button-1>", self._pil_click, add=True)
-        self._pil_esc_id = self.root.bind("<Escape>",   lambda e: self._end_pil_pick(None), add=True)
+        self._tk.configure(cursor="crosshair")
+        self._tk.grab_set_global()
+        self._pil_btn_id = self._tk.bind("<Button-1>", self._pil_click, add=True)
+        self._pil_esc_id = self._tk.bind("<Escape>",   lambda e: self._end_pil_pick(None), add=True)
 
     def _pil_click(self, _event):
-        x, y = self.root.winfo_pointerx(), self.root.winfo_pointery()
+        x, y = self._tk.winfo_pointerx(), self._tk.winfo_pointery()
         # Release the grab before sampling — on Linux the active grab can block
         # scrot / XCB from accessing the display, so we must free it first.
         self._release_pil_grab()
@@ -933,13 +937,13 @@ class PixelEditor:
 
     def _release_pil_grab(self):
         self._pil_picking = False
-        self.root.configure(cursor="")
+        self._tk.configure(cursor="")
         try:
-            self.root.grab_release()
+            self._tk.grab_release()
         except Exception:
             pass
-        self.root.unbind("<Button-1>", self._pil_btn_id)
-        self.root.unbind("<Escape>",   self._pil_esc_id)
+        self._tk.unbind("<Button-1>", self._pil_btn_id)
+        self._tk.unbind("<Escape>",   self._pil_esc_id)
 
     def _sample_pixel(self, x, y):
         """Return '#rrggbb' at screen position (x, y). Tries multiple backends."""
@@ -1081,7 +1085,7 @@ class PixelEditor:
     def _schedule_rezoom(self):
         if not self._rezoom_pending:
             self._rezoom_pending = True
-            self.root.after_idle(self._do_rezoom)
+            self._tk.after_idle(self._do_rezoom)
 
     def _do_rezoom(self):
         self._rezoom_pending = False
@@ -1831,10 +1835,1064 @@ class PixelEditor:
             text=f"Exported {n} frames ({self.w}x{self.h} each) → {os.path.basename(path)}")
 
 
+# ---------------------------------------------------------------------------
+# Ground-tile types and their display colours / materials.
+# ---------------------------------------------------------------------------
+
+GROUND_TYPES = [
+    {"name": "grass",  "hex": "#7ca164",
+     "material_path": "res://Assets/shader/shader-material.tres",
+     "material_uid":  "uid://ckch5r1m2f8oo"},
+    {"name": "water",  "hex": "#1c7bd6",
+     "material_path": "res://Assets/shader/shader-material-water.tres",
+     "material_uid":  None},
+    {"name": "road",   "hex": "#814c37",
+     "material_path": "res://Assets/shader/shader-material-road.tres",
+     "material_uid":  None},
+    {"name": "road2",  "hex": "#7d7d7d",
+     "material_path": "res://Assets/shader/shader-material-road2.tres",
+     "material_uid":  None},
+]
+
+GHOST_MATERIAL_PATH = "res://addons/TileMapDual/ghost_material.tres"
+GHOST_MATERIAL_UID  = "uid://cmbcfxlkxxnwq"
+TILESET_PATH        = "res://Assets/tilesets/shader.tres"
+TILESET_UID         = "uid://6h55aginnmsp"
+TILEMAPD_SCRIPT     = "res://addons/TileMapDual/tile_map_dual.gd"
+TILEMAPD_SCRIPT_UID = "uid://cjk8nronimk5r"
+
+
+def find_maps_dir():
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = here
+    while root != os.path.dirname(root):
+        if os.path.exists(os.path.join(root, "project.godot")):
+            break
+        root = os.path.dirname(root)
+    maps = os.path.join(root, "Scenes", "maps")
+    os.makedirs(maps, exist_ok=True)
+    return maps
+
+
+def encode_tile_map_data(cells):
+    """Encode a list of (x, y) cell coordinates into Godot's
+    TileMapLayer PackedByteArray format (format-version 0).
+    Every cell uses source=0, atlas=(2,1), alt=0."""
+    buf = struct.pack('<H', 0)  # format header
+    for x, y in cells:
+        buf += struct.pack('<6h', x, y, 0, 2, 1, 0)
+    return buf
+
+
+def decode_tile_map_data(raw):
+    """Return a list of (x, y) from a PackedByteArray blob."""
+    cells = []
+    offset = 2  # skip format header
+    while offset + 12 <= len(raw):
+        x, y = struct.unpack('<2h', raw[offset:offset+4])
+        cells.append((x, y))
+        offset += 12
+    return cells
+
+
+def b64_tile_data(cells):
+    import base64
+    return base64.b64encode(encode_tile_map_data(cells)).decode()
+
+
+def generate_tscn(scene_name, layers):
+    """Build the text of a .tscn file.
+    `layers` is a dict mapping ground-type name → set of (x,y) cells."""
+    ext_ids = {}
+    ext_lines = []
+    next_id = [1]
+
+    def ext(rtype, path, uid=None):
+        key = (rtype, path)
+        if key not in ext_ids:
+            tag = f"{next_id[0]}_{path.rsplit('/', 1)[-1].split('.')[0]}"
+            ext_ids[key] = tag
+            uid_part = f' uid="{uid}"' if uid else ""
+            ext_lines.append(
+                f'[ext_resource type="{rtype}"{uid_part}'
+                f' path="{path}" id="{tag}"]')
+            next_id[0] += 1
+        return ext_ids[key]
+
+    ghost_id  = ext("Material", GHOST_MATERIAL_PATH, GHOST_MATERIAL_UID)
+    tileset_id = ext("TileSet",  TILESET_PATH,       TILESET_UID)
+    script_id  = ext("Script",   TILEMAPD_SCRIPT,    TILEMAPD_SCRIPT_UID)
+
+    mat_ids = {}
+    for gt in GROUND_TYPES:
+        mat_ids[gt["name"]] = ext("Material", gt["material_path"], gt["material_uid"])
+
+    lines = ['[gd_scene format=4]', '']
+    lines += ext_lines
+    lines += ['', f'[node name="{scene_name}" type="Node2D"]']
+
+    layer_name_map = {
+        "grass": "GrassTile", "water": "WaterTile",
+        "road": "RoadTile", "road2": "Road2Tile",
+    }
+
+    for gt in GROUND_TYPES:
+        name = gt["name"]
+        cells = layers.get(name, set())
+        if not cells:
+            continue
+        node_name = layer_name_map[name]
+        td = b64_tile_data(sorted(cells))
+        lines += [
+            '',
+            f'[node name="{node_name}" type="TileMapLayer" parent="."]',
+            f'material = ExtResource("{ghost_id}")',
+            f'tile_set = ExtResource("{tileset_id}")',
+            f'tile_map_data = PackedByteArray("{td}")',
+            f'script = ExtResource("{script_id}")',
+            'godot_4_3_compatibility = false',
+            f'display_material = ExtResource("{mat_ids[name]}")',
+            f'metadata/_custom_type_script = "{TILEMAPD_SCRIPT_UID}"',
+        ]
+
+    lines.append('')
+    return '\n'.join(lines)
+
+
+def parse_tscn_layers(path):
+    """Read a ground .tscn and return {ground_type_name: set of (x,y)}."""
+    import base64
+    with open(path) as f:
+        text = f.read()
+
+    material_to_type = {}
+    for gt in GROUND_TYPES:
+        material_to_type[gt["material_path"]] = gt["name"]
+
+    ext_res = {}
+    for m in re.finditer(r'\[ext_resource[^\]]*path="([^"]+)"[^\]]*id="([^"]+)"', text):
+        ext_res[m.group(2)] = m.group(1)
+    for m in re.finditer(r'\[ext_resource[^\]]*id="([^"]+)"[^\]]*path="([^"]+)"', text):
+        ext_res[m.group(1)] = m.group(2)
+
+    layers = {}
+    node_tile_data = None
+    node_type = None
+    for line in text.split('\n'):
+        if line.startswith('[node'):
+            if node_type and node_tile_data:
+                layers[node_type] = set(decode_tile_map_data(node_tile_data))
+            node_tile_data = None
+            node_type = None
+            continue
+        dm = re.match(r'display_material\s*=\s*ExtResource\("([^"]+)"\)', line.strip())
+        if dm:
+            mat_path = ext_res.get(dm.group(1), "")
+            node_type = material_to_type.get(mat_path)
+        td = re.match(r'tile_map_data\s*=\s*PackedByteArray\("([^"]+)"\)', line.strip())
+        if td:
+            node_tile_data = base64.b64decode(td.group(1))
+    if node_type and node_tile_data:
+        layers[node_type] = set(decode_tile_map_data(node_tile_data))
+
+    return layers
+
+
+# ---------------------------------------------------------------------------
+# Ground Map Editor.
+# ---------------------------------------------------------------------------
+
+class GroundEditor:
+    MAX_DIM = 256
+
+    def __init__(self, parent):
+        self.parent = parent
+        self._tk = parent.winfo_toplevel()
+        self.active = False
+        self.maps_dir = find_maps_dir()
+        self.path = None
+
+        self.w, self.h = 40, 30
+        self.zoom = 16
+        self.show_grid = True
+
+        self.cells = {}  # (x,y) → ground type name
+        self.current_type = "grass"
+        self.tool = tk.StringVar(value="pencil")
+
+        self.undo_stack = []
+        self.redo_stack = []
+        self._img_base = None
+        self._img_zoomed = None
+        self._img_id = None
+        self._grid_ids = []
+        self._rezoom_pending = False
+        self.last_px = None
+        self.panning = False
+        self.stroke_start = None
+        self.stroke_backup = None
+
+        self.sel = None
+        self.cm_grab = None
+        self.lasso_select = True
+        self.rubber = None
+        self.lasso_pts = None
+        self.sel_outline_id = None
+        self.rubber_id = None
+
+        self.type_colors = {}
+        for gt in GROUND_TYPES:
+            h = gt["hex"]
+            self.type_colors[gt["name"]] = (
+                int(h[1:3], 16), int(h[3:5], 16), int(h[5:7], 16))
+
+        self.build_ui()
+        self.rebuild_canvas()
+        self.bind_keys()
+
+    def build_ui(self):
+        for cls in ("Button", "Radiobutton"):
+            self.parent.option_add(f"*{cls}.highlightBackground", "#1a1a1a")
+            self.parent.option_add(f"*{cls}.highlightColor", "#1a1a1a")
+            self.parent.option_add(f"*{cls}.activeBackground", "#555555")
+            self.parent.option_add(f"*{cls}.activeForeground", "white")
+
+        bar = tk.Frame(self.parent, bg="#2b2b2b")
+        bar.pack(side="top", fill="x")
+
+        def btn(parent, text, cmd, **kw):
+            b = tk.Button(parent, text=text, command=cmd, padx=6, pady=2,
+                          bg="#3c3c3c", fg="white", relief="flat",
+                          activebackground="#555", **kw)
+            b.pack(side="left", padx=1, pady=2)
+            return b
+
+        btn(bar, "New", self.new_map)
+        btn(bar, "Undo  U", self.undo)
+        btn(bar, "Redo  Y", self.redo)
+        tk.Frame(bar, width=12, bg="#2b2b2b").pack(side="left")
+        btn(bar, "Zoom -", lambda: self.set_zoom(self.zoom - 2))
+        btn(bar, "Zoom +", lambda: self.set_zoom(self.zoom + 2))
+        self.grid_btn = btn(bar, "Grid: on", self.toggle_grid)
+
+        self.status = tk.Label(bar, text="", bg="#2b2b2b", fg="#aaa")
+        self.status.pack(side="right", padx=8)
+
+        body = tk.Frame(self.parent, bg="#1e1e1e")
+        body.pack(side="top", fill="both", expand=True)
+
+        sidebar = tk.Frame(body, bg="#2b2b2b")
+        sidebar.pack(side="left", fill="y")
+
+        tk.Label(sidebar, text="TOOL", bg="#2b2b2b", fg="#ccc").pack(pady=(8, 2))
+        for name, label in [("pencil", "Pencil  B"), ("fill", "Fill  G"),
+                            ("line", "Line  L"), ("rect", "Rect  R"),
+                            ("rectfill", "Rect Fill  F"),
+                            ("picker", "Picker  Q"),
+                            ("copy", "Copy  C"), ("move", "Move  M")]:
+            tk.Radiobutton(sidebar, text=label, value=name, variable=self.tool,
+                           indicatoron=False, width=12, bg="#3c3c3c", fg="white",
+                           selectcolor="#7a2233", relief="flat",
+                           anchor="w", padx=6, pady=4).pack(fill="x", padx=3, pady=1)
+        tk.Button(sidebar, text="Erase  E", command=self.set_erase, width=12,
+                  bg="#3c3c3c", fg="white", relief="flat", anchor="w",
+                  padx=6, pady=4).pack(fill="x", padx=3, pady=(6, 1))
+        self.select_btn = tk.Button(sidebar, text="Select: lasso",
+                  command=self.toggle_select_mode, width=12,
+                  bg="#3c3c3c", fg="white", relief="flat", anchor="w",
+                  padx=6, pady=4)
+        self.select_btn.pack(fill="x", padx=3, pady=1)
+
+        self.build_resize_controls(sidebar)
+
+        center = tk.Frame(body, bg="#1e1e1e")
+        center.pack(side="left", fill="both", expand=True)
+        self.canvas = tk.Canvas(center, bg="#1e1e1e", highlightthickness=0)
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.bind("<Button-1>", self.on_press)
+        self.canvas.bind("<B1-Motion>", self.on_drag)
+        self.canvas.bind("<ButtonRelease-1>", self.on_release)
+        self.canvas.bind("<Motion>", self.on_hover)
+        self.canvas.bind("<Button-3>", self.on_rmb_press)
+        self.canvas.bind("<B3-Motion>", self.on_rmb_drag)
+        self.canvas.bind("<ButtonRelease-3>", lambda e: self.pan_end())
+        self.canvas.bind("<Button-2>", self.on_mmb_press)
+        self.canvas.bind("<B2-Motion>", self.on_mmb_drag)
+        self.canvas.bind("<ButtonRelease-2>", lambda e: self.pan_end())
+        self.canvas.bind("<Button-4>", lambda e: self.set_zoom(self.zoom + 2, e))
+        self.canvas.bind("<Button-5>", lambda e: self.set_zoom(self.zoom - 2, e))
+
+        right = tk.Frame(body, bg="#2b2b2b", width=224)
+        right.pack(side="right", fill="y")
+        right.pack_propagate(False)
+
+        tk.Label(right, text="GROUND TYPE", bg="#2b2b2b", fg="#ccc").pack(pady=(8, 2))
+        self.type_var = tk.StringVar(value=self.current_type)
+        self.type_btns = {}
+        for gt in GROUND_TYPES:
+            r, g, b = self.type_colors[gt["name"]]
+            fg_lum = (r * 299 + g * 587 + b * 114) / 1000
+            fg = "black" if fg_lum > 128 else "white"
+            rb = tk.Radiobutton(right, text=gt["name"].upper(), value=gt["name"],
+                                variable=self.type_var,
+                                command=self.on_type_change,
+                                indicatoron=False, width=20,
+                                bg=f"#{r:02x}{g:02x}{b:02x}", fg=fg,
+                                selectcolor=f"#{max(0,r-30):02x}{max(0,g-30):02x}{max(0,b-30):02x}",
+                                relief="flat", anchor="center",
+                                padx=6, pady=8, font=("TkDefaultFont", 11, "bold"))
+            rb.pack(fill="x", padx=6, pady=2)
+            self.type_btns[gt["name"]] = rb
+        self.erase_active = False
+        self.erase_label = tk.Label(right, text="", bg="#2b2b2b", fg="#ff6666")
+        self.erase_label.pack(pady=(2, 0))
+
+        tk.Label(right, text="FILE", bg="#2b2b2b", fg="#ccc").pack(pady=(16, 2))
+        self.name_var = tk.StringVar()
+        namerow = tk.Frame(right, bg="#2b2b2b")
+        namerow.pack(fill="x", padx=6)
+        self.name_entry = tk.Entry(namerow, textvariable=self.name_var, bg="#1e1e1e",
+                                   fg="white", insertbackground="white", relief="flat")
+        self.name_entry.pack(side="left", fill="x", expand=True)
+        tk.Label(namerow, text=".tscn", bg="#2b2b2b", fg="#888").pack(side="left")
+        saverow = tk.Frame(right, bg="#2b2b2b")
+        saverow.pack(fill="x", padx=6)
+        tk.Button(saverow, text="Save", command=self.save_current, bg="#3c3c3c",
+                  fg="white", relief="flat", padx=4).pack(fill="x")
+
+        files_wrap = tk.Frame(right, bg="#2b2b2b")
+        files_wrap.pack(fill="both", expand=True, padx=6, pady=(4, 8))
+        fsb = tk.Scrollbar(files_wrap, orient="vertical")
+        self.file_list = tk.Listbox(files_wrap, bg="#1e1e1e", fg="white", relief="flat",
+                                    highlightthickness=0, activestyle="none",
+                                    selectbackground="#7a2233", yscrollcommand=fsb.set)
+        fsb.configure(command=self.file_list.yview)
+        fsb.pack(side="right", fill="y")
+        self.file_list.pack(side="left", fill="both", expand=True)
+        self.file_list.bind("<Double-Button-1>", self.on_file_open)
+        self.refresh_file_list()
+
+    def build_resize_controls(self, parent):
+        wrap = tk.Frame(parent, bg="#2b2b2b")
+        wrap.pack(side="bottom", fill="x", pady=(8, 8))
+        tk.Label(wrap, text="CANVAS", bg="#2b2b2b", fg="#ccc").pack()
+
+        row = tk.Frame(wrap, bg="#2b2b2b")
+        row.pack(pady=2)
+        self.w_var = tk.StringVar(value=str(self.w))
+        self.h_var = tk.StringVar(value=str(self.h))
+        for var in (self.w_var, self.h_var):
+            tk.Entry(row, textvariable=var, width=3, bg="#1e1e1e", fg="white",
+                     insertbackground="white", relief="flat",
+                     justify="center").pack(side="left", padx=1)
+            if var is self.w_var:
+                tk.Label(row, text="×", bg="#2b2b2b", fg="#ccc").pack(side="left")
+        tk.Button(row, text="Set", command=self.apply_resize_entries, bg="#3c3c3c",
+                  fg="white", relief="flat", padx=4).pack(side="left", padx=2)
+
+        grid = tk.Frame(wrap, bg="#2b2b2b")
+        grid.pack(pady=2)
+        self.repeat_id = None
+        for r, (arrow, edge) in enumerate([("↑", "top"), ("↓", "bottom"),
+                                           ("←", "left"), ("→", "right")]):
+            tk.Label(grid, text=arrow, width=2, bg="#2b2b2b", fg="white").grid(row=r, column=0)
+            for col, (sym, sign) in enumerate([("＋", 1), ("−", -1)], start=1):
+                b = tk.Button(grid, text=sym, width=2, relief="flat", bg="#3c3c3c", fg="white")
+                b.grid(row=r, column=col, padx=1, pady=1)
+                self._hold_repeat(b, lambda e=edge, s=sign: self.grow(e, s))
+
+    def _hold_repeat(self, widget, action):
+        def tick(delay):
+            action()
+            self.repeat_id = self._tk.after(delay, lambda: tick(70))
+        def stop(_e):
+            if self.repeat_id is not None:
+                self._tk.after_cancel(self.repeat_id)
+                self.repeat_id = None
+        widget.bind("<ButtonPress-1>", lambda _e: tick(350))
+        widget.bind("<ButtonRelease-1>", stop)
+
+    def typing(self):
+        return isinstance(self._tk.focus_get(), tk.Entry)
+
+    def _key_guard(self, fn):
+        def handler(e):
+            if self.active and not self.typing():
+                fn()
+        return handler
+
+    def bind_keys(self):
+        binds = {"b": "pencil", "g": "fill", "q": "picker",
+                 "l": "line", "r": "rect", "f": "rectfill",
+                 "c": "copy", "m": "move"}
+        for key, name in binds.items():
+            self._tk.bind(key, self._key_guard(lambda n=name: self.tool.set(n)), add="+")
+        self._tk.bind("e", self._key_guard(self.set_erase), add="+")
+        self._tk.bind("u", self._key_guard(self.undo), add="+")
+        self._tk.bind("y", self._key_guard(self.redo), add="+")
+        self._tk.bind("<Return>", lambda e: self.commit_float() if self.active else None, add="+")
+        self._tk.bind("<Escape>", lambda e: self.cancel_selection() if self.active else None, add="+")
+        self._tk.bind("<Control-z>", lambda e: self.undo() if self.active else None, add="+")
+        self._tk.bind("<Control-y>", lambda e: self.redo() if self.active else None, add="+")
+        self._tk.bind("<Control-s>", lambda e: self.save_current() if self.active else None, add="+")
+        self._tk.bind("<plus>", lambda e: self.set_zoom(self.zoom + 2) if self.active else None, add="+")
+        self._tk.bind("<minus>", lambda e: self.set_zoom(self.zoom - 2) if self.active else None, add="+")
+        self._tk.bind("<Button-1>", self._defocus, add="+")
+        self.tool.trace_add("write", lambda *a: self.on_tool_change())
+
+    def _defocus(self, event):
+        if not isinstance(event.widget, tk.Entry):
+            self._tk.focus_set()
+
+    def on_type_change(self):
+        self.current_type = self.type_var.get()
+        self.erase_active = False
+        self.erase_label.configure(text="")
+
+    def set_erase(self):
+        self.erase_active = True
+        self.erase_label.configure(text="ERASING")
+
+    # -- Rendering ----------------------------------------------------------
+
+    def cell_hex(self, x, y):
+        t = self.cells.get((x, y))
+        if self.sel:
+            fx, fy = x - self.sel["x"], y - self.sel["y"]
+            if 0 <= fx < self.sel["w"] and 0 <= fy < self.sel["h"]:
+                ft = self.sel["buf"].get((fx, fy))
+                if ft:
+                    t = ft
+        if t:
+            r, g, b = self.type_colors[t]
+            return f"#{r:02x}{g:02x}{b:02x}"
+        return "#1e1e1e"
+
+    def view_margin(self):
+        return (max(self.canvas.winfo_width() // 2, 200),
+                max(self.canvas.winfo_height() // 2, 200))
+
+    def rebuild_canvas(self):
+        self.w_var.set(str(self.w))
+        self.h_var.set(str(self.h))
+        self.canvas.delete("all")
+        self._grid_ids = []
+        self.sel_outline_id = self.rubber_id = None
+        self._img_base = tk.PhotoImage(width=self.w, height=self.h)
+        self._build_base_image()
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self._img_id = self.canvas.create_image(0, 0, anchor="nw",
+                                                 image=self._img_zoomed)
+        self._draw_grid()
+        mx, my = self.view_margin()
+        self.canvas.configure(scrollregion=(-mx, -my, self.w * self.zoom + mx,
+                                            self.h * self.zoom + my))
+        if self.sel:
+            self.draw_sel_outline()
+
+    def _build_base_image(self):
+        rows = []
+        for y in range(self.h):
+            rows.append("{" + " ".join(self.cell_hex(x, y) for x in range(self.w)) + "}")
+        self._img_base.put(" ".join(rows))
+
+    def _draw_grid(self):
+        for gid in self._grid_ids:
+            self.canvas.delete(gid)
+        self._grid_ids = []
+        if not self.show_grid or self.zoom < 4:
+            return
+        z = self.zoom
+        color = "#3a3a3a"
+        for x in range(self.w + 1):
+            self._grid_ids.append(
+                self.canvas.create_line(x * z, 0, x * z, self.h * z,
+                                        fill=color, width=1))
+        for y in range(self.h + 1):
+            self._grid_ids.append(
+                self.canvas.create_line(0, y * z, self.w * z, y * z,
+                                        fill=color, width=1))
+
+    def _schedule_rezoom(self):
+        if not self._rezoom_pending:
+            self._rezoom_pending = True
+            self._tk.after_idle(self._do_rezoom)
+
+    def _do_rezoom(self):
+        self._rezoom_pending = False
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self.canvas.itemconfigure(self._img_id, image=self._img_zoomed)
+
+    def refresh_cell(self, x, y):
+        self._img_base.put(self.cell_hex(x, y), to=(x, y))
+        self._schedule_rezoom()
+
+    def refresh_all(self):
+        self._build_base_image()
+        self._img_zoomed = self._img_base.zoom(self.zoom, self.zoom)
+        self.canvas.itemconfigure(self._img_id, image=self._img_zoomed)
+
+    def set_zoom(self, z, event=None):
+        old_z = self.zoom
+        self.zoom = max(2, min(48, z))
+        if self.zoom == old_z:
+            return
+        if event:
+            cx = self.canvas.canvasx(event.x)
+            cy = self.canvas.canvasy(event.y)
+            px, py = cx / old_z, cy / old_z
+            self.rebuild_canvas()
+            mx, my = self.view_margin()
+            self.canvas.xview_moveto((px * self.zoom - event.x + mx) / (self.w * self.zoom + 2 * mx))
+            self.canvas.yview_moveto((py * self.zoom - event.y + my) / (self.h * self.zoom + 2 * my))
+        else:
+            self.rebuild_canvas()
+
+    def toggle_grid(self):
+        self.show_grid = not self.show_grid
+        self.grid_btn.configure(text=f"Grid: {'on' if self.show_grid else 'off'}")
+        self._draw_grid()
+
+    # -- Mouse / painting ---------------------------------------------------
+
+    def event_pixel(self, event, clamp=True):
+        x = int(self.canvas.canvasx(event.x) // self.zoom)
+        y = int(self.canvas.canvasy(event.y) // self.zoom)
+        if clamp:
+            return (x, y) if 0 <= x < self.w and 0 <= y < self.h else None
+        return (x, y)
+
+    def outside_grid(self, event):
+        x, y = self.event_pixel(event, clamp=False)
+        return not (0 <= x < self.w and 0 <= y < self.h)
+
+    def pan_start(self, event):
+        self.panning = True
+        self.canvas.scan_mark(event.x, event.y)
+
+    def pan_move(self, event):
+        self.canvas.scan_dragto(event.x, event.y, gain=1)
+
+    def pan_end(self):
+        self.panning = False
+
+    def paint(self, x, y):
+        if self.erase_active:
+            if (x, y) in self.cells:
+                del self.cells[(x, y)]
+                self.refresh_cell(x, y)
+        else:
+            if self.cells.get((x, y)) != self.current_type:
+                self.cells[(x, y)] = self.current_type
+                self.refresh_cell(x, y)
+
+    def line_points(self, x0, y0, x1, y1):
+        dx, dy = abs(x1 - x0), abs(y1 - y0)
+        sx, sy = (1 if x0 < x1 else -1), (1 if y0 < y1 else -1)
+        err = dx - dy
+        pts = []
+        while True:
+            pts.append((x0, y0))
+            if x0 == x1 and y0 == y1:
+                break
+            e2 = 2 * err
+            if e2 > -dy:
+                err -= dy; x0 += sx
+            if e2 < dx:
+                err += dx; y0 += sy
+        return pts
+
+    def flood_fill(self, x, y):
+        target = self.cells.get((x, y))
+        if self.erase_active:
+            if target is None:
+                return
+        else:
+            if target == self.current_type:
+                return
+
+        stack = [(x, y)]
+        seen = set()
+        while stack:
+            cx, cy = stack.pop()
+            if (cx, cy) in seen or not (0 <= cx < self.w and 0 <= cy < self.h):
+                continue
+            if self.cells.get((cx, cy)) != target:
+                continue
+            seen.add((cx, cy))
+            if self.erase_active:
+                self.cells.pop((cx, cy), None)
+            else:
+                self.cells[(cx, cy)] = self.current_type
+            stack += [(cx+1, cy), (cx-1, cy), (cx, cy+1), (cx, cy-1)]
+        self.refresh_all()
+
+    def draw_shape(self, tool, start, end):
+        x0, y0 = start
+        x1, y1 = end
+        if tool == "line":
+            pts = self.line_points(x0, y0, x1, y1)
+        else:
+            lo_x, hi_x = sorted((x0, x1))
+            lo_y, hi_y = sorted((y0, y1))
+            pts = []
+            for yy in range(lo_y, hi_y + 1):
+                for xx in range(lo_x, hi_x + 1):
+                    edge = xx in (lo_x, hi_x) or yy in (lo_y, hi_y)
+                    if tool == "rectfill" or edge:
+                        pts.append((xx, yy))
+        for px, py in pts:
+            if 0 <= px < self.w and 0 <= py < self.h:
+                if self.erase_active:
+                    self.cells.pop((px, py), None)
+                else:
+                    self.cells[(px, py)] = self.current_type
+
+    def on_press(self, event):
+        if self.outside_grid(event):
+            self.pan_start(event)
+            return
+        tool = self.tool.get()
+        if tool in ("copy", "move"):
+            self.cm_press(event)
+            return
+        px = self.event_pixel(event)
+        if px is None:
+            return
+        x, y = px
+        if tool == "picker":
+            t = self.cells.get((x, y))
+            if t:
+                self.current_type = t
+                self.type_var.set(t)
+                self.erase_active = False
+                self.erase_label.configure(text="")
+        elif tool == "fill":
+            self.push_undo()
+            self.flood_fill(x, y)
+        elif tool in ("line", "rect", "rectfill"):
+            self.push_undo()
+            self.stroke_start = (x, y)
+            self.stroke_backup = dict(self.cells)
+        else:
+            self.push_undo()
+            self.last_px = (x, y)
+            self.paint(x, y)
+
+    def on_drag(self, event):
+        if self.panning:
+            self.pan_move(event)
+            return
+        tool = self.tool.get()
+        if tool in ("copy", "move"):
+            self.cm_drag(event)
+            return
+        px = self.event_pixel(event)
+        if px is None:
+            return
+        x, y = px
+        if tool == "pencil" and self.last_px:
+            for lx, ly in self.line_points(*self.last_px, x, y):
+                self.paint(lx, ly)
+            self.last_px = (x, y)
+        elif tool in ("line", "rect", "rectfill") and self.stroke_start:
+            self.cells = dict(self.stroke_backup)
+            self.draw_shape(tool, self.stroke_start, (x, y))
+            self.refresh_all()
+
+    def on_release(self, event):
+        if self.panning:
+            self.pan_end()
+        elif self.tool.get() in ("copy", "move"):
+            self.cm_release(event)
+        self.last_px = None
+        self.stroke_start = None
+        self.stroke_backup = None
+
+    def on_rmb_press(self, event):
+        if self.outside_grid(event):
+            self.pan_start(event)
+        else:
+            self.push_undo()
+            px = self.event_pixel(event)
+            if px:
+                self.last_px = px
+                was_erase = self.erase_active
+                self.erase_active = True
+                self.paint(px[0], px[1])
+                self.erase_active = was_erase
+
+    def on_rmb_drag(self, event):
+        if self.panning:
+            self.pan_move(event)
+        else:
+            px = self.event_pixel(event)
+            if px and self.last_px:
+                was_erase = self.erase_active
+                self.erase_active = True
+                for lx, ly in self.line_points(self.last_px[0], self.last_px[1], px[0], px[1]):
+                    self.paint(lx, ly)
+                self.erase_active = was_erase
+                self.last_px = px
+
+    def on_mmb_press(self, event):
+        self.pan_start(event)
+
+    def on_mmb_drag(self, event):
+        self.pan_move(event) if self.panning else None
+
+    def on_hover(self, event):
+        px = self.event_pixel(event)
+        info = f"{px[0]}, {px[1]}" if px else ""
+        types_here = ""
+        if px:
+            t = self.cells.get((px[0], px[1]))
+            if t:
+                types_here = f"  [{t}]"
+        self.status.configure(text=f"{info}{types_here}")
+
+    # -- Copy / move selection -----------------------------------------------
+
+    def on_tool_change(self):
+        self.cancel_rubber()
+        self.commit_float()
+
+    def toggle_select_mode(self):
+        self.cancel_rubber()
+        self.rubber = self.lasso_pts = None
+        self.lasso_select = not self.lasso_select
+        self.select_btn.configure(text=f"Select: {'lasso' if self.lasso_select else 'box'}")
+
+    def cm_press(self, event):
+        if self.sel is None:
+            self.start_marquee(event)
+        else:
+            rx, ry = self.event_pixel(event, clamp=False)
+            s = self.sel
+            if s["x"] <= rx < s["x"] + s["w"] and s["y"] <= ry < s["y"] + s["h"]:
+                self.cm_grab = (rx - s["x"], ry - s["y"])
+            else:
+                self.commit_float()
+                self.start_marquee(event)
+
+    def start_marquee(self, event):
+        px = self.event_pixel(event)
+        if px:
+            if self.lasso_select:
+                self.lasso_pts = [px]
+            else:
+                self.rubber = (px[0], px[1], px[0], px[1])
+            self.draw_marquee()
+
+    def cm_drag(self, event):
+        if self.rubber:
+            px = self.event_pixel(event)
+            if px:
+                self.rubber = (self.rubber[0], self.rubber[1], px[0], px[1])
+                self.draw_marquee()
+        elif self.lasso_pts is not None:
+            px = self.event_pixel(event)
+            if px and px != self.lasso_pts[-1]:
+                self.lasso_pts.append(px)
+                self.draw_marquee()
+        elif self.sel and self.cm_grab:
+            rx, ry = self.event_pixel(event, clamp=False)
+            self.sel["x"] = rx - self.cm_grab[0]
+            self.sel["y"] = ry - self.cm_grab[1]
+            self.refresh_all()
+            self.draw_sel_outline()
+
+    def cm_release(self, event):
+        if self.rubber:
+            self.lift_box(self.tool.get())
+            self.rubber = None
+        elif self.lasso_pts is not None:
+            self.lift_hull(self.tool.get())
+            self.lasso_pts = None
+        elif self.sel and self.cm_grab:
+            self.commit_float()
+        self.cm_grab = None
+
+    def make_selection(self, sx, sy, w, h, mode, inside):
+        buf = {}
+        for j in range(h):
+            for i in range(w):
+                if inside[j * w + i]:
+                    t = self.cells.get((sx + i, sy + j))
+                    if t:
+                        buf[(i, j)] = t
+        if mode == "move":
+            self.push_undo()
+            for j in range(h):
+                for i in range(w):
+                    if inside[j * w + i]:
+                        self.cells.pop((sx + i, sy + j), None)
+        self.sel = {"x": sx, "y": sy, "ox": sx, "oy": sy,
+                    "w": w, "h": h, "buf": buf, "mode": mode, "hull": None}
+        self.refresh_all()
+        self.draw_sel_outline()
+
+    def lift_box(self, mode):
+        x0, y0, x1, y1 = self.rubber
+        sx, sy = min(x0, x1), min(y0, y1)
+        w, h = abs(x1 - x0) + 1, abs(y1 - y0) + 1
+        self.cancel_rubber()
+        self.make_selection(sx, sy, w, h, mode, [True] * (w * h))
+
+    def lift_hull(self, mode):
+        hull = convex_hull(self.lasso_pts)
+        self.cancel_rubber()
+        if len(hull) >= 3:
+            xs, ys = [p[0] for p in hull], [p[1] for p in hull]
+            sx, sy = min(xs), min(ys)
+            w, h = max(xs) - sx + 1, max(ys) - sy + 1
+            center_hull = [(hx + 0.5, hy + 0.5) for (hx, hy) in hull]
+            inside = [point_in_hull(center_hull, sx + i + 0.5, sy + j + 0.5)
+                      for j in range(h) for i in range(w)]
+            self.make_selection(sx, sy, w, h, mode, inside)
+
+    def stamp(self, ox, oy):
+        for (fx, fy), t in self.sel["buf"].items():
+            self.cells[(ox + fx, oy + fy)] = t
+
+    def commit_float(self):
+        if self.sel:
+            if self.sel["mode"] == "copy":
+                self.push_undo()
+            self.stamp(self.sel["x"], self.sel["y"])
+            self.sel = None
+            self.clear_sel_outline()
+            self.refresh_all()
+
+    def cancel_selection(self):
+        self.cancel_rubber()
+        if self.sel:
+            if self.sel["mode"] == "move":
+                self.stamp(self.sel["ox"], self.sel["oy"])
+            self.sel = None
+            self.clear_sel_outline()
+            self.refresh_all()
+
+    def draw_box(self, x, y, w, h, color):
+        z = self.zoom
+        return self.canvas.create_rectangle(x * z, y * z, (x + w) * z, (y + h) * z,
+                                            outline=color, width=2, dash=(4, 3))
+
+    def draw_hull_outline(self, hull, color):
+        if len(hull) < 3:
+            return None
+        z = self.zoom
+        coords = [c * z for (hx, hy) in hull for c in (hx + 0.5, hy + 0.5)]
+        return self.canvas.create_polygon(coords, outline=color, fill="",
+                                          width=2, dash=(4, 3))
+
+    def draw_sel_outline(self):
+        self.clear_sel_outline()
+        if self.sel:
+            self.sel_outline_id = self.draw_box(
+                self.sel["x"], self.sel["y"], self.sel["w"], self.sel["h"], "#ffd700")
+
+    def clear_sel_outline(self):
+        if self.sel_outline_id:
+            self.canvas.delete(self.sel_outline_id)
+            self.sel_outline_id = None
+
+    def draw_marquee(self):
+        self.cancel_rubber()
+        if self.rubber:
+            x0, y0, x1, y1 = self.rubber
+            self.rubber_id = self.draw_box(
+                min(x0, x1), min(y0, y1), abs(x1 - x0) + 1, abs(y1 - y0) + 1, "#41a6f6")
+        elif self.lasso_pts:
+            self.rubber_id = self.draw_hull_outline(convex_hull(self.lasso_pts), "#41a6f6")
+
+    def cancel_rubber(self):
+        if self.rubber_id:
+            self.canvas.delete(self.rubber_id)
+            self.rubber_id = None
+
+    # -- Undo / redo --------------------------------------------------------
+
+    def snapshot(self):
+        return dict(self.cells)
+
+    def push_undo(self):
+        self.undo_stack.append(self.snapshot())
+        del self.undo_stack[:-100]
+        self.redo_stack.clear()
+
+    def undo(self):
+        if self.undo_stack:
+            self.redo_stack.append(self.snapshot())
+            self.cells = self.undo_stack.pop()
+            self.refresh_all()
+
+    def redo(self):
+        if self.redo_stack:
+            self.undo_stack.append(self.snapshot())
+            self.cells = self.redo_stack.pop()
+            self.refresh_all()
+
+    # -- Resize -------------------------------------------------------------
+
+    def apply_resize_entries(self):
+        try:
+            nw, nh = int(self.w_var.get()), int(self.h_var.get())
+        except ValueError:
+            return
+        if 1 <= nw <= self.MAX_DIM and 1 <= nh <= self.MAX_DIM:
+            self.w, self.h = nw, nh
+            self.rebuild_canvas()
+
+    def grow(self, edge, sign):
+        horizontal = edge in ("left", "right")
+        nw = self.w + (sign if horizontal else 0)
+        nh = self.h + (0 if horizontal else sign)
+        if 1 <= nw <= self.MAX_DIM and 1 <= nh <= self.MAX_DIM:
+            if sign == 1 and edge in ("left", "top"):
+                ox = 1 if edge == "left" else 0
+                oy = 1 if edge == "top" else 0
+                self.cells = {(x + ox, y + oy): t for (x, y), t in self.cells.items()}
+            elif sign == -1 and edge in ("left", "top"):
+                ox = -1 if edge == "left" else 0
+                oy = -1 if edge == "top" else 0
+                self.cells = {(x + ox, y + oy): t for (x, y), t in self.cells.items()}
+            self.w, self.h = nw, nh
+            self.rebuild_canvas()
+
+    def new_map(self):
+        self.cells = {}
+        self.path = None
+        self.name_var.set("")
+        self.undo_stack.clear()
+        self.redo_stack.clear()
+        self.rebuild_canvas()
+
+    # -- File operations ----------------------------------------------------
+
+    def refresh_file_list(self, select=None):
+        self.file_list.delete(0, tk.END)
+        try:
+            names = sorted(f for f in os.listdir(self.maps_dir)
+                           if f.lower().endswith(".tscn"))
+        except OSError:
+            names = []
+        for n in names:
+            self.file_list.insert(tk.END, n)
+        if select in names:
+            i = names.index(select)
+            self.file_list.selection_clear(0, tk.END)
+            self.file_list.selection_set(i)
+            self.file_list.see(i)
+
+    def on_file_open(self, event=None):
+        sel = self.file_list.curselection()
+        if sel:
+            self.load_file(os.path.join(self.maps_dir, self.file_list.get(sel[0])))
+
+    def load_file(self, path):
+        try:
+            loaded = parse_tscn_layers(path)
+        except Exception as exc:
+            messagebox.showerror("Open", f"Failed to parse scene:\n{exc}")
+            return
+        self.cells = {}
+        for name, coords in loaded.items():
+            for xy in coords:
+                self.cells[xy] = name
+        if self.cells:
+            xs = [c[0] for c in self.cells]
+            ys = [c[1] for c in self.cells]
+            self.w = max(max(xs) + 2, self.w)
+            self.h = max(max(ys) + 2, self.h)
+        self.path = path
+        self.name_var.set(os.path.splitext(os.path.basename(path))[0])
+        self.undo_stack.clear()
+        self.redo_stack.clear()
+        self.rebuild_canvas()
+        self.refresh_file_list(select=os.path.basename(path))
+        self.status.configure(text=f"Loaded {os.path.basename(path)}")
+
+    def save_current(self):
+        name = self.name_var.get().strip()
+        if not name:
+            path = filedialog.asksaveasfilename(
+                initialdir=self.maps_dir, defaultextension=".tscn",
+                filetypes=[("Godot Scene", "*.tscn")])
+            if not path:
+                return
+            name = os.path.splitext(os.path.basename(path))[0]
+        scene_name = name.replace(" ", "_").title().replace("_", "")
+        layers = {}
+        for (x, y), t in self.cells.items():
+            layers.setdefault(t, set()).add((x, y))
+        tscn = generate_tscn(scene_name, layers)
+        path = os.path.join(self.maps_dir, name)
+        if not path.lower().endswith(".tscn"):
+            path += ".tscn"
+        with open(path, "w") as f:
+            f.write(tscn)
+        self.path = path
+        self.name_var.set(os.path.splitext(os.path.basename(path))[0])
+        self.refresh_file_list(select=os.path.basename(path))
+        self.status.configure(text=f"Saved {os.path.basename(path)}")
+
+
+# ---------------------------------------------------------------------------
+# Tabbed main window.
+# ---------------------------------------------------------------------------
+
+class TabbedEditor:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("GMI Jam — Editor")
+
+        self.tab_bar = tk.Frame(root, bg="#1a1a1a")
+        self.tab_bar.pack(side="top", fill="x")
+
+        self.container = tk.Frame(root, bg="#1e1e1e")
+        self.container.pack(side="top", fill="both", expand=True)
+
+        self.tabs = {}
+        self.active_tab = None
+
+        pixel_frame = tk.Frame(self.container, bg="#1e1e1e")
+        ground_frame = tk.Frame(self.container, bg="#1e1e1e")
+
+        self.pixel_editor = PixelEditor(pixel_frame)
+        self.ground_editor = GroundEditor(ground_frame)
+
+        self.tabs["Pixel"] = pixel_frame
+        self.tabs["Ground"] = ground_frame
+
+        self.tab_buttons = {}
+        for name in ("Pixel", "Ground"):
+            b = tk.Button(self.tab_bar, text=name, padx=16, pady=4,
+                          bg="#2b2b2b", fg="white", relief="flat",
+                          activebackground="#555",
+                          command=lambda n=name: self.switch_tab(n))
+            b.pack(side="left", padx=1, pady=2)
+            self.tab_buttons[name] = b
+
+        self.switch_tab("Pixel")
+
+    def switch_tab(self, name):
+        if self.active_tab == name:
+            return
+        self.pixel_editor.active = (name == "Pixel")
+        self.ground_editor.active = (name == "Ground")
+        for n, frame in self.tabs.items():
+            frame.pack_forget()
+        self.tabs[name].pack(in_=self.container, fill="both", expand=True)
+        for n, btn in self.tab_buttons.items():
+            btn.configure(bg="#7a2233" if n == name else "#2b2b2b")
+        self.active_tab = name
+
+
 def main():
     root = tk.Tk()
-    root.geometry("1000x700")
-    PixelEditor(root)
+    root.geometry("1100x750")
+    TabbedEditor(root)
     root.mainloop()
 
 
