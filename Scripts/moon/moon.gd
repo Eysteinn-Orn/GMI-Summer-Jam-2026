@@ -3,9 +3,11 @@ extends CharacterBody2D
 @export var speed = 50.0
 @export var jump_velocity = -500.0
 @export var damage_per_second = 10.0
+@export var stop_radius = 8.0
 
 var player_inside := false
 var player: Node = null
+var mouse_direction: Vector2 = Vector2.ZERO
 
 
 func _ready():
@@ -18,12 +20,16 @@ func _ready():
 
 
 func _physics_process(delta):
-	var direction = Vector2(
-		Input.get_axis("Left2", "Right2"),
-		Input.get_axis("Up2", "Down2")
-	)
+	var to_mouse = get_global_mouse_position() - global_position
+	var distance_to_mouse = to_mouse.length()
 
-	velocity = direction.normalized() * speed
+	if distance_to_mouse > stop_radius:
+		mouse_direction = to_mouse.normalized()
+		velocity = mouse_direction * speed
+	else:
+		mouse_direction = Vector2.ZERO
+		velocity = Vector2.ZERO
+
 	move_and_slide()
 
 	# DAMAGE LOGIC: only if player is NOT under shadow

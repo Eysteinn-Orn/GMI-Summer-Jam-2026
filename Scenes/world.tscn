@@ -1,59 +1,19 @@
 [gd_scene format=3 uid="uid://d2y852kokepd6"]
 
-[ext_resource type="Script" uid="uid://c3bb25pd2gt3m" path="res://Scripts/vampire/vampy.gd" id="1_5a7ea"]
-[ext_resource type="Texture2D" uid="uid://b28on2mo0n60v" path="res://Assets/background/backgroundTest1.webp" id="1_8j60k"]
-[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="1_a02cp"]
-[ext_resource type="Script" uid="uid://bwtowwhyq24tg" path="res://Scripts/moon/moon.gd" id="4_8j60k"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
-size = Vector2(128, 128)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_8j60k"]
-radius = 67.89166
+[ext_resource type="PackedScene" uid="uid://cxo0fehxe60ne" path="res://Scenes/maps/grass.tscn" id="1_8j60k"]
+[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://Scenes/vampire/vampire.tscn" id="2_5a7ea"]
+[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://Scenes/moon/moon.tscn" id="3_8j60k"]
+[ext_resource type="Script" uid="uid://bodp4y4jbflhe" path="res://Scripts/game_manager.gd" id="4_8j60k"]
 
 [node name="World" type="Node2D" unique_id=780093096]
 
-[node name="Ground" type="Sprite2D" parent="." unique_id=68738812]
-position = Vector2(577, 326)
-scale = Vector2(2.3833332, 2.303887)
-texture = ExtResource("1_8j60k")
+[node name="Grass" parent="." unique_id=231246929 instance=ExtResource("1_8j60k")]
 
-[node name="SirKnight" type="CharacterBody2D" parent="." unique_id=1260519867]
-position = Vector2(22, 626)
-scale = Vector2(0.25, 0.25)
-collision_mask = 4
-script = ExtResource("1_5a7ea")
-speed = 300.0
-metadata/_edit_group_ = true
+[node name="Vampire" parent="." unique_id=233018022 instance=ExtResource("2_5a7ea")]
+scale = Vector2(1, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="SirKnight" unique_id=1291087763]
-texture = ExtResource("1_a02cp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SirKnight" unique_id=1367244326]
-shape = SubResource("RectangleShape2D_go701")
-
-[node name="Shadow" type="CharacterBody2D" parent="." unique_id=1425161486]
-modulate = Color(1, 1, 1, 0.28627452)
+[node name="Moon" parent="." unique_id=324293011 instance=ExtResource("3_8j60k")]
 position = Vector2(350, 337)
-scale = Vector2(1.25, 1.25)
-collision_layer = 2
-collision_mask = 0
+
+[node name="GameManager" type="Node" parent="." unique_id=619244071]
 script = ExtResource("4_8j60k")
-speed = 125.0
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Shadow" unique_id=1297048432]
-texture = ExtResource("1_a02cp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Shadow" unique_id=2027347930]
-shape = SubResource("RectangleShape2D_go701")
-
-[node name="Area2D" type="Area2D" parent="Shadow" unique_id=790750002]
-position = Vector2(-1.5999985, -0.79999995)
-collision_layer = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Shadow/Area2D" unique_id=630018954]
-shape = SubResource("CircleShape2D_8j60k")
-
-[connection signal="body_entered" from="Shadow/Area2D" to="Shadow" method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Shadow/Area2D" to="Shadow" method="_on_area_2d_body_exited"]

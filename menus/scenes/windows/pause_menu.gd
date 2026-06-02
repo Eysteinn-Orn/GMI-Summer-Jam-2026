@@ -95,13 +95,15 @@ func _ready() -> void:
 	exit_confirmation.confirmed.connect(_on_exit_confirmation_confirmed)
 
 func _on_restart_button_pressed() -> void:
-	_show_window(restart_confirmation)
+	SceneLoader.reload_current_scene()
+	close()
 
 func _on_options_button_pressed() -> void:
 	_load_and_show_menu(options_menu_scene)
 
 func _on_main_menu_button_pressed() -> void:
-	_show_window(main_menu_confirmation)
+	close()
+	_load_scene(get_main_menu_scene_path())
 
 func _on_exit_button_pressed() -> void:
 	_show_window(exit_confirmation)

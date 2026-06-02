@@ -1,0 +1,10 @@
+[gd_resource type="CanvasTexture" format=3 uid="uid://b12nreyobada4"]
+
+[ext_resource type="Texture2D" uid="uid://bpibp30trrqcl" path="res://Assets/shader/shader-tileset-normal.png" id="2_h8jjh"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_uwoep"]
+load_path = "res://.godot/imported/shader-tileset.png-760f807d209c3833b73a3f970ef0c8a3.ctex"
+
+[resource]
+diffuse_texture = SubResource("CompressedTexture2D_uwoep")
+normal_texture = ExtResource("2_h8jjh")

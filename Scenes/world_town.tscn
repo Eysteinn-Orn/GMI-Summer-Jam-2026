@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Scenes/maps/town.tscn" id="1_town"]
+[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://Scenes/vampire/vampire.tscn" id="2_vamp"]
+[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://Scenes/moon/moon.tscn" id="3_moon"]
+[ext_resource type="Script" uid="uid://bodp4y4jbflhe" path="res://Scripts/game_manager.gd" id="4_gm"]
+
+[node name="World" type="Node2D"]
+
+[node name="Town" parent="." instance=ExtResource("1_town")]
+
+[node name="Vampire" parent="." instance=ExtResource("2_vamp")]
+
+[node name="Moon" parent="." instance=ExtResource("3_moon")]
+position = Vector2(350, 337)
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("4_gm")
