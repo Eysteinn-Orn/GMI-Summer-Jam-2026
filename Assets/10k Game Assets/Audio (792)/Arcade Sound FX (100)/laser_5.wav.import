@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://81w6do6xsmoy"
+path="res://.godot/imported/laser_5.wav-17fae2d81fc4fc4bf67398e1002a1b68.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/laser_5.wav"
+dest_files=["res://.godot/imported/laser_5.wav-17fae2d81fc4fc4bf67398e1002a1b68.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

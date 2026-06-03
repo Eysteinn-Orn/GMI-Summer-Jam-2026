@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cq6dfoq6uy2ht"
+path="res://.godot/imported/sndComputer.wav-ab683f23f74c449e89510414aeb2b38c.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro RPG Sounds (96)/sndComputer.wav"
+dest_files=["res://.godot/imported/sndComputer.wav-ab683f23f74c449e89510414aeb2b38c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

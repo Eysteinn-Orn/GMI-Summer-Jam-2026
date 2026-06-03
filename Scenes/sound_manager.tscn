@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://coo06qpcx1ocq"]
 
-[ext_resource type="Script" uid="uid://bc5pwqr202cl6" path="res://Scripts/sound_manager.gd" id="1_32i44"]
+[ext_resource type="Script" uid="uid://bc5pwqr202cl6" path="res://scripts/sound_manager.gd" id="1_32i44"]
 [ext_resource type="AudioStream" uid="uid://ball0olaiek08" path="res://Assets/sounds/stepping-001.wav" id="2_1ohty"]
 [ext_resource type="AudioStream" uid="uid://dngitxk7tpaub" path="res://Assets/sounds/stepping-002.wav" id="3_tox07"]
 

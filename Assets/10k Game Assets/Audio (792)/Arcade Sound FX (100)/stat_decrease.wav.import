@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bapcgwvo8s5un"
+path="res://.godot/imported/stat_decrease.wav-4b076442c9304670f122e43ac1bf4b4f.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/stat_decrease.wav"
+dest_files=["res://.godot/imported/stat_decrease.wav-4b076442c9304670f122e43ac1bf4b4f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

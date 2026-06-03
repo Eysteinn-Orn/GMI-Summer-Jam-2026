@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bmdbnec6uu5lg"
+path="res://.godot/imported/Item2.wav-75bb9e54de53754d743addfb113b968a.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Short (100)/Item2.wav"
+dest_files=["res://.godot/imported/Item2.wav-75bb9e54de53754d743addfb113b968a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

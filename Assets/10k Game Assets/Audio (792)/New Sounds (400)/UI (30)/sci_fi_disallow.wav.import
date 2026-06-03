@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c2me4aydf12v5"
+path="res://.godot/imported/sci_fi_disallow.wav-0d646a01099801559eeffd7fcb1d6eb3.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/UI (30)/sci_fi_disallow.wav"
+dest_files=["res://.godot/imported/sci_fi_disallow.wav-0d646a01099801559eeffd7fcb1d6eb3.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

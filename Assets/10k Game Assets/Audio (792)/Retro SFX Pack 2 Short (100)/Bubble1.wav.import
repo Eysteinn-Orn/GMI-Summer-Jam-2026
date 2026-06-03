@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://1d74cohldwwy"
+path="res://.godot/imported/Bubble1.wav-6b165cd4bbe11833ecf7a9bde6272b79.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Short (100)/Bubble1.wav"
+dest_files=["res://.godot/imported/Bubble1.wav-6b165cd4bbe11833ecf7a9bde6272b79.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

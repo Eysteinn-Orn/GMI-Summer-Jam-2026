@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://0iq8knwrfq7l"
+path="res://.godot/imported/DrainPower.wav-00afc0ca0ecb3fb3b0a0999abb6200a5.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Long (32)/DrainPower.wav"
+dest_files=["res://.godot/imported/DrainPower.wav-00afc0ca0ecb3fb3b0a0999abb6200a5.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

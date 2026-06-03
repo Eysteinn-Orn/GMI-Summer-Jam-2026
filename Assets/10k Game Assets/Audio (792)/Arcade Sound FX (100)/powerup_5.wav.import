@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://b3rtof17ef8wm"
+path="res://.godot/imported/powerup_5.wav-4f97d3224bd0e2434c2a83aabe4a19da.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/powerup_5.wav"
+dest_files=["res://.godot/imported/powerup_5.wav-4f97d3224bd0e2434c2a83aabe4a19da.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
