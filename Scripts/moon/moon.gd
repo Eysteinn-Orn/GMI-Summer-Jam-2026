@@ -2,12 +2,12 @@ extends CharacterBody2D
 
 @export var speed = 50.0
 @export var jump_velocity = -500.0
-@export var damage_per_second = 10.0
 @export var stop_radius = 8.0
 
 var player_inside := false
 var player: Node = null
 var mouse_direction: Vector2 = Vector2.ZERO
+var sun_timer := 0.0
 
 
 func _ready():
@@ -16,7 +16,6 @@ func _ready():
 
 	$Area2D.body_entered.connect(_on_body_entered)
 	$Area2D.body_exited.connect(_on_body_exited)
-	
 
 
 func _physics_process(delta):
@@ -34,8 +33,16 @@ func _physics_process(delta):
 
 	# DAMAGE LOGIC: only if player is NOT under shadow
 	if player and not player_inside:
-		if player.has_method("take_damage"):
-			player.take_damage(damage_per_second * delta)
+		sun_timer += delta
+
+		if sun_timer >= 3.0:
+			player.take_damage(1)
+			sun_timer = 0.0
+			print("Taking damage")
+	else:
+		sun_timer = 0.0
+		
+			
 
 
 func _on_body_entered(body):
@@ -49,11 +56,11 @@ func _on_body_exited(body):
 		player_inside = false
 		print("Exited shadow")
 
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	print("Entered shadow")
-	pass # Replace with function body.
-
-
-func _on_area_2d_body_exited(body: Node2D) -> void:
-	print("Exited shadow")
-	pass # Replace with function body.
+#func _on_area_2d_body_entered(body: Node2D) -> void:
+	#print("Entered shadow")
+	#pass # Replace with function body.
+#
+#
+#func _on_area_2d_body_exited(body: Node2D) -> void:
+	#print("Exited shadow")
+	#pass # Replace with function body.

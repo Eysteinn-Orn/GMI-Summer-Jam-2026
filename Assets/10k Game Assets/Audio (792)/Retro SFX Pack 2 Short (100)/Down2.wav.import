@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://crela37rg7a15"
+path="res://.godot/imported/Down2.wav-7873a1ccba2d6497e5ae75b4fc1170ce.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Short (100)/Down2.wav"
+dest_files=["res://.godot/imported/Down2.wav-7873a1ccba2d6497e5ae75b4fc1170ce.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

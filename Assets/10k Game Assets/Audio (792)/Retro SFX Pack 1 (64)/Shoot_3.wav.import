@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dswhx1ktms0sh"
+path="res://.godot/imported/Shoot_3.wav-588e693bbd0f14e288ca4c2b84ce1c7f.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 1 (64)/Shoot_3.wav"
+dest_files=["res://.godot/imported/Shoot_3.wav-588e693bbd0f14e288ca4c2b84ce1c7f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

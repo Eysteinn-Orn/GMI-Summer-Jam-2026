@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://gya1aixo1sal"]
 
 [ext_resource type="Script" uid="uid://bwtowwhyq24tg" path="res://Scripts/moon/moon.gd" id="1_4shwn"]
-[ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_420bj"]
+[ext_resource type="Texture2D" uid="uid://cdeje7oee26ad" path="res://Assets/sprites/Moon/blushMoon.png" id="2_4shwn"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
-size = Vector2(128, 128)
+[sub_resource type="CircleShape2D" id="CircleShape2D_420bj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8j60k"]
 radius = 67.89166
@@ -19,10 +18,13 @@ speed = 125.0
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=993156164]
-texture = ExtResource("2_420bj")
+position = Vector2(0.80000305, 0.80000305)
+scale = Vector2(0.15421686, 0.1576923)
+texture = ExtResource("2_4shwn")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2013428004]
-shape = SubResource("RectangleShape2D_go701")
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=746539990]
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("CircleShape2D_420bj")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2120093844]
 position = Vector2(-1.5999985, -0.79999995)
