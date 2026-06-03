@@ -28,3 +28,8 @@ func take_damage(amount):
 	health -= amount
 	health = clamp(health, 0, max_health)
 	health_bar.value = health
+	
+func heal_damage(amount):
+	health += amount
+	health = clamp(health, 0, max_health)
+	health_bar.value = health

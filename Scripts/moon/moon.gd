@@ -8,6 +8,7 @@ var player_inside := false
 var player: Node = null
 var mouse_direction: Vector2 = Vector2.ZERO
 var sun_timer := 0.0
+var moon_timer := 0.0
 
 
 func _ready():
@@ -42,6 +43,16 @@ func _physics_process(delta):
 	else:
 		sun_timer = 0.0
 		
+	if player and player_inside:
+		moon_timer += delta
+		
+		if moon_timer >= 5.0:
+			player.heal_damage(1)
+			moon_timer = 0.0
+			print("Healing")
+	
+	else: 
+		moon_timer = 0.0
 			
 
 
