@@ -30,7 +30,13 @@ PauseMenuLayer="*res://menus/scenes/windows/pause_menu_layer.tscn"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/TileMapDual/plugin.cfg", "res://addons/maaacks_menus_template/plugin.cfg", "res://addons/pixel_editor/plugin.cfg")
+enabled=PackedStringArray("res://addons/maaacks_menus_template/plugin.cfg", "res://addons/pixel_editor/plugin.cfg")
+
+[importer_defaults]
+
+texture={
+"mipmaps/generate": false
+}
 
 [input]
 
@@ -119,12 +125,6 @@ copy_path="res://menus/"
 [physics]
 
 3d/physics_engine="Jolt Physics"
-
-[importer_defaults]
-
-texture={
-"mipmaps/generate": false
-}
 
 [rendering]
 
