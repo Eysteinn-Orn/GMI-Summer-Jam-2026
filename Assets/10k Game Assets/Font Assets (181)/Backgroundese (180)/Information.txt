@@ -1,0 +1,7 @@
+What is this set of fonts for?
+
+This set of fonts was created to allow game developers to easily make nonsense text for background textures among other things. Sometimes when you want there to be incidental text that the player doesn't need to understand, or you don't want to translate it into multiple languages. These fonts will help you to do that in a consistent way.
+
+License:
+
+You may use these game assets for ANY and ALL uses including commercial use, with or without giving credit, except that you may not sell or redistribute the unaltered assets as your own game assets.
