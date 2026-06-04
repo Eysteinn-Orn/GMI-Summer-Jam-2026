@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ch0ui4liyud3u"
+path="res://.godot/imported/synth_warning.wav-89a2888d8fa2e466522555d09a5aa9a9.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/UI (30)/synth_warning.wav"
+dest_files=["res://.godot/imported/synth_warning.wav-89a2888d8fa2e466522555d09a5aa9a9.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

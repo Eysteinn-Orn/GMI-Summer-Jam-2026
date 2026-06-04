@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dhbqhgdc0acbu"
+path="res://.godot/imported/brass_negative_quick.wav-b2452cb045aa47b6b6c2a95589353023.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/Musical Effects (111)/brass_negative_quick.wav"
+dest_files=["res://.godot/imported/brass_negative_quick.wav-b2452cb045aa47b6b6c2a95589353023.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

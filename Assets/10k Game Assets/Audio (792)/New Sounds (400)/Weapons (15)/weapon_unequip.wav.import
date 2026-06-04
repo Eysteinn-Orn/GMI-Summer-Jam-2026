@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://86ipdbeb68kf"
+path="res://.godot/imported/weapon_unequip.wav-95fe7891e82a1697a14f4e05c3b6700e.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/Weapons (15)/weapon_unequip.wav"
+dest_files=["res://.godot/imported/weapon_unequip.wav-95fe7891e82a1697a14f4e05c3b6700e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

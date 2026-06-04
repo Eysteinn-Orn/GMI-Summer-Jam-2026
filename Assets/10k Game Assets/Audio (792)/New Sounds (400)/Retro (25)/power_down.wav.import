@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://fwst8x53v23g"
+path="res://.godot/imported/power_down.wav-5191ba293dc81329e128b8f1536a13fa.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/Retro (25)/power_down.wav"
+dest_files=["res://.godot/imported/power_down.wav-5191ba293dc81329e128b8f1536a13fa.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

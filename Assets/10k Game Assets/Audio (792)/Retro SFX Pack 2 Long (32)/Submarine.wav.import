@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ck6ja287qvh8f"
+path="res://.godot/imported/Submarine.wav-ea7a210fb074938c0125a589f6912c87.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Long (32)/Submarine.wav"
+dest_files=["res://.godot/imported/Submarine.wav-ea7a210fb074938c0125a589f6912c87.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

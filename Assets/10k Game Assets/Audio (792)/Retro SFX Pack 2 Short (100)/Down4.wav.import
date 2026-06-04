@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://romb6t84wprs"
+path="res://.godot/imported/Down4.wav-9ec59dc7a91558371f3c0341977e3eaa.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 2 Short (100)/Down4.wav"
+dest_files=["res://.godot/imported/Down4.wav-9ec59dc7a91558371f3c0341977e3eaa.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -2,7 +2,15 @@ extends CharacterBody2D
 
 @export var speed = 200.0
 @export var jump_velocity = -500.0
-@export var health = 5
+
+@export var max_health = 10
+@export var health = 10
+
+@onready var health_bar = $"../CanvasLayer/ProgressBar"
+
+func _ready():
+	health_bar.max_value = max_health
+	health_bar.value = health
 
 func _physics_process(delta):
 	var direction = Vector2(
@@ -12,11 +20,16 @@ func _physics_process(delta):
 
 	velocity = direction.normalized() * speed
 	move_and_slide()
+	
+	if Input.is_action_just_pressed("Space"):
+		take_damage(1)
 
-
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	pass # Replace with function body.
-
-
-func _on_area_2d_body_exited(body: Node2D) -> void:
-	pass # Replace with function body.
+func take_damage(amount):
+	health -= amount
+	health = clamp(health, 0, max_health)
+	health_bar.value = health
+	
+func heal_damage(amount):
+	health += amount
+	health = clamp(health, 0, max_health)
+	health_bar.value = health

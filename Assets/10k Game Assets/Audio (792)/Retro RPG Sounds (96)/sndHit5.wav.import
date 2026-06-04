@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c720hpj82s6uo"
+path="res://.godot/imported/sndHit5.wav-93f67b7420e975869d1e21d2fd26f071.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro RPG Sounds (96)/sndHit5.wav"
+dest_files=["res://.godot/imported/sndHit5.wav-93f67b7420e975869d1e21d2fd26f071.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

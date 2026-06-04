@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://1sxes1e7k7ar"
+path="res://.godot/imported/disappear.wav-d3773a3b31e9c9069e21ac874ca63d09.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/disappear.wav"
+dest_files=["res://.godot/imported/disappear.wav-d3773a3b31e9c9069e21ac874ca63d09.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
