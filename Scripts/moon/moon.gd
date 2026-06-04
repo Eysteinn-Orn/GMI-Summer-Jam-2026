@@ -39,6 +39,9 @@ func _physics_process(delta):
 	var distance_to_mouse = to_mouse.length()
 
 	if distance_to_mouse > stop_radius:
+		if is_instance_valid(stop_tween):
+			stop_tween.kill()
+			stop_tween = null
 		mouse_direction = to_mouse.normalized()
 		velocity = mouse_direction * speed
 	else:
