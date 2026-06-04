@@ -7,27 +7,35 @@ extends Node
 ## Remove a sound, terminating it's audio.
 func remove_sound(instance: AudioStreamPlayer) -> void:
 	instance.queue_free()
-
+	for array in audio_stream_players:
+		for e in audio_stream_players[array]:
+			if e == instance:
+				audio_stream_players[array].erase(e)
+				if audio_stream_players[array].size() == 0:
+					audio_stream_players.erase(array)
+				return
 
 ## Play a sound by it's key. Returns the instance node.
 ##
 ## [param sound] references an AudioStream in [member sound_files].
-func create_sound(sound: String, db: float = 0.0) -> AudioStreamPlayer:
+func create_sound(sound: String, db: float = 0.0, start_time = 0.0) -> AudioStreamPlayer:
 	var instance = AudioStreamPlayer.new()
 	var i : int = 1
 	instance.bus = &"SFX"
 	if (sound_files.has(sound)):
 		instance.stream = sound_files[sound]
-	instance.finished.connect(remove_sound.bind(instance))
+	else:
+		return
 	if (!audio_stream_players.has(sound)):
 		audio_stream_players[sound] = [instance]
 	else:
 		audio_stream_players[sound].push_front(instance)
 		i = audio_stream_players[sound].size()
+	instance.finished.connect(remove_sound.bind(instance))
 	instance.name = sound + str(i)
 	instance.volume_db = db
 	add_child(instance)
-	instance.play()
+	instance.play(start_time)
 	return instance
 
 
@@ -35,18 +43,26 @@ func create_sound(sound: String, db: float = 0.0) -> AudioStreamPlayer:
 ##
 ## [param whitelist] destroys all sounds *but* the specified sound if true.
 func destroy_sounds(sound: String, whitelist: bool = false) -> void:
-	if (!sound or (!audio_stream_players.has(sound) and whitelist)):
+	if !sound or (!audio_stream_players.has(sound) and whitelist):
 		for instance in get_children(): 
 			instance.queue_free()
+		for array in audio_stream_players:
+			audio_stream_players.erase(array)
 		return
-	if (!audio_stream_players.has(sound)):
+	if !audio_stream_players.has(sound):
 		return
 	if whitelist:
 		for instance in get_children(): 
 			if (!audio_stream_players[sound].has(instance)):
 				instance.queue_free()
+		for array in audio_stream_players:
+			if !array == sound:
+				audio_stream_players.erase(array)
 		return
 	for instance in audio_stream_players[sound]: 
 		if instance:
 			instance.queue_free()
-	audio_stream_players[sound].clear()
+	audio_stream_players.erase(sound)
+
+func is_playing(sound: String) -> bool:
+	return audio_stream_players.has(sound)

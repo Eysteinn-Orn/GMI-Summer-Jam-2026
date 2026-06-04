@@ -1,8 +1,8 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b0lq1u0ypof75"]
 
 [ext_resource type="Script" uid="uid://qspg54whb6o5" path="res://Scripts/player_25d.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_icon"]
-[ext_resource type="PackedScene" path="res://Scenes/maps/town.tscn" id="3_town"]
+[ext_resource type="PackedScene" uid="uid://c3bjxhvkrawl" path="res://Scenes/maps/town.tscn" id="3_town"]
 [ext_resource type="Script" uid="uid://0lcr01fdedlu" path="res://Scripts/moon_25d.gd" id="4_moon"]
 [ext_resource type="Script" uid="uid://dsjipyi4poahh" path="res://Scripts/camera_25d.gd" id="5_camera"]
 [ext_resource type="Texture2D" uid="uid://bupu4a5bdovn4" path="res://Assets/sprites/bat1.png" id="6_bat1"]
@@ -25,7 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://5opdwd5ojbr5" path="res://Assets/sprites/tree2.png" id="22_tree2"]
 [ext_resource type="Texture2D" uid="uid://citb58e0gomgu" path="res://Assets/sprites/vampire1.png" id="23_vampire"]
 [ext_resource type="Script" uid="uid://dqm6bjxrjv5wh" path="res://Scripts/dolly_zoom_ui.gd" id="24_dolly"]
-[ext_resource type="Script" path="res://Scripts/ground_from_viewport.gd" id="26_ground_vp"]
+[ext_resource type="Script" uid="uid://dq6s8fcernssh" path="res://Scripts/ground_from_viewport.gd" id="26_ground_vp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_player"]
 size = Vector3(128, 128, 128)
@@ -44,12 +44,12 @@ target = NodePath("../SirKnight")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1227336949]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 100, 100)
 
-[node name="TownViewport" type="SubViewport" parent="."]
+[node name="TownViewport" type="SubViewport" parent="." unique_id=163553548]
 transparent_bg = true
 size = Vector2i(1024, 1024)
 render_target_update_mode = 3
 
-[node name="Town" parent="TownViewport" instance=ExtResource("3_town")]
+[node name="Town" parent="TownViewport" unique_id=1568305022 instance=ExtResource("3_town")]
 
 [node name="Ground" type="Sprite3D" parent="." unique_id=1077889450]
 transform = Transform3D(2.5657244, 0, 0, 0, 0, 1, 0, -2.674419, 0, 67.73724, -1, 492.43127)

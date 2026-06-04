@@ -1,15 +1,28 @@
 extends CharacterBody2D
 
-@export var speed = 50.0
-@export var jump_velocity = -500.0
-@export var stop_radius = 8.0
+# Initial delay before damage begins
+const BURN_DELAY : float = 2.0
+# Delay between damage triggers
+const BURN_RATE  : float = 1.0
+# Initial delay before healing begins
+const HEAL_DELAY : float = 4.0
+# Delay between damage triggers
+const HEAL_RATE  : float = 1.0
 
-var player_inside := false
-var player: Node = null
-var mouse_direction: Vector2 = Vector2.ZERO
-var sun_timer := 0.0
-var moon_timer := 0.0
-
+@export var speed         : float = 50.0
+@export var jump_velocity : float = -500.0
+@export var stop_radius   : float = 8.0
+var player_inside   : bool    = false
+var player          : Node    = null
+var mouse_direction : Vector2 = Vector2.ZERO
+var sun_timer       : float   = 0.0
+var sun_damage      : int     = 1
+var moon_timer      : float   = 0.0
+var moon_heal       : int     = 1
+var burning         : bool    = false
+var current_damage  : int     = 0
+var healing         : bool    = false
+var current_heal    : int     = 0
 
 func _ready():
 	# If you want, assign via group instead (recommended)
@@ -29,38 +42,14 @@ func _physics_process(delta):
 	else:
 		mouse_direction = Vector2.ZERO
 		velocity = Vector2.ZERO
-
+	if player:
+		update_health(delta)
 	move_and_slide()
-
-	# DAMAGE LOGIC: only if player is NOT under shadow
-	if player and not player_inside:
-		sun_timer += delta
-
-		if sun_timer >= 3.0:
-			player.take_damage(1)
-			sun_timer = 0.0
-			print("Taking damage")
-	else:
-		sun_timer = 0.0
-		
-	if player and player_inside:
-		moon_timer += delta
-		
-		if moon_timer >= 5.0:
-			player.heal_damage(1)
-			moon_timer = 0.0
-			print("Healing")
-	
-	else: 
-		moon_timer = 0.0
-			
-
 
 func _on_body_entered(body):
 	if body == player:
 		player_inside = true
 		print("Entered shadow")
-
 
 func _on_body_exited(body):
 	if body == player:
@@ -75,3 +64,60 @@ func _on_body_exited(body):
 #func _on_area_2d_body_exited(body: Node2D) -> void:
 	#print("Exited shadow")
 	#pass # Replace with function body.
+
+	# DAMAGE LOGIC: only if player is NOT under shadow
+func update_health(delta : float) -> void:
+	if burning and !SFX.is_playing("vamp_burning"):
+		SFX.create_sound("vamp_burning")
+	elif !burning and SFX.is_playing("vamp_burning"):
+		SFX.destroy_sounds("vamp_burning")
+	if healing and !SFX.is_playing("vamp_healing"):
+		SFX.create_sound("vamp_healing")
+	elif !healing and SFX.is_playing("vamp_healing"):
+		SFX.destroy_sounds("vamp_healing")
+	if !player_inside:
+		moon_timer = 0.0
+		current_heal = 0
+		healing = false
+		sun_timer += delta
+		if sun_timer == delta:
+			SFX.destroy_sounds("vamp_warning")
+			SFX.create_sound("vamp_warning")
+		elif sun_timer >= (current_damage * BURN_RATE) + BURN_DELAY:
+			if player.health <= 0: return
+			player.take_damage(sun_damage)
+			current_damage += sun_damage
+			if player.health <= 0:
+				player.health = 0
+				burning = false
+				SFX.destroy_sounds("vamp_dead")
+				SFX.create_sound("vamp_dead", -4.0)
+				print("Vampy has 0 health")
+			else: 
+				burning = true
+				SFX.destroy_sounds("vamp_sizzle")
+				SFX.create_sound("vamp_sizzle")
+				print("Taking damage")
+	else:
+		sun_timer = 0.0
+		current_damage = 0
+		burning = false
+		moon_timer += delta
+		if moon_timer == delta:
+			SFX.destroy_sounds("vamp_phew")
+			SFX.create_sound("vamp_phew", -4.0)
+		elif moon_timer >= (current_heal * HEAL_RATE) + HEAL_DELAY:
+			if player.health >= player.max_health: return
+			player.heal_damage(moon_heal)
+			current_heal += moon_heal
+			if player.health >= player.max_health:
+				player.health = player.max_health
+				healing = false
+				SFX.destroy_sounds("vamp_max_health")
+				SFX.create_sound("vamp_max_health")
+				print("Vampy has max health")
+			else:
+				healing = true
+				SFX.destroy_sounds("vamp_heal")
+				SFX.create_sound("vamp_heal")
+				print("Healing damage")
