@@ -18,6 +18,13 @@ func _physics_process(delta):
 		Input.get_axis("Up", "Down")
 	)
 
+	# Prevents diagonal movement, creates a more akward movement pattern.
+	# if direction.x != 0 and direction.y != 0:
+	# 	if abs(direction.x) >= abs(direction.y):
+	# 		direction.y = 0
+	# 	else:
+	# 		direction.x = 0
+
 	velocity = direction.normalized() * speed
 	move_and_slide()
 	
