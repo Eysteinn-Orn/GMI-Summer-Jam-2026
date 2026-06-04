@@ -3,12 +3,14 @@ extends CharacterBody2D
 @export var speed = 50.0
 @export var jump_velocity = -500.0
 @export var stop_radius = 8.0
+@export var stop_smooth_time = 0.18
 
 var player_inside := false
 var player: Node = null
 var mouse_direction: Vector2 = Vector2.ZERO
 var sun_timer := 0.0
 var moon_timer := 0.0
+var stop_tween: Tween
 
 
 func _ready():
@@ -24,11 +26,19 @@ func _physics_process(delta):
 	var distance_to_mouse = to_mouse.length()
 
 	if distance_to_mouse > stop_radius:
+		if is_instance_valid(stop_tween):
+			stop_tween.kill()
+			stop_tween = null
 		mouse_direction = to_mouse.normalized()
 		velocity = mouse_direction * speed
 	else:
 		mouse_direction = Vector2.ZERO
-		velocity = Vector2.ZERO
+		if not is_instance_valid(stop_tween) and velocity.length() > 0.0:
+			stop_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			stop_tween.tween_property(self, "velocity", Vector2.ZERO, stop_smooth_time)
+			stop_tween.finished.connect(func(): stop_tween = null)
+		elif not is_instance_valid(stop_tween):
+			velocity = Vector2.ZERO
 
 	move_and_slide()
 
