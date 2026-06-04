@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d27m08afv55u5"
+path="res://.godot/imported/steel_drums_chime_positive.wav-f16adf40686389a8ca95f365f5f26fc7.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/Musical Effects (111)/steel_drums_chime_positive.wav"
+dest_files=["res://.godot/imported/steel_drums_chime_positive.wav-f16adf40686389a8ca95f365f5f26fc7.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

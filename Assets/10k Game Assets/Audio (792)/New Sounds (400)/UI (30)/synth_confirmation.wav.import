@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://fj1ql0ictprt"
+path="res://.godot/imported/synth_confirmation.wav-a834cb6b495d930e7b386355705b64f0.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/UI (30)/synth_confirmation.wav"
+dest_files=["res://.godot/imported/synth_confirmation.wav-a834cb6b495d930e7b386355705b64f0.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bw5wvctk2voiv"
+path="res://.godot/imported/explosion_2.wav-28b6d6bff2a40eb9bcee5ee094c0ace4.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/explosion_2.wav"
+dest_files=["res://.godot/imported/explosion_2.wav-28b6d6bff2a40eb9bcee5ee094c0ace4.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

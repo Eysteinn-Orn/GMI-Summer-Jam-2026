@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bg4p0pfgk5urm"
+path="res://.godot/imported/grand_piano_level_start.wav-5bfbef966f8efeb67cc224c60603148a.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/New Sounds (400)/Musical Effects (111)/grand_piano_level_start.wav"
+dest_files=["res://.godot/imported/grand_piano_level_start.wav-5bfbef966f8efeb67cc224c60603148a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://v8ubons0spoq"
+path="res://.godot/imported/tidal_wave.wav-0ae1fead1b5f8bb1a40bf60a72632a2b.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/tidal_wave.wav"
+dest_files=["res://.godot/imported/tidal_wave.wav-0ae1fead1b5f8bb1a40bf60a72632a2b.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

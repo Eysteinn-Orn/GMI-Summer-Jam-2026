@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://n4eu5084k0ep"
+path="res://.godot/imported/confirm_2.wav-caf9a1bac90ec4ded79adfcb716d8cd7.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Arcade Sound FX (100)/confirm_2.wav"
+dest_files=["res://.godot/imported/confirm_2.wav-caf9a1bac90ec4ded79adfcb716d8cd7.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

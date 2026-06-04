@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://da3rxqwprayhv"
+path="res://.godot/imported/Footstep_3.wav-b53010ac99786e96e84ab80593b8b720.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 1 (64)/Footstep_3.wav"
+dest_files=["res://.godot/imported/Footstep_3.wav-b53010ac99786e96e84ab80593b8b720.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

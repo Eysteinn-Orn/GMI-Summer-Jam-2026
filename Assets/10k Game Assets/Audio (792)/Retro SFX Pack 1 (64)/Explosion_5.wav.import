@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bnulxn11wm5ua"
+path="res://.godot/imported/Explosion_5.wav-cd23e836118d1d3ffe1c573c461146b2.sample"
+
+[deps]
+
+source_file="res://Assets/10k Game Assets/Audio (792)/Retro SFX Pack 1 (64)/Explosion_5.wav"
+dest_files=["res://.godot/imported/Explosion_5.wav-cd23e836118d1d3ffe1c573c461146b2.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
