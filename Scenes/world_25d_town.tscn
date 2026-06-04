@@ -1,12 +1,12 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://qspg54whb6o5" path="res://scripts/player_25d.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://qspg54whb6o5" path="res://Scripts/player_25d.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://cgn4bobh4bd8r" path="res://icon.svg" id="2_icon"]
-[ext_resource type="PackedScene" uid="uid://c3bjxhvkrawl" path="res://Scenes/maps/town.tscn" id="3_town"]
-[ext_resource type="Script" uid="uid://0lcr01fdedlu" path="res://scripts/moon_25d.gd" id="4_moon"]
-[ext_resource type="Script" uid="uid://dsjipyi4poahh" path="res://scripts/camera_25d.gd" id="5_camera"]
+[ext_resource type="PackedScene" path="res://Scenes/maps/town.tscn" id="3_town"]
+[ext_resource type="Script" uid="uid://0lcr01fdedlu" path="res://Scripts/moon_25d.gd" id="4_moon"]
+[ext_resource type="Script" uid="uid://dsjipyi4poahh" path="res://Scripts/camera_25d.gd" id="5_camera"]
 [ext_resource type="Texture2D" uid="uid://bupu4a5bdovn4" path="res://Assets/sprites/bat1.png" id="6_bat1"]
-[ext_resource type="Script" uid="uid://byqtuqwxkk6nt" path="res://scripts/grounded_sprite_25d.gd" id="6_grounded"]
+[ext_resource type="Script" uid="uid://byqtuqwxkk6nt" path="res://Scripts/grounded_sprite_25d.gd" id="6_grounded"]
 [ext_resource type="Texture2D" uid="uid://b4efvrka7r1bs" path="res://Assets/sprites/boulder1.png" id="7_boulder1"]
 [ext_resource type="Texture2D" uid="uid://6p2gpeygq7wc" path="res://Assets/sprites/boulder2.png" id="8_boulder2"]
 [ext_resource type="Texture2D" uid="uid://d35wxtv371v48" path="res://Assets/sprites/brickwall1.png" id="9_brickwall1"]
@@ -24,8 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://8ia6o2m2et28" path="res://Assets/sprites/tree1.png" id="21_tree1"]
 [ext_resource type="Texture2D" uid="uid://5opdwd5ojbr5" path="res://Assets/sprites/tree2.png" id="22_tree2"]
 [ext_resource type="Texture2D" uid="uid://citb58e0gomgu" path="res://Assets/sprites/vampire1.png" id="23_vampire"]
-[ext_resource type="Script" uid="uid://dqm6bjxrjv5wh" path="res://scripts/dolly_zoom_ui.gd" id="24_dolly"]
-[ext_resource type="Script" uid="uid://dq6s8fcernssh" path="res://Scripts/ground_from_viewport.gd" id="26_ground_vp"]
+[ext_resource type="Script" uid="uid://dqm6bjxrjv5wh" path="res://Scripts/dolly_zoom_ui.gd" id="24_dolly"]
+[ext_resource type="Script" path="res://Scripts/ground_from_viewport.gd" id="26_ground_vp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_player"]
 size = Vector3(128, 128, 128)

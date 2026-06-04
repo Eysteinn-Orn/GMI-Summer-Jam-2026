@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" format=3]
 
 [ext_resource type="Shader" uid="uid://6rlmlioft12x" path="res://Assets/shader/shader.gdshader" id="1_shader"]
-[ext_resource type="Texture2D" uid="uid://dr25wcbwnpxnm" path="res://Assets/sprites/road1.png" id="2_overlay"]
+[ext_resource type="Texture2D" path="res://Assets/sprites/road1.png" id="2_overlay"]
 
 [resource]
 shader = ExtResource("1_shader")
