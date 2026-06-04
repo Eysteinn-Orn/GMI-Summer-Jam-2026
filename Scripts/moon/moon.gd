@@ -12,6 +12,8 @@ const HEAL_RATE  : float = 1.0
 @export var speed         : float = 50.0
 @export var jump_velocity : float = -500.0
 @export var stop_radius   : float = 8.0
+@export var stop_smooth_time = 0.18
+var stop_tween: Tween
 var player_inside   : bool    = false
 var player          : Node    = null
 var mouse_direction : Vector2 = Vector2.ZERO
@@ -41,7 +43,12 @@ func _physics_process(delta):
 		velocity = mouse_direction * speed
 	else:
 		mouse_direction = Vector2.ZERO
-		velocity = Vector2.ZERO
+		if not is_instance_valid(stop_tween) and velocity.length() > 0.0:
+			stop_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			stop_tween.tween_property(self, "velocity", Vector2.ZERO, stop_smooth_time)
+			stop_tween.finished.connect(func(): stop_tween = null)
+		elif not is_instance_valid(stop_tween):
+			velocity = Vector2.ZERO
 	if player:
 		update_health(delta)
 	move_and_slide()
