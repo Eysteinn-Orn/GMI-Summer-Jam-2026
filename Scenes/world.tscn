@@ -1,13 +1,10 @@
 [gd_scene format=3 uid="uid://d2y852kokepd6"]
 
-[ext_resource type="PackedScene" uid="uid://cxo0fehxe60ne" path="res://Scenes/maps/grass.tscn" id="1_8j60k"]
-[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://Scenes/vampire/vampire.tscn" id="2_5a7ea"]
-[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://Scenes/moon/moon.tscn" id="3_8j60k"]
-[ext_resource type="Script" uid="uid://bodp4y4jbflhe" path="res://Scripts/game_manager.gd" id="4_8j60k"]
+[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://scenes/vampire/vampire.tscn" id="2_5a7ea"]
+[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://scenes/moon/moon.tscn" id="3_8j60k"]
+[ext_resource type="Script" uid="uid://bodp4y4jbflhe" path="res://scripts/game_manager.gd" id="4_8j60k"]
 
 [node name="World" type="Node2D" unique_id=780093096]
-
-[node name="Grass" parent="." unique_id=231246929 instance=ExtResource("1_8j60k")]
 
 [node name="Vampire" parent="." unique_id=233018022 groups=["player"] instance=ExtResource("2_5a7ea")]
 scale = Vector2(1, 1)
