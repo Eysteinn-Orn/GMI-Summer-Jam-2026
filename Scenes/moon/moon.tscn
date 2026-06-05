@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://gya1aixo1sal"]
 
 [ext_resource type="Script" uid="uid://bwtowwhyq24tg" path="res://Scripts/moon/moon.gd" id="1_4shwn"]
-[ext_resource type="Texture2D" uid="uid://cdeje7oee26ad" path="res://Assets/sprites/Moon/blushMoon.png" id="2_4shwn"]
+[ext_resource type="Texture2D" path="res://Assets/sprites/Moon/blushMoon_31.png" id="2_4shwn"]
+[ext_resource type="Script" path="res://Scripts/moon/moon_shadow.gd" id="3_dark"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_420bj"]
 
@@ -9,7 +10,6 @@
 radius = 67.89166
 
 [node name="Moon" type="CharacterBody2D" unique_id=324293011]
-modulate = Color(1, 1, 1, 0.28627452)
 scale = Vector2(1.25, 1.25)
 collision_layer = 2
 collision_mask = 0
@@ -17,9 +17,18 @@ script = ExtResource("1_4shwn")
 speed = 125.0
 metadata/_edit_group_ = true
 
+[node name="Darkness" type="Node2D" parent="." unique_id=993156165]
+z_index = 100
+script = ExtResource("3_dark")
+darkness = 0.8
+falloff = 30.0
+sprite_path = NodePath("../Sprite2D")
+
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=993156164]
+self_modulate = Color(1, 1, 1, 0.28627452)
+z_index = 101
 position = Vector2(0.80000305, 0.80000305)
-scale = Vector2(0.15421686, 0.1576923)
+scale = Vector2(4.12944, 4.23232)
 texture = ExtResource("2_4shwn")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=746539990]
