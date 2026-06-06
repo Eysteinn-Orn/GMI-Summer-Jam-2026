@@ -4,9 +4,16 @@
 [ext_resource type="Texture2D" uid="uid://cqw4xbiuvdc1t" path="res://Assets/sprites/vampire.png" id="2_yq822"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_go701"]
-size = Vector2(16, 16)
+size = Vector2(8, 12)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_wptyn"]
+[sub_resource type="Animation" id="Animation_yq822"]
+resource_name = "idle_down"
+length = 0.8
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wptyn"]
+_data = {
+&"idle_down": SubResource("Animation_yq822")
+}
 
 [node name="Vampire" type="CharacterBody2D" unique_id=233018022]
 scale = Vector2(0.25, 0.25)
@@ -23,7 +30,8 @@ vframes = 4
 frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1776260982]
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_go701")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=476883241]
-sprite_frames = SubResource("SpriteFrames_wptyn")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1166887778]
+libraries/ = SubResource("AnimationLibrary_wptyn")
