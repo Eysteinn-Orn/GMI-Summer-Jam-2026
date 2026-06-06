@@ -33,6 +33,9 @@ func _input(event : InputEvent) -> void:
 func _on_level_select_button_pressed() -> void:
 	_open_sub_menu(preload("res://menus/scenes/menus/level_select/level_select.tscn"))
 
+func _on_eclipse_anim_button_pressed() -> void:
+	_open_sub_menu(preload("res://menus/scenes/menus/main_menu/eclipse_anim.tscn"))
+
 func _ready() -> void:
 	super._ready()
 	animation_state_machine = $MenuAnimationTree.get("parameters/playback")
