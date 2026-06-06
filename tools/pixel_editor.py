@@ -1731,14 +1731,24 @@ class PixelEditor:
         if 1 <= nw <= self.MAX_DIM and 1 <= nh <= self.MAX_DIM:
             self.resize_to(nw, nh, ox, oy)
 
+    def rel_to_sprites(self, path):
+        """A saved/opened path as it appears in the file list and name box:
+        relative to the sprites root when inside it, else just the basename."""
+        rel = os.path.relpath(path, self.sprites_dir)
+        return os.path.basename(path) if rel.startswith("..") else rel
+
     def refresh_file_list(self, select=None):
-        """Rescan the sprites folder into the always-open file list."""
+        """Rescan the sprites folder, including subfolders, into the always-open
+        file list. Entries are paths relative to the sprites root, so a sprite in
+        Assets/sprites/enemies/bat.png shows (and saves back) as 'enemies/bat'."""
         self.file_list.delete(0, tk.END)
-        try:
-            names = sorted(f for f in os.listdir(self.sprites_dir)
-                           if f.lower().endswith(".png"))
-        except OSError:
-            names = []
+        names = []
+        for dirpath, _dirs, files in os.walk(self.sprites_dir):
+            for f in files:
+                if f.lower().endswith(".png"):
+                    names.append(os.path.relpath(os.path.join(dirpath, f),
+                                                 self.sprites_dir))
+        names.sort()
         for n in names:
             self.file_list.insert(tk.END, n)
         if select in names:
@@ -1762,12 +1772,12 @@ class PixelEditor:
             self.frames = [pixels]
             self.frame = 0
             self.path = path
-            self.name_var.set(os.path.splitext(os.path.basename(path))[0])
+            self.name_var.set(os.path.splitext(self.rel_to_sprites(path))[0])
             self.undo_stack.clear()
             self.redo_stack.clear()
             self.update_frame_label()
             self.rebuild_canvas()
-            self.refresh_file_list(select=os.path.basename(path))
+            self.refresh_file_list(select=self.rel_to_sprites(path))
 
     def open_png(self):
         path = filedialog.askopenfilename(initialdir=self.sprites_dir,
@@ -1789,25 +1799,29 @@ class PixelEditor:
             directory = os.path.dirname(path)
             name = os.path.splitext(os.path.basename(path))[0]
         self.commit_float()
+        # A name may carry a subfolder ('enemies/bat'); split it off so the _N
+        # frame-suffix logic only sees the filename and we can create the folder.
+        subdir, base = os.path.split(name)
+        target_dir = os.path.join(directory, subdir)
+        os.makedirs(target_dir, exist_ok=True)
         if len(self.frames) > 1:
-            base = name
             if "_" in base and base.rsplit("_", 1)[1].isdigit():
                 base = base.rsplit("_", 1)[0]  # vampire_0 → vampire, not vampire_0_0
             for i, frame in enumerate(self.frames):
-                save_png(os.path.join(directory, f"{base}_{i}.png"), self.w, self.h, frame)
-            self.path = os.path.join(directory, f"{base}_{self.frame}.png")
-            self.name_var.set(f"{base}_{self.frame}")
-            self.refresh_file_list(select=f"{base}_{self.frame}.png")
+                save_png(os.path.join(target_dir, f"{base}_{i}.png"), self.w, self.h, frame)
+            self.path = os.path.join(target_dir, f"{base}_{self.frame}.png")
+            self.name_var.set(os.path.splitext(self.rel_to_sprites(self.path))[0])
+            self.refresh_file_list(select=self.rel_to_sprites(self.path))
             self.status.configure(
                 text=f"Saved {len(self.frames)} frames → {base}_0..{len(self.frames) - 1}.png")
         else:
-            path = os.path.join(directory, name)
+            path = os.path.join(target_dir, base)
             if not path.lower().endswith(".png"):
                 path += ".png"
             save_png(path, self.w, self.h, self.pixels)
             self.path = path
-            self.name_var.set(os.path.splitext(os.path.basename(path))[0])
-            self.refresh_file_list(select=os.path.basename(path))
+            self.name_var.set(os.path.splitext(self.rel_to_sprites(path))[0])
+            self.refresh_file_list(select=self.rel_to_sprites(path))
             self.status.configure(text=f"Saved {os.path.basename(path)}")
 
     def export_spritesheet(self):
