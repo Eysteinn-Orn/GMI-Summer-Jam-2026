@@ -29,6 +29,12 @@ SFX="*uid://coo06qpcx1ocq"
 PauseMenuLayer="*res://menus/scenes/windows/pause_menu_layer.tscn"
 GameManager="*uid://bodp4y4jbflhe"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="viewport"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/maaacks_menus_template/plugin.cfg", "res://addons/pixel_editor/plugin.cfg")
