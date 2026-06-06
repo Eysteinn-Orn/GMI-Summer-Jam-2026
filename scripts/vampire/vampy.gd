@@ -12,11 +12,28 @@ var prev_hop := 0.0
 @export var health = 10
 
 @onready var sprite: Sprite2D = $Sprite2D
-@onready var health_bar = $"../CanvasLayer/ProgressBar"
+#@onready var health_bar = $"../CanvasLayer/ProgressBar"
+@onready var health_bar = $"../CanvasLayer/HealthBar"
+
+var health_textures = [
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_0.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_1.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_2.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_3.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_4.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_5.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_6.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_7.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_8.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_9.png"),
+	preload("res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_10.png"),
+] 
+
+func update_health_bar():
+	health_bar.texture = health_textures[health]
 
 func _ready():
-	health_bar.max_value = max_health
-	health_bar.value = health
+	update_health_bar()
 
 func _physics_process(delta):
 	var direction = Vector2(
@@ -59,9 +76,9 @@ func has_hopped() -> bool:
 func take_damage(amount):
 	health -= amount
 	health = clamp(health, 0, max_health)
-	health_bar.value = health
+	update_health_bar()
 	
 func heal_damage(amount):
 	health += amount
 	health = clamp(health, 0, max_health)
-	health_bar.value = health
+	update_health_bar()

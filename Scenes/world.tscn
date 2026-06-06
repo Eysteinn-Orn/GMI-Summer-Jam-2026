@@ -40,11 +40,9 @@ script = ExtResource("4_8j60k")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=889750536]
 
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" unique_id=28480628]
-offset_left = 115.0
-offset_top = 9.0
-offset_right = 315.0
-offset_bottom = 36.0
+[node name="HealthBar" type="TextureRect" parent="CanvasLayer" unique_id=1092511832]
+offset_right = 138.0
+offset_bottom = 40.0
 
 [node name="EclipseTimer" type="Timer" parent="." unique_id=1128872305]
 unique_name_in_owner = true
