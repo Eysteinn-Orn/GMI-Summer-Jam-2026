@@ -26,8 +26,11 @@ collision_visibility_mode = 1
 [node name="Vampire" parent="." unique_id=233018022 groups=["player"] instance=ExtResource("2_5a7ea")]
 scale = Vector2(1, 1)
 collision_mask = 1
+speed = 100.0
+jump_velocity = -250.0
 
 [node name="Camera2D" type="Camera2D" parent="Vampire" unique_id=471652089]
+zoom = Vector2(2.5, 2.5)
 process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 12.0
