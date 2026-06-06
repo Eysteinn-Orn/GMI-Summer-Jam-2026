@@ -1,6 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://cqmbl5h61bjis"]
 
 [ext_resource type="Texture2D" uid="uid://cqv0oqfokfaty" path="res://Assets/10k Game Assets/Pixel Art (4770)/RPG (1437)/Scenery (343)/Tile Sets (5)/rpg_tileset_graveyard.png" id="1_yf3xe"]
+[ext_resource type="Texture2D" uid="uid://dhvic5m81l0kb" path="res://Assets/tilesets/custom_tiles.png" id="2_82pyw"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_yf3xe"]
 tile_data = PackedInt32Array(0, 983040, 9, 65536, 983040, 10)
@@ -701,6 +702,13 @@ texture = ExtResource("1_yf3xe")
 10:0/0 = 0
 7:6/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_82pyw"]
+texture = ExtResource("2_82pyw")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
 [resource]
 physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
@@ -711,6 +719,7 @@ terrain_set_0/terrain_1/color = Color(0.23529412, 0.4509804, 0.09019608, 1)
 terrain_set_0/terrain_2/name = "Spooky Ground"
 terrain_set_0/terrain_2/color = Color(0.40392157, 0.2784314, 0.5647059, 1)
 sources/0 = SubResource("TileSetAtlasSource_xpige")
+sources/1000 = SubResource("TileSetAtlasSource_82pyw")
 pattern_0 = SubResource("TileMapPattern_yf3xe")
 pattern_1 = SubResource("TileMapPattern_xpige")
 pattern_2 = SubResource("TileMapPattern_82pyw")

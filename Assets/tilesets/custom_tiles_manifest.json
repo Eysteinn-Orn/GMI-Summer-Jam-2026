@@ -1,0 +1,7 @@
+{
+	"next_index": 2,
+	"tiles": {
+		"res://Assets/sprites/tiles/rock1.png": 0,
+		"res://Assets/sprites/tiles/tree1.png": 1
+	}
+}
