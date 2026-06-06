@@ -8,6 +8,9 @@ tile_data = PackedInt32Array(0, 983040, 9, 65536, 983040, 10)
 [sub_resource type="TileMapPattern" id="TileMapPattern_xpige"]
 tile_data = PackedInt32Array(0, 393216, 11, 65536, 393216, 12, 131072, 393216, 13, 1, 458752, 11, 65537, 458752, 12, 131073, 458752, 13, 2, 524288, 11, 65538, 524288, 12, 131074, 524288, 13)
 
+[sub_resource type="TileMapPattern" id="TileMapPattern_82pyw"]
+tile_data = PackedInt32Array(0, 393216, 11, 65536, 393216, 12, 131072, 393216, 14, 1, 458752, 11, 65537, 458752, 12, 131073, 458752, 13, 2, 524288, 11, 65538, 524288, 12, 131074, 458752, 14)
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xpige"]
 texture = ExtResource("1_yf3xe")
 0:0/0 = 0
@@ -165,7 +168,6 @@ texture = ExtResource("1_yf3xe")
 7:4/0 = 0
 8:4/0 = 0
 9:4/0 = 0
-9:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 10:4/0 = 0
 11:4/0 = 0
 12:4/0 = 0
@@ -187,7 +189,6 @@ texture = ExtResource("1_yf3xe")
 8:5/0 = 0
 8:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:5/0 = 0
-9:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 10:5/0 = 0
 11:5/0 = 0
 12:5/0 = 0
@@ -206,8 +207,6 @@ texture = ExtResource("1_yf3xe")
 5:6/0 = 0
 6:6/0 = 0
 6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
-7:6/0 = 0
-7:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:6/0 = 0
 8:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:6/0 = 0
@@ -685,6 +684,7 @@ texture = ExtResource("1_yf3xe")
 14:15/0 = 0
 15:15/0 = 0
 10:0/0 = 0
+7:6/0 = 0
 
 [resource]
 physics_layer_0/collision_layer = 1
@@ -698,3 +698,4 @@ terrain_set_0/terrain_2/color = Color(0.40392157, 0.2784314, 0.5647059, 1)
 sources/0 = SubResource("TileSetAtlasSource_xpige")
 pattern_0 = SubResource("TileMapPattern_yf3xe")
 pattern_1 = SubResource("TileMapPattern_xpige")
+pattern_2 = SubResource("TileMapPattern_82pyw")
