@@ -27,11 +27,13 @@ func _physics_process(delta):
 		_hop_time += delta * hop_speed
 		sprite.position.y = -abs(sin(_hop_time)) * hop_height
 		if has_hopped():
+			ui.update_vamp(true)
 			SFX.destroy_sounds("step")
 			SFX.create_sound("step", -8.0)
 		prev_prev_hop = prev_hop
 		prev_hop = sprite.position.y
 	else:
+		ui.update_vamp(false)
 		_hop_time = 0.0
 		sprite.position.y = 0.0
 		prev_prev_hop = 0.1

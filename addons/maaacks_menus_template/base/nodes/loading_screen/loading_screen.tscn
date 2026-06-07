@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cd0jbh4metflb"]
 
 [ext_resource type="Script" uid="uid://dgeewyjjpk4qn" path="res://addons/maaacks_menus_template/base/nodes/loading_screen/loading_screen.gd" id="1_gbk34"]
+[ext_resource type="Texture2D" uid="uid://b743aypneiyde" path="res://Assets/sprites/Moon/blushMoon_31.png" id="2_n04bj"]
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=788661482]
 process_mode = 3
@@ -14,6 +15,23 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=611475408]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.781
+anchor_top = 0.98600006
+anchor_right = 0.781
+anchor_bottom = 0.98600006
+offset_left = -1079.52
+offset_top = -1064.8801
+offset_right = 0.47998047
+offset_bottom = 15.119873
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(540, 540)
+texture = ExtResource("2_n04bj")
+stretch_mode = 4
 
 [node name="BackPanel" type="Panel" parent="Control" unique_id=604252196]
 layout_mode = 0

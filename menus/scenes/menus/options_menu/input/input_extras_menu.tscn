@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c0i0cmyr31sbp"]
 
-[ext_resource type="Script" path="res://addons/maaacks_menus_template/base/nodes/utilities/capture_focus.gd" id="1_jvcy6"]
-[ext_resource type="PackedScene" path="res://addons/maaacks_menus_template/base/nodes/menus/options_menu/option_control/slider_option_control.tscn" id="2_qe5tt"]
+[ext_resource type="Script" uid="uid://1nf36h0gms3q" path="res://addons/maaacks_menus_template/base/nodes/utilities/capture_focus.gd" id="1_jvcy6"]
+[ext_resource type="PackedScene" uid="uid://cl416gdb1fgwr" path="res://addons/maaacks_menus_template/base/nodes/menus/options_menu/option_control/slider_option_control.tscn" id="2_qe5tt"]
 
 [node name="Inputs" type="MarginContainer" unique_id=998049297]
 anchors_preset = 15
@@ -42,9 +42,11 @@ section = "InputSettings"
 text = "Mouse Sensitivity :"
 
 [node name="HSlider" parent="VBoxContainer/MarginContainer/VBoxContainer/MouseSensitivityControl" index="1" unique_id=424108384]
+custom_minimum_size = Vector2(512, 0)
 min_value = 0.25
 max_value = 2.0
 tick_count = 8
+ticks_position = 2
 
 [node name="JoypadSensitivityControl" parent="VBoxContainer/MarginContainer/VBoxContainer" unique_id=256777414 instance=ExtResource("2_qe5tt")]
 layout_mode = 2
@@ -57,9 +59,11 @@ section = "InputSettings"
 text = "Joypad Sensitivity :"
 
 [node name="HSlider" parent="VBoxContainer/MarginContainer/VBoxContainer/JoypadSensitivityControl" index="1" unique_id=424108384]
+custom_minimum_size = Vector2(512, 0)
 min_value = 0.25
 max_value = 2.0
 tick_count = 8
+ticks_position = 2
 
 [editable path="VBoxContainer/MarginContainer/VBoxContainer/MouseSensitivityControl"]
 [editable path="VBoxContainer/MarginContainer/VBoxContainer/JoypadSensitivityControl"]

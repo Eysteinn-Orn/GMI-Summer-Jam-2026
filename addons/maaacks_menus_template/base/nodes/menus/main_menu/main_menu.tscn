@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://c6k5nnpbypshi"]
 
 [ext_resource type="Script" uid="uid://bhgs1upaahk3y" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://bi38c86op1y7x" path="res://Assets/10k Game Assets/Font Assets (181)/CI GameDev (1)/ci-gamedev-font.ttf" id="4_dnqxm"]
 [ext_resource type="Script" uid="uid://1nf36h0gms3q" path="res://addons/maaacks_menus_template/base/nodes/utilities/capture_focus.gd" id="4_l1ebe"]
 [ext_resource type="PackedScene" uid="uid://bkcsjsk2ciff" path="res://addons/maaacks_menus_template/base/nodes/music_players/background_music_player.tscn" id="4_w8sbm"]
 [ext_resource type="Script" uid="uid://b5oej1q4h7jvh" path="res://addons/maaacks_menus_template/base/nodes/autoloads/ui_sound_controller/ui_sound_controller.gd" id="6_bs342"]
 [ext_resource type="Script" uid="uid://dmkubt2nsnsbn" path="res://addons/maaacks_menus_template/base/nodes/labels/config_version_label.gd" id="6_pdiij"]
+[ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="7_7hknb"]
 [ext_resource type="PackedScene" uid="uid://cwt4p3bufkke5" path="res://addons/maaacks_menus_template/base/nodes/windows/confirmation_overlaid_window.tscn" id="7_im16j"]
 [ext_resource type="Script" uid="uid://bkwlopi4qn32o" path="res://addons/maaacks_menus_template/base/nodes/labels/config_name_label.gd" id="7_j7612"]
 
@@ -55,8 +57,9 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 67.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 48
-text = "Title"
+theme_override_fonts/font = ExtResource("4_dnqxm")
+theme_override_font_sizes/font_size = 96
+text = "GMI-Summer-2026"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("7_j7612")
@@ -73,10 +76,12 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 34.0
+offset_top = 48.0
+offset_bottom = 115.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 24
-text = "Subtitle"
+theme_override_fonts/font = ExtResource("4_dnqxm")
+theme_override_font_sizes/font_size = 48
+text = "GMI-Summer-2026"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -113,21 +118,25 @@ script = ExtResource("4_l1ebe")
 [node name="NewGameButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" unique_id=2044537792]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("7_7hknb")
 text = "New Game"
 
 [node name="OptionsButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" unique_id=1486236076]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("7_7hknb")
 text = "Options"
 
 [node name="CreditsButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" unique_id=301223169]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("7_7hknb")
 text = "Credits"
 
 [node name="ExitButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" unique_id=1750454379]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("7_7hknb")
 text = "Exit"
 
 [node name="VersionMargin" type="MarginContainer" parent="." unique_id=1732528471]

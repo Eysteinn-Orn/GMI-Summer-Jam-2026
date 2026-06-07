@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://c4bd0jxcs7g46"]
 
-[ext_resource type="PackedScene" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.tscn" id="1_sbi1w"]
-[ext_resource type="Script" path="res://menus/scenes/menus/main_menu/main_menu_with_animations.gd" id="2_ytpwg"]
-[ext_resource type="PackedScene" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_8i6b8"]
-[ext_resource type="PackedScene" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_t55r5"]
+[ext_resource type="PackedScene" uid="uid://c6k5nnpbypshi" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.tscn" id="1_sbi1w"]
+[ext_resource type="Script" uid="uid://dl6k7fr7focsx" path="res://menus/scenes/menus/main_menu/main_menu_with_animations.gd" id="2_ytpwg"]
+[ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_8i6b8"]
+[ext_resource type="PackedScene" uid="uid://cx2v8gytdtwqj" path="res://menus/scenes/menus/main_menu/custom_credits.tscn" id="4_ytpwg"]
+[ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_ytpwg"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Intro"
@@ -316,7 +317,7 @@ graph_offset = Vector2(-180.277, 49)
 [node name="MainMenu" unique_id=589811630 instance=ExtResource("1_sbi1w")]
 script = ExtResource("2_ytpwg")
 options_packed_scene = ExtResource("3_8i6b8")
-credits_packed_scene = ExtResource("4_t55r5")
+credits_packed_scene = ExtResource("4_ytpwg")
 
 [node name="MenuAnimationPlayer" type="AnimationPlayer" parent="." index="1" unique_id=1492532975]
 libraries/ = SubResource("AnimationLibrary_2kqig")
@@ -336,20 +337,26 @@ modulate = Color(1, 1, 1, 0)
 modulate = Color(1, 1, 1, 0)
 
 [node name="MenuButtonsBoxContainer" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer" index="0" unique_id=2017477786]
+offset_left = -165.0
+offset_top = -244.0
+offset_right = 165.0
+offset_bottom = 244.0
 lock = true
+
+[node name="EclipseAnimButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="0" unique_id=2026977733]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("5_ytpwg")
+text = "Intro"
+
+[node name="LevelSelectButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2" unique_id=1017608670]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("5_ytpwg")
+text = "Level Select"
 
 [node name="VersionContainer" parent="VersionMargin" parent_id_path=PackedInt32Array(1732528471) index="0" unique_id=1603969262]
 modulate = Color(1, 1, 1, 0)
-
-[node name="LevelSelectButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Level Select"
-
-[node name="EclipseAnimButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "eclipse anim"
 
 [node name="MouseFilter" type="Control" parent="." index="8" unique_id=33285267]
 layout_mode = 1
@@ -361,5 +368,5 @@ grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/EclipseAnimButton" to="." method="_on_eclipse_anim_button_pressed"]
+[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]

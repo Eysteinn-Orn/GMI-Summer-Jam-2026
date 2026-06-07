@@ -1,24 +1,36 @@
 [gd_scene format=3 uid="uid://b1p24cwql2we2"]
 
-[ext_resource type="PackedScene" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.tscn" id="1_6pasy"]
-[ext_resource type="Script" path="res://menus/scenes/menus/main_menu/main_menu.gd" id="2_i8spl"]
-[ext_resource type="PackedScene" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_qe0nm"]
-[ext_resource type="PackedScene" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_mov4g"]
+[ext_resource type="PackedScene" uid="uid://c6k5nnpbypshi" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.tscn" id="1_6pasy"]
+[ext_resource type="Script" uid="uid://du05h8dxxg7ho" path="res://menus/scenes/menus/main_menu/main_menu.gd" id="2_i8spl"]
+[ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_qe0nm"]
+[ext_resource type="PackedScene" uid="uid://cyhl7uqhsfg51" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_mov4g"]
+[ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_i8spl"]
 
 [node name="MainMenu" unique_id=869232425 instance=ExtResource("1_6pasy")]
 script = ExtResource("2_i8spl")
 options_packed_scene = ExtResource("3_qe0nm")
 credits_packed_scene = ExtResource("4_mov4g")
 
-[node name="LevelSelectButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="1"]
+[node name="TitleLabel" parent="MenuContainer/TitleMargin/TitleContainer" parent_id_path=PackedInt32Array(556427956) index="0" unique_id=359406872]
+text = "GMI-Summer-2026"
+
+[node name="MenuButtonsBoxContainer" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer" parent_id_path=PackedInt32Array(116448484) index="0" unique_id=2017477786]
+offset_left = -171.0
+offset_top = -244.0
+offset_right = 171.0
+offset_bottom = 244.0
+
+[node name="EclipseAnimButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="0" unique_id=1833878232]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("5_i8spl")
+text = "Intro"
+
+[node name="LevelSelectButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2" unique_id=326414453]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("5_i8spl")
 text = "Level Select"
 
-[node name="EclipseAnimButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "eclipse anim"
-
-[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/EclipseAnimButton" to="." method="_on_eclipse_anim_button_pressed"]
+[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
