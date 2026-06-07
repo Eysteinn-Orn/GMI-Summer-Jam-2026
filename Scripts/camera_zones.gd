@@ -24,7 +24,7 @@ func _physics_process(_delta: float) -> void:
 			set_active_camera(3)
 		else:
 			set_active_camera(2)
-	elif focus.y > camera_size.y/2:
+	elif focus.y > camera_size.y/2 - camera_offset_y/4:
 		if focus.x < -camera_size.x/2:
 			set_active_camera(7)
 		elif focus.x > camera_size.x/2:
