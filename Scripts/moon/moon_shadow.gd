@@ -8,15 +8,9 @@ extends Node2D
 @export_range(0.0, 1.0) var hold : float = 0.0  # fraction of the falloff held at full dark
 @export var falloff   : float = 90.0  # local px the fade extends past the core
 @export var segments  : int   = 64    # circle smoothness
-@export var sprite_path : NodePath    # the moon Sprite2D to size the core from
-
 var core_radius : float = 64.0
 
-func _ready() -> void:
-	var spr := get_node_or_null(sprite_path) as Sprite2D
-	if spr and spr.texture:
-		var size := spr.texture.get_size() * spr.scale
-		core_radius = max(size.x, size.y) * 0.5
+func _process(_delta):
 	queue_redraw()
 
 func _draw() -> void:
