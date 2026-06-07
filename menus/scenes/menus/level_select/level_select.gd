@@ -1,16 +1,14 @@
 extends Control
 
 const LEVELS := {
-	"Grass": "res://Scenes/world.tscn",
-	"Town": "res://Scenes/world_town.tscn",
-	"2.5D World": "res://Scenes/world_25d.tscn",
-	"2.5D Town": "res://Scenes/world_25d_town.tscn",
+	"The Graveyard": "res://Scenes/world.tscn",
 }
 
 func _ready() -> void:
 	for level_name in LEVELS:
 		var button := Button.new()
 		button.text = level_name
+		button.theme = load("res://Assets/themes/main.tres")
 		button.pressed.connect(_on_level_pressed.bind(LEVELS[level_name]))
 		%LevelButtons.add_child(button)
 

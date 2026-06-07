@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://v8b34gi6y4x4"]
 
-[ext_resource type="Script" path="res://menus/scenes/credits/scrollable_credits.gd" id="1_gcb84"]
-[ext_resource type="PackedScene" path="res://menus/scenes/credits/credits_label.tscn" id="2_nuv7p"]
+[ext_resource type="Script" uid="uid://yd206p6xl4o6" path="res://menus/scenes/credits/scrollable_credits.gd" id="1_gcb84"]
+[ext_resource type="PackedScene" uid="uid://bqtkmju6tjn4f" path="res://menus/scenes/credits/credits_label.tscn" id="2_nuv7p"]
 
 [node name="ScrollableCredits" type="Control" unique_id=1649718614]
 layout_mode = 3
@@ -15,5 +15,29 @@ script = ExtResource("1_gcb84")
 [node name="CreditsLabel" parent="." unique_id=967293869 instance=ExtResource("2_nuv7p")]
 unique_name_in_owner = true
 layout_mode = 1
+text = "[font_size=96]Collaborators[/font_size]
+
+[font_size=64]Role[/font_size]
+Person 1  
+
+[font_size=48]Tools[/font_size]
+[font_size=24]Godot[/font_size]
+[img=80]res:///menus/assets/godot_engine_logo/logo_vertical_color_dark.png[/img]  
+Author: [url=https://godotengine.org/contact]Juan Linietsky, Ariel Manzur, and contributors[/url]  
+Source: [url=https://godotengine.org/]godotengine.org[/url]  
+License: [url=https://github.com/godotengine/godot/blob/master/LICENSE.txt]MIT License[/url] 
+
+[font_size=24]Godot Menus Template[/font_size]
+[img=80]res:///menus/assets/plugin_logo/logo.png[/img]  
+Author: [url=https://github.com/Maaack/Godot-Menus-Template/graphs/contributors]Marek Belski and contributors[/url]  
+Source: [url=https://github.com/Maaack/Godot-Menus-Template]github: Godot-Menus-Template[/url]  
+License: [url=LICENSE.txt]MIT License[/url]  
+
+[font_size=24]Git[/font_size]
+[img=80]res:///menus/assets/git_logo/Git-Logo-2Color.png[/img]  
+Author: [url=https://github.com/torvalds]Linus Torvalds[/url]  
+Source: [url=https://git-scm.com/downloads]git-scm.com[/url]  
+License: [url=https://opensource.org/licenses/GPL-2.0]GNU General Public License version 2[/url]
+"
 fit_content = false
 scroll_active = true

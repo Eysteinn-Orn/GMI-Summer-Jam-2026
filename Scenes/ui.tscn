@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://bkygcd5tn7mf4" path="res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_healthbar_10.png" id="1_jxero"]
 [ext_resource type="Script" uid="uid://dnljvcnoycnu3" path="res://Scripts/ui.gd" id="1_nf4gj"]
 [ext_resource type="Texture2D" uid="uid://b2a88ld6nbk8j" path="res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/UI (12)/ui_nine_slice.png" id="2_m78vo"]
-[ext_resource type="Texture2D" uid="uid://citb58e0gomgu" path="res://Assets/sprites/vampire1.png" id="2_qdvrb"]
 [ext_resource type="Texture2D" uid="uid://dsrls151do1wh" path="res://Assets/sprites/eclipse/Sun_Base01.png" id="4_q7pk6"]
+[ext_resource type="Texture2D" uid="uid://f0nepgthujfc" path="res://Assets/sprites/vampire_sprites.png" id="4_smcll"]
 [ext_resource type="Texture2D" uid="uid://bq54cs15ligyt" path="res://Assets/sprites/eclipse/MoonRenderTest01_F05.png" id="5_m78vo"]
 [ext_resource type="FontFile" uid="uid://bi38c86op1y7x" path="res://Assets/10k Game Assets/Font Assets (181)/CI GameDev (1)/ci-gamedev-font.ttf" id="7_smcll"]
 
@@ -40,14 +40,15 @@ offset_top = -192.0
 offset_right = 1920.0
 grow_vertical = 0
 texture = SubResource("GradientTexture1D_2246s")
+flip_h = true
 
 [node name="HealthBar" type="TextureRect" parent="." unique_id=1829599755]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 160.0
+offset_left = 1372.0
 offset_top = -160.0
-offset_right = 672.0
+offset_right = 1884.0
 offset_bottom = -32.0
 grow_vertical = 0
 pivot_offset = Vector2(44, 60)
@@ -55,15 +56,13 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 texture = ExtResource("1_jxero")
 
-[node name="VampIcon" type="TextureRect" parent="." unique_id=1577994775]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = -192.0
-offset_right = 193.0
-grow_vertical = 0
-texture = ExtResource("2_qdvrb")
+[node name="VampIcon" type="Sprite2D" parent="." unique_id=1636870446]
+position = Vector2(1267, 952)
+scale = Vector2(2, 2)
+texture = ExtResource("4_smcll")
+hframes = 4
+vframes = 2
+frame = 6
 
 [node name="SunIcon" type="TextureRect" parent="." unique_id=1006724765]
 clip_contents = true
@@ -72,9 +71,9 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -191.0
+offset_left = -1920.0
 offset_top = -199.0
-offset_right = 8.5
+offset_right = -1720.5
 offset_bottom = 0.5
 grow_horizontal = 0
 grow_vertical = 0
@@ -87,9 +86,9 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -174.0
+offset_left = -1900.0
 offset_top = -174.0
-offset_right = -15.0
+offset_right = -1741.0
 offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
@@ -102,14 +101,15 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -129.25
+offset_left = -940.0
 offset_top = -206.0
-offset_right = 129.25
+offset_right = -565.0
 grow_horizontal = 2
 grow_vertical = 0
+pivot_offset = Vector2(0, 103)
 size_flags_vertical = 8
 theme_override_fonts/font = ExtResource("7_smcll")
 theme_override_font_sizes/font_size = 96
 text = "0:18"
-horizontal_alignment = 1
+horizontal_alignment = 2
 vertical_alignment = 1

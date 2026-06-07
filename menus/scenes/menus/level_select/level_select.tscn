@@ -1,8 +1,9 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://ht4y5tuk18j1"]
 
-[ext_resource type="Script" path="res://menus/scenes/menus/level_select/level_select.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://beoov4n31b337" path="res://menus/scenes/menus/level_select/level_select.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="2_8c3fu"]
 
-[node name="LevelSelect" type="Control"]
+[node name="LevelSelect" type="Control" unique_id=1425669220]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1784645952]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,14 +20,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1144217935]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1648157000]
 layout_mode = 2
+theme = ExtResource("2_8c3fu")
 text = "Select Level"
 horizontal_alignment = 1
 
-[node name="LevelButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="LevelButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=218287923]
 unique_name_in_owner = true
 layout_mode = 2

@@ -34,8 +34,8 @@ const SUN_TEXTURES : Array[CompressedTexture2D] = [
 const SHADOW_START : float = 50
 const SHADOW_END   : float = 10
 const SHADOW_DIF   : float = SHADOW_END - SHADOW_START
-const MOON_START : Vector2 = Vector2(1746.0, 906.0)
-const MOON_END   : Vector2 = Vector2(1628.0, 906.0)
+const MOON_START : Vector2 = Vector2(20.0, 906.0)
+const MOON_END   : Vector2 = Vector2(146.0, 906.0)
 const MOON_DIF   : Vector2 = MOON_END - MOON_START
 const ECLIPSE_CLR_START : Color = Color(0.071, 0.0, 0.272, 1.0)
 const ECLIPSE_CLR_END   : Color = Color(0.717, 0.511, 0.247, 1.0)
@@ -45,7 +45,7 @@ const LVL_TIME : int = 90
 @export var moon : Node2D
 @onready var background: TextureRect = $Background
 @onready var health_bar: TextureRect = $HealthBar
-@onready var vamp_icon: TextureRect = $VampIcon
+@onready var vamp_icon: Sprite2D = $VampIcon
 @onready var sun_icon: TextureRect = $SunIcon
 @onready var moon_icon: TextureRect = $MoonIcon
 @onready var level_time: Label = $LevelTime
@@ -73,10 +73,12 @@ func _process(delta: float) -> void:
 	lvl_time -= delta
 	lvl_progress += delta / LVL_TIME
 	if lvl_progress >= 1:
+		level_time.horizontal_alignment = 0
 		level_time.text = "GAME OVER"
 		return
 	level_time.text = sec_to_str(ceil(lvl_time))
 	moon_icon.position = MOON_START + MOON_DIF * lvl_progress
+	level_time.position.x = moon_icon.position.x
 	moon.shadow_shape.shape.radius = SHADOW_START + (SHADOW_DIF * lvl_progress)
 	moon_icon.scale = Vector2(1 - (lvl_progress / 4), 1 - (lvl_progress / 4))
 	if hb_wobble == true:
@@ -90,3 +92,10 @@ func _process(delta: float) -> void:
 	)
 	moon_icon.texture = MOON_TEXTURES[floor(5 - lvl_progress * 5)]
 	sun_icon.texture = SUN_TEXTURES[floor(8 - lvl_progress * 8)]
+
+func update_vamp(stepping : bool = false):
+	if stepping:
+		if vamp_icon.frame >= 5:
+			vamp_icon.frame = 0
+		else: vamp_icon.frame += 1
+	else: vamp_icon.frame = 6
