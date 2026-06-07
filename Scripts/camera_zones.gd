@@ -7,7 +7,8 @@ extends Node2D
 	7 : $Zone7, 8 : $Zone8, 9 : $Zone9
 }
 @onready var active_camera : Camera2D = zones[5]
-var camera_size : Vector2 = Vector2(480, 270)
+const camera_size     : Vector2 = Vector2(480, 270)
+const camera_offset_y : float   = 202
 
 func set_active_camera(i : int) -> void:
 	active_camera.enabled = false

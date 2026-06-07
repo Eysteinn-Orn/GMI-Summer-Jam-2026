@@ -8,14 +8,17 @@ const BURN_RATE  : float = 1.0
 const HEAL_DELAY : float = 4.0
 # Delay between damage triggers
 const HEAL_RATE  : float = 1.0
+const STOP_SMOOTH_TIME = 0.18
 
+@onready var shadow_shape: CollisionShape2D = $Area2D/CollisionShape2D
+@onready var darkness: Node2D = $Darkness
 @export var speed         : float = 50.0
 @export var jump_velocity : float = -500.0
-@export var stop_radius   : float = 8.0
-@export var stop_smooth_time = 0.18
+@export var stop_radius   : float = 20.0
+@export var stop_smooth_time      = STOP_SMOOTH_TIME
+@export var player        : Node  = null
 var stop_tween: Tween
 var player_inside   : bool    = false
-var player          : Node    = null
 var mouse_direction : Vector2 = Vector2.ZERO
 var sun_timer       : float   = 0.0
 var sun_damage      : int     = 1
@@ -26,18 +29,12 @@ var current_damage  : int     = 0
 var healing         : bool    = false
 var current_heal    : int     = 0
 
-func _ready():
-	# If you want, assign via group instead (recommended)
-	player = get_tree().get_first_node_in_group("player")
-
-	$Area2D.body_entered.connect(_on_body_entered)
-	$Area2D.body_exited.connect(_on_body_exited)
-
-
 func _physics_process(delta):
 	var to_mouse = get_global_mouse_position() - global_position
 	var distance_to_mouse = to_mouse.length()
-
+	darkness.core_radius = shadow_shape.shape.radius
+	stop_radius = shadow_shape.shape.radius / 5
+	stop_smooth_time = STOP_SMOOTH_TIME * (shadow_shape.shape.radius / 60)
 	if distance_to_mouse > stop_radius:
 		if is_instance_valid(stop_tween):
 			stop_tween.kill()
@@ -65,15 +62,6 @@ func _on_body_exited(body):
 	if body == player:
 		player_inside = false
 		print("Exited shadow")
-
-#func _on_area_2d_body_entered(body: Node2D) -> void:
-	#print("Entered shadow")
-	#pass # Replace with function body.
-#
-#
-#func _on_area_2d_body_exited(body: Node2D) -> void:
-	#print("Exited shadow")
-	#pass # Replace with function body.
 
 	# DAMAGE LOGIC: only if player is NOT under shadow
 func update_health(delta : float) -> void:

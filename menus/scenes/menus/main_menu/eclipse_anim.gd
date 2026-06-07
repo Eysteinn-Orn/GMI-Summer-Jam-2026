@@ -120,8 +120,8 @@ func _say(bubble: Control, anchor: Vector2, text: String, duration: float) -> vo
 	bubble.visible = true
 	bubble.reset_size()
 	await get_tree().process_frame
-	var size := bubble.size
-	bubble.position = anchor - Vector2(size.x * 0.5, size.y + 40)
+	var bub_size := bubble.size
+	bubble.position = anchor - Vector2(bub_size.x * 0.5, bub_size.y + 40)
 	await get_tree().create_timer(duration).timeout
 	bubble.visible = false
 
