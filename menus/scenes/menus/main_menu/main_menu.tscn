@@ -15,4 +15,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Level Select"
 
+[node name="EclipseAnimButton" type="Button" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer" index="2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "eclipse anim"
+
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]
+[connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/EclipseAnimButton" to="." method="_on_eclipse_anim_button_pressed"]
