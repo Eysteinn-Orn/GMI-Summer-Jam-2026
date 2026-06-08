@@ -488,6 +488,7 @@ class PixelEditor:
         tools.pack(side="left", fill="y")
         for name, label in [("pencil", "Pencil  B"),
                             ("fill", "Fill  G"), ("picker", "Picker  Q"),
+                            ("swap", "Swap  S"),
                             ("line", "Line  L"), ("rect", "Rect  R"),
                             ("rectfill", "Rect Fill  F"), ("copy", "Copy  C"),
                             ("move", "Move  M"), ("warp", "Warp  W")]:
@@ -730,7 +731,7 @@ class PixelEditor:
     def bind_keys(self):
         binds = {"b": "pencil", "g": "fill", "i": "picker",
                  "q": "picker", "l": "line", "r": "rect", "f": "rectfill",
-                 "c": "copy", "m": "move", "w": "warp"}
+                 "c": "copy", "m": "move", "w": "warp", "s": "swap"}
         for key, name in binds.items():
             self._tk.bind(key, self._key_guard(lambda n=name: self.tool.set(n)), add="+")
         self._tk.bind("e", self._key_guard(self.set_transparent), add="+")
@@ -1165,6 +1166,18 @@ class PixelEditor:
                 err += dx; y0 += sy
         return pts
 
+    def color_swap(self, old, new):
+        """Replace every pixel matching `old` (RGBA) with `new`, across the
+        whole frame. No-op if they're already equal."""
+        old = list(old)
+        new = list(new)
+        if old == new:
+            return
+        for i, p in enumerate(self.pixels):
+            if p == old:
+                self.pixels[i] = list(new)
+        self.refresh_all()
+
     def flood_fill(self, x, y, color):
         idx = y * self.w + x
         target = list(self.pixels[idx])
@@ -1231,6 +1244,8 @@ class PixelEditor:
                 self.paint(x, y, self.color)
             elif tool == "fill":
                 self.flood_fill(x, y, self.color)
+            elif tool == "swap":
+                self.color_swap(list(self.pixels[y * self.w + x]), self.color)
             elif tool in ("line", "rect", "rectfill"):
                 self.stroke_start = (x, y)
                 self.stroke_backup = [list(p) for p in self.pixels]
