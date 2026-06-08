@@ -7,8 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://drlcinvpa7kx7" path="res://Scenes/ui.tscn" id="6_5ukr8"]
 [ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ukr8"]
-
 [node name="World" type="Node2D" unique_id=780093096]
 
 [node name="Map" parent="." unique_id=1675353685 instance=ExtResource("1_8j60k")]
@@ -37,6 +35,5 @@ physics_interpolation_mode = 1
 
 [node name="Key" parent="Interactibles" unique_id=1953636594 instance=ExtResource("6_o06y3")]
 position = Vector2(-1, -98)
-physics_material_override = SubResource("PhysicsMaterial_5ukr8")
 drag_force = 500.0
 max_speed = 5.0

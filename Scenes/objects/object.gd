@@ -10,7 +10,7 @@ extends RigidBody2D
 
 var dragged_by: Node = null
 var smoothed_target := Vector2.ZERO
-var _target_tween: Tween
+var _prev_linear_damp := 0.0
 
 func begin_drag(by: Node) -> bool:
 	if dragged_by:
@@ -19,9 +19,7 @@ func begin_drag(by: Node) -> bool:
 		return false
 	dragged_by = by
 	smoothed_target = global_position
-	if is_instance_valid(_target_tween):
-		_target_tween.kill()
-		_target_tween = null
+	_prev_linear_damp = linear_damp
 	linear_damp = drag_linear_damp
 	return true
 
@@ -29,27 +27,27 @@ func end_drag() -> void:
 	if draggable_component:
 		draggable_component.end_drag()
 	dragged_by = null
-	if is_instance_valid(_target_tween):
-		_target_tween.kill()
-		_target_tween = null
-	linear_damp = 1.0
+	if _prev_linear_damp > 0.0:
+		linear_damp = _prev_linear_damp
+		_prev_linear_damp = 0.0
 
-func drag_to(target: Vector2, _delta: float) -> void:
-	_update_smoothed_target(target)
+func drag_to(target: Vector2, delta: float) -> void:
+	_update_smoothed_target(target, delta)
 	var direction = smoothed_target - global_position
 	var to_target = direction
 	apply_central_force(to_target * drag_force)
 	linear_velocity = linear_velocity.limit_length(max_speed)
 
-func _update_smoothed_target(target: Vector2) -> void:
+func _update_smoothed_target(target: Vector2, delta: float) -> void:
 	if smoothed_target == Vector2.ZERO:
 		smoothed_target = global_position
 
 	if smoothed_target.distance_to(target) <= retarget_threshold:
 		return
 
-	if is_instance_valid(_target_tween):
-		_target_tween.kill()
+	if drag_smooth_time <= 0.0:
+		smoothed_target = target
+		return
 
-	_target_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_target_tween.tween_property(self, "smoothed_target", target, drag_smooth_time)
+	var alpha := 1.0 - exp(-delta / drag_smooth_time)
+	smoothed_target = smoothed_target.lerp(target, clamp(alpha, 0.0, 1.0))
