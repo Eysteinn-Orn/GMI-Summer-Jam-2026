@@ -5,6 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://cdvaekgr2ftk5" path="res://Scenes/camera_zones.tscn" id="2_fo5ed"]
 [ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://Scenes/moon/moon.tscn" id="3_8j60k"]
 [ext_resource type="PackedScene" uid="uid://drlcinvpa7kx7" path="res://Scenes/ui.tscn" id="6_5ukr8"]
+[ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ukr8"]
+friction = 0.02
 
 [node name="World" type="Node2D" unique_id=780093096]
 
@@ -28,3 +32,13 @@ ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=164520636 node_paths=PackedStringArray("moon") instance=ExtResource("6_5ukr8")]
 moon = NodePath("../Moon")
+
+[node name="Interactibles" type="Node2D" parent="." unique_id=392590775]
+physics_interpolation_mode = 1
+
+[node name="Key" parent="Interactibles" unique_id=1953636594 instance=ExtResource("6_o06y3")]
+position = Vector2(-1, -98)
+mass = 0.002
+physics_material_override = SubResource("PhysicsMaterial_5ukr8")
+gravity_scale = 0.025
+can_sleep = false

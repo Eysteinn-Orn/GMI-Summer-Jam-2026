@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://b3x30xwhy1n7a"]
+
+[ext_resource type="Texture2D" uid="uid://pd7f0kmladbf" path="res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/Items (17)/key.png" id="1_a01yg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hj0li"]
+size = Vector2(15, 9)
+
+[node name="Key" type="RigidBody2D" unique_id=1425239136]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=869154830]
+texture = ExtResource("1_a01yg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=359880369]
+position = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_hj0li")
