@@ -21,9 +21,10 @@ speed = 100.0
 jump_velocity = -250.0
 ui = NodePath("../CanvasLayer")
 
-[node name="Moon" parent="." unique_id=324293011 node_paths=PackedStringArray("player") instance=ExtResource("3_8j60k")]
+[node name="Moon" parent="." unique_id=324293011 node_paths=PackedStringArray("player", "ui") instance=ExtResource("3_8j60k")]
 motion_mode = 1
 player = NodePath("../Vampire")
+ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=164520636 node_paths=PackedStringArray("moon") instance=ExtResource("6_5ukr8")]
 moon = NodePath("../Moon")

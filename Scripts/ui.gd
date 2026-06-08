@@ -73,7 +73,9 @@ func _process(delta: float) -> void:
 	lvl_time -= delta
 	lvl_progress += delta / LVL_TIME
 	if lvl_progress >= 1:
-		level_time.horizontal_alignment = 0
+		lvl_progress = 1
+		lvl_time = 0
+		level_time.position.x = 600
 		level_time.text = "GAME OVER"
 		return
 	level_time.text = sec_to_str(ceil(lvl_time))
