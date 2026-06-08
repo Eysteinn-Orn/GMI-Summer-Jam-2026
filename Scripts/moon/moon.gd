@@ -17,6 +17,7 @@ const STOP_SMOOTH_TIME = 0.18
 @export var stop_radius   : float = 20.0
 @export var stop_smooth_time      = STOP_SMOOTH_TIME
 @export var player        : Node  = null
+@export var ui : CanvasLayer
 var stop_tween: Tween
 var player_inside   : bool    = false
 var mouse_direction : Vector2 = Vector2.ZERO
@@ -28,6 +29,7 @@ var burning         : bool    = false
 var current_damage  : int     = 0
 var healing         : bool    = false
 var current_heal    : int     = 0
+var lvl_progress    : float   = 0
 
 func _physics_process(delta):
 	var to_mouse = get_global_mouse_position() - global_position
@@ -79,9 +81,13 @@ func update_health(delta : float) -> void:
 		healing = false
 		sun_timer += delta
 		if sun_timer == delta:
+			lvl_progress = ui.lvl_progress
 			SFX.destroy_sounds("vamp_warning")
 			SFX.create_sound("vamp_warning")
-		elif sun_timer >= (current_damage * BURN_RATE) + BURN_DELAY:
+		elif sun_timer >= (
+			(current_damage * BURN_RATE) +
+			(BURN_DELAY * (1 - lvl_progress))
+			):
 			if player.health <= 0: return
 			player.take_damage(sun_damage)
 			current_damage += sun_damage
@@ -102,9 +108,13 @@ func update_health(delta : float) -> void:
 		burning = false
 		moon_timer += delta
 		if moon_timer == delta:
+			lvl_progress = ui.lvl_progress
 			SFX.destroy_sounds("vamp_phew")
 			SFX.create_sound("vamp_phew", -4.0)
-		elif moon_timer >= (current_heal * HEAL_RATE) + HEAL_DELAY:
+		elif moon_timer >= (
+			(current_heal * HEAL_RATE) + 
+			(HEAL_DELAY * (lvl_progress))
+			):
 			if player.health >= player.max_health: return
 			player.heal_damage(moon_heal)
 			current_heal += moon_heal
