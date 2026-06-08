@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ukr8"]
-friction = 0.02
 
 [node name="World" type="Node2D" unique_id=780093096]
 
@@ -38,7 +37,6 @@ physics_interpolation_mode = 1
 
 [node name="Key" parent="Interactibles" unique_id=1953636594 instance=ExtResource("6_o06y3")]
 position = Vector2(-1, -98)
-mass = 0.002
 physics_material_override = SubResource("PhysicsMaterial_5ukr8")
-gravity_scale = 0.025
-can_sleep = false
+drag_force = 500.0
+max_speed = 5.0
