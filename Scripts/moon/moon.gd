@@ -103,14 +103,16 @@ func update_health(delta : float) -> void:
 				SFX.create_sound("vamp_sizzle")
 				print("Taking damage")
 	else:
-		sun_timer = 0.0
-		current_damage = 0
-		burning = false
 		moon_timer += delta
 		if moon_timer == delta:
 			lvl_progress = ui.lvl_progress
-			SFX.destroy_sounds("vamp_phew")
-			SFX.create_sound("vamp_phew", -4.0)
+			if burning:
+				SFX.destroy_sounds("vamp_phew")
+				SFX.create_sound("vamp_phew", -4.0)
+		sun_timer = 0.0
+		current_damage = 0
+		burning = false
+		if moon_timer == delta: pass
 		elif moon_timer >= (
 			(current_heal * HEAL_RATE) + 
 			(HEAL_DELAY * (lvl_progress))
