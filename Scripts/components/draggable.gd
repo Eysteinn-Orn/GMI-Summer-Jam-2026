@@ -6,14 +6,14 @@ extends Node
 var dragged_by: Node = null
 
 func begin_drag(by: Node) -> bool:
-    if not can_drag or dragged_by != null:
-        return false
-    dragged_by = by
-    return true
+	if not can_drag or dragged_by != null:
+		return false
+	dragged_by = by
+	return true
 
 func end_drag() -> void:
-    dragged_by = null
+	dragged_by = null
 
 func drag_to(_target: Vector2, _delta: float) -> void:
-    # implement in subclass
-    pass
+	# implement in subclass
+	pass
