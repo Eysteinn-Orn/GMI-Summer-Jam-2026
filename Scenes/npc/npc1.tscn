@@ -1,0 +1,180 @@
+[gd_scene format=3 uid="uid://b8npc1aaaaaa1"]
+
+[ext_resource type="Script" path="res://Scripts/npc/npc1.gd" id="1_npc1"]
+[ext_resource type="Texture2D" uid="uid://51pldgaw6ooe" path="res://Assets/sprites/npc1.png" id="2_npc1"]
+
+[sub_resource type="SystemFont" id="Font_npc1"]
+font_names = PackedStringArray("sans-serif")
+antialiasing = 0
+subpixel_positioning = 0
+hinting = 0
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_idle_down"]
+resource_name = "idle_down"
+length = 0.375
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_walk_left"]
+resource_name = "walk_left"
+length = 0.375
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_walk_right"]
+resource_name = "walk_right"
+length = 0.375
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [6, 7, 8]
+}
+
+[sub_resource type="Animation" id="Animation_walk_up"]
+resource_name = "walk_up"
+length = 0.375
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [9, 10, 11]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_npc1"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"idle_down": SubResource("Animation_idle_down"),
+&"walk_left": SubResource("Animation_walk_left"),
+&"walk_right": SubResource("Animation_walk_right"),
+&"walk_up": SubResource("Animation_walk_up")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimNode_left"]
+animation = &"walk_left"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimNode_up"]
+animation = &"walk_up"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimNode_right"]
+animation = &"walk_right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimNode_down"]
+animation = &"idle_down"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id="BlendSpace_walk"]
+auto_triangles = false
+blend_point_0/node = SubResource("AnimNode_left")
+blend_point_0/pos = Vector2(-1, 0)
+blend_point_1/node = SubResource("AnimNode_up")
+blend_point_1/pos = Vector2(0, -1)
+blend_point_2/node = SubResource("AnimNode_right")
+blend_point_2/pos = Vector2(1, 0)
+blend_point_3/node = SubResource("AnimNode_down")
+blend_point_3/pos = Vector2(0, 1)
+triangles = PackedInt32Array(0, 1, 2, 0, 2, 3)
+blend_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_start"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="StateMachine_npc1"]
+states/Start/position = Vector2(293, 82)
+states/walk/node = SubResource("BlendSpace_walk")
+states/walk/position = Vector2(510, 82)
+transitions = ["Start", "walk", SubResource("Transition_start")]
+graph_offset = Vector2(117, -18)
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(8, 10)
+
+[node name="Npc1" type="CharacterBody2D"]
+physics_interpolation_mode = 1
+y_sort_enabled = true
+collision_mask = 1
+script = ExtResource("1_npc1")
+speed = 50.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_npc1")
+hframes = 3
+vframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_npc1")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+tree_root = SubResource("StateMachine_npc1")
+anim_player = NodePath("../AnimationPlayer")
+parameters/walk/blend_position = Vector2(1, 0)
+
+[node name="Body" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("Shape_body")
+
+[node name="Bubble" type="Label" parent="."]
+offset_left = -40.0
+offset_top = -28.0
+offset_right = 40.0
+offset_bottom = -18.0
+text = "AAAAA! a vampire!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = SubResource("Font_npc1")

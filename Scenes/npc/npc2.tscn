@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b8npc2aaaaaa2"]
+
+[ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://Scenes/npc/npc1.tscn" id="1_root"]
+[ext_resource type="Texture2D" uid="uid://dsjfobkhu8xsx" path="res://Assets/sprites/npc2.png" id="2_tex"]
+
+[node name="Npc2" instance=ExtResource("1_root")]
+editable_instance = true
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_tex")

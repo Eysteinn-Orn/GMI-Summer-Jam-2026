@@ -6,6 +6,8 @@
 [ext_resource type="TileSet" uid="uid://cqmbl5h61bjis" path="res://Assets/tilesets/graveyard.tres" id="3_o06y3"]
 [ext_resource type="PackedScene" uid="uid://drlcinvpa7kx7" path="res://Scenes/ui.tscn" id="6_5ukr8"]
 [ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
+[ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://Scenes/npc/npc1.tscn" id="7_npc1"]
+[ext_resource type="PackedScene" uid="uid://b8npc2aaaaaa2" path="res://Scenes/npc/npc2.tscn" id="8_npc2"]
 
 [node name="World" type="Node2D" unique_id=780093096]
 
@@ -43,6 +45,12 @@ y_sort_enabled = true
 position = Vector2(-1, -98)
 drag_force = 500.0
 max_speed = 5.0
+
+[node name="Npc1" parent="Walls" instance=ExtResource("7_npc1")]
+position = Vector2(-60, 0)
+
+[node name="Npc2" parent="Walls" instance=ExtResource("8_npc2")]
+position = Vector2(60, 20)
 
 [node name="CanvasLayer" parent="." unique_id=164520636 node_paths=PackedStringArray("moon") instance=ExtResource("6_5ukr8")]
 moon = NodePath("../Walls/Moon")
