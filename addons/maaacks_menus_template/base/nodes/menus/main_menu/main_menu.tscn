@@ -10,6 +10,18 @@
 [ext_resource type="PackedScene" uid="uid://cwt4p3bufkke5" path="res://addons/maaacks_menus_template/base/nodes/windows/confirmation_overlaid_window.tscn" id="7_im16j"]
 [ext_resource type="Script" uid="uid://bkwlopi4qn32o" path="res://addons/maaacks_menus_template/base/nodes/labels/config_name_label.gd" id="7_j7612"]
 
+[sub_resource type="Gradient" id="Gradient_bh8h2"]
+offsets = PackedFloat32Array(0, 0.09731544, 0.48657718, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.09997686, 0.09997686, 0.09997686, 0.90002316, 0.80536914, 0.80536914, 0.80536914, 0.19463086, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_erbqk"]
+gradient = SubResource("Gradient_bh8h2")
+width = 480
+height = 270
+fill = 1
+fill_from = Vector2(0.5026455, 0.10111699)
+fill_to = Vector2(0.5899471, 1)
+
 [node name="MainMenu" type="Control" unique_id=781937481]
 layout_mode = 3
 anchors_preset = 15
@@ -24,13 +36,14 @@ script = ExtResource("6_bs342")
 
 [node name="BackgroundMusicPlayer" parent="." unique_id=1141822549 instance=ExtResource("4_w8sbm")]
 
-[node name="BackgroundTextureRect" type="TextureRect" parent="." unique_id=1940176448]
+[node name="BackgroundTextureRect2" type="TextureRect" parent="." unique_id=1430915474]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = SubResource("GradientTexture2D_erbqk")
 expand_mode = 1
 stretch_mode = 5
 
