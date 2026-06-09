@@ -8,10 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
 [ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://Scenes/npc/npc1.tscn" id="7_npc1"]
 [ext_resource type="PackedScene" uid="uid://b8npc2aaaaaa2" path="res://Scenes/npc/npc2.tscn" id="8_npc2"]
+[ext_resource type="Texture2D" uid="uid://ixgv1telm3pq" path="res://Assets/sprites/camera_grid.png" id="9_5v1tr"]
 
 [node name="World" type="Node2D" unique_id=780093096]
 
-[node name="CameraZones" parent="." unique_id=2036735457 node_paths=PackedStringArray("player") instance=ExtResource("2_fo5ed")]
+[node name="ZoneCamera" parent="." unique_id=2036735457 node_paths=PackedStringArray("player") instance=ExtResource("2_fo5ed")]
 player = NodePath("../Walls/Vampire")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1880223123]
@@ -54,3 +55,11 @@ position = Vector2(60, 20)
 
 [node name="CanvasLayer" parent="." unique_id=164520636 node_paths=PackedStringArray("moon") instance=ExtResource("6_5ukr8")]
 moon = NodePath("../Walls/Moon")
+
+[node name="CameraGrid" type="TextureRect" parent="." unique_id=1016575433]
+offset_left = -48240.0
+offset_top = -22085.0
+offset_right = 47760.0
+offset_bottom = 21815.0
+texture = ExtResource("9_5v1tr")
+stretch_mode = 1

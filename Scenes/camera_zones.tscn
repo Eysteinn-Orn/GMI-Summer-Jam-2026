@@ -2,51 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bqeepysawm6vj" path="res://Scripts/camera_zones.gd" id="1_f0ped"]
 
-[node name="CameraZones" type="Node2D" unique_id=2036735457]
+[node name="ZoneCamera" type="Camera2D" unique_id=1874934513]
+zoom = Vector2(4, 4)
 script = ExtResource("1_f0ped")
-
-[node name="Zone1" type="Camera2D" parent="." unique_id=746641397]
-position = Vector2(-480, -220)
-enabled = false
-zoom = Vector2(4, 4)
-limit_enabled = false
-
-[node name="Zone2" type="Camera2D" parent="." unique_id=2107579710]
-position = Vector2(0, -220)
-enabled = false
-zoom = Vector2(4, 4)
-
-[node name="Zone3" type="Camera2D" parent="." unique_id=944193972]
-position = Vector2(480, -220)
-enabled = false
-zoom = Vector2(4, 4)
-
-[node name="Zone4" type="Camera2D" parent="." unique_id=451048232]
-position = Vector2(-480, 0)
-enabled = false
-zoom = Vector2(4, 4)
-limit_enabled = false
-
-[node name="Zone5" type="Camera2D" parent="." unique_id=2134599029]
-zoom = Vector2(4, 4)
-
-[node name="Zone6" type="Camera2D" parent="." unique_id=287669975]
-position = Vector2(480, 0)
-enabled = false
-zoom = Vector2(4, 4)
-
-[node name="Zone7" type="Camera2D" parent="." unique_id=1916099515]
-position = Vector2(-480, 220)
-enabled = false
-zoom = Vector2(4, 4)
-limit_enabled = false
-
-[node name="Zone8" type="Camera2D" parent="." unique_id=2125686050]
-position = Vector2(0, 220)
-enabled = false
-zoom = Vector2(4, 4)
-
-[node name="Zone9" type="Camera2D" parent="." unique_id=1816423403]
-position = Vector2(480, 220)
-enabled = false
-zoom = Vector2(4, 4)
