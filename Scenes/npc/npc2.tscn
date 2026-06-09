@@ -3,8 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://Scenes/npc/npc1.tscn" id="1_root"]
 [ext_resource type="Texture2D" uid="uid://dsjfobkhu8xsx" path="res://Assets/sprites/npc2.png" id="2_tex"]
 
-[node name="Npc2" instance=ExtResource("1_root")]
-editable_instance = true
+[node name="Npc2" unique_id=1137515221 instance=ExtResource("1_root")]
 
-[node name="Sprite2D" parent="." index="0"]
+[node name="Sprite2D" parent="." index="0" unique_id=1139513895]
 texture = ExtResource("2_tex")
