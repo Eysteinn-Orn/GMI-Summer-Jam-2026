@@ -12,7 +12,8 @@
 
 [node name="World" type="Node2D" unique_id=780093096]
 
-[node name="ZoneCamera" parent="." unique_id=2036735457 node_paths=PackedStringArray("player") instance=ExtResource("2_fo5ed")]
+[node name="ZoneCamera" parent="." unique_id=2036735457 node_paths=PackedStringArray("camera_grid", "player") instance=ExtResource("2_fo5ed")]
+camera_grid = NodePath("../CameraGrid")
 player = NodePath("../Walls/Vampire")
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1880223123]
