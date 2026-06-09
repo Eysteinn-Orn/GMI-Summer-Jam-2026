@@ -1,52 +1,21 @@
-extends Node2D
+extends Camera2D
 
+## assumes value of zoom = Vector2(4.0, 4.0)
 @export var player : Node
-@onready var zones : Dictionary[int, Node] = {
-	1 : $Zone1, 2 : $Zone2, 3 : $Zone3,
-	4 : $Zone4, 5 : $Zone5, 6 : $Zone6,
-	7 : $Zone7, 8 : $Zone8, 9 : $Zone9
-}
-@onready var active_camera : Camera2D = zones[5]
-const camera_size     : Vector2 = Vector2(480, 270)
-const camera_offset_y : float   = 202
+const camera_size : Vector2 = Vector2(480, 270)
+const hud_height  : float   = 202
+const bounds_size : Vector2 = Vector2(camera_size.x, camera_size.y - hud_height/4)
+const offset_y    : float   = - hud_height / 8
 
-func set_active_camera(i : int) -> void:
-	active_camera.enabled = false
-	zones[i].enabled = true
-	active_camera = zones[i]
+func get_camera_pos(focus: Vector2) -> Vector2:
+	var camera_index : Vector2 = Vector2(
+		ceil((focus.x - (camera_size.x/2)) / bounds_size.x),
+		ceil((focus.y - (camera_size.y/2) + (hud_height/4)) / bounds_size.y)
+	)
+	return Vector2(
+		camera_index.x * bounds_size.x,
+		camera_index.y * bounds_size.y
+	)
 
-func _physics_process(_delta: float) -> void:
-	var focus : Vector2 = player.position
-	if focus.y < -camera_size.y/2:
-		if focus.x < -camera_size.x/2:
-			set_active_camera(1)
-		elif focus.x > camera_size.x/2:
-			set_active_camera(3)
-		else:
-			set_active_camera(2)
-	elif focus.y > camera_size.y/2 - camera_offset_y/4:
-		if focus.x < -camera_size.x/2:
-			set_active_camera(7)
-		elif focus.x > camera_size.x/2:
-			set_active_camera(9)
-		else:
-			set_active_camera(8)
-	else:
-		if focus.x < -camera_size.x/2:
-			set_active_camera(4)
-		elif focus.x > camera_size.x/2:
-			set_active_camera(6)
-		else:
-			set_active_camera(5)
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+func _process(_delta: float) -> void:
+	position = get_camera_pos(player.position)
