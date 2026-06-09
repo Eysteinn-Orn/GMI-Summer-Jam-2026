@@ -17,6 +17,8 @@ func begin_drag(by: Node) -> bool:
 		return false
 	if draggable_component and not draggable_component.begin_drag(by):
 		return false
+	SFX.destroy_sounds("key_up")
+	SFX.create_sound("key_up")
 	dragged_by = by
 	smoothed_target = global_position
 	_prev_linear_damp = linear_damp
@@ -25,6 +27,8 @@ func begin_drag(by: Node) -> bool:
 
 func end_drag() -> void:
 	if draggable_component:
+		SFX.destroy_sounds("key_down")
+		SFX.create_sound("key_down")
 		draggable_component.end_drag()
 	dragged_by = null
 	if _prev_linear_damp > 0.0:
