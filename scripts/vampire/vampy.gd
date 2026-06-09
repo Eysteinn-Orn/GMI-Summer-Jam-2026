@@ -4,6 +4,8 @@ var _hop_time := 0.0
 var prev_prev_hop := 0.1
 var prev_hop := 0.0
 
+
+@onready var animation_tree: AnimationTree = %AnimationTree
 @export var speed = 200.0
 @export var jump_velocity = -500.0
 @export var hop_height := 8.0
@@ -21,8 +23,14 @@ func _physics_process(delta):
 	)
 
 	velocity = direction.normalized() * speed
-	move_and_slide()
-	update_frame(direction)
+	# move_and_slide()
+	move_and_collide(velocity * delta)
+	# update_frame(direction)
+	if velocity == Vector2.ZERO:
+		pass
+	else:
+		animation_tree.set("parameters/walk/blend_position", velocity)
+
 	if direction.length() > 0.01:
 		_hop_time += delta * hop_speed
 		sprite.position.y = -abs(sin(_hop_time)) * hop_height

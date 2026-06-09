@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://b3x30xwhy1n7a"]
+
+[ext_resource type="Texture2D" uid="uid://pd7f0kmladbf" path="res://Assets/10k Game Assets/Pixel Art (4770)/8bit Adventure (1489)/Items (17)/key.png" id="1_a01yg"]
+[ext_resource type="Script" uid="uid://dryjkcd4hgob6" path="res://Scenes/objects/object.gd" id="1_hnewk"]
+[ext_resource type="Script" uid="uid://dojemq61bvlsp" path="res://Scripts/components/draggable.gd" id="2_hj0li"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hnewk"]
+radius = 4.527693
+
+[node name="Key" type="RigidBody2D" unique_id=1425239136]
+script = ExtResource("1_hnewk")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=869154830]
+texture = ExtResource("1_a01yg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=359880369]
+position = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_hnewk")
+
+[node name="Draggable" type="Node" parent="." unique_id=1410489982]
+script = ExtResource("2_hj0li")
+metadata/_custom_type_script = "uid://dojemq61bvlsp"
