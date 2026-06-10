@@ -9,8 +9,41 @@ tile_data = PackedInt32Array(0, 983040, 9, 65536, 983040, 10)
 [sub_resource type="TileMapPattern" id="TileMapPattern_xpige"]
 tile_data = PackedInt32Array(0, 393216, 11, 65536, 393216, 12, 131072, 393216, 13, 1, 458752, 11, 65537, 458752, 12, 131073, 458752, 13, 2, 524288, 11, 65538, 524288, 12, 131074, 524288, 13)
 
+[sub_resource type="TileMapPattern" id="TileMapPattern_2r1rc"]
+tile_data = PackedInt32Array(0, 786432, 14, 65536, 786432, 12, 1, 786432, 13, 65537, 786432, 14, 131073, 786432, 12, 2, 851968, 13, 65538, 851968, 14, 131074, 851968, 12, 3, 786432, 13, 65539, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_3hcrj"]
+tile_data = PackedInt32Array(0, 786432, 12, 1, 786432, 14, 65537, 786432, 12, 2, 786432, 13, 65538, 786432, 14, 131074, 786432, 12, 3, 851968, 13, 65539, 786432, 13, 131075, 786432, 14, 196611, 786432, 12, 4, 786432, 13, 65540, 851968, 13, 131076, 851968, 14, 196612, 851968, 12, 5, 786432, 14, 65541, 786432, 13, 131077, 851968, 12, 6, 851968, 14, 65542, 786432, 14, 131078, 786432, 12, 7, 786432, 14, 65543, 786432, 13, 131079, 786432, 14, 196615, 786432, 12, 8, 786432, 13, 65544, 851968, 13, 131080, 851968, 14, 196616, 851968, 12, 9, 851968, 13, 65545, 786432, 13, 131081, 851968, 12, 10, 786432, 13, 65546, 851968, 12, 11, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_c57fd"]
+tile_data = PackedInt32Array(0, 786432, 11, 65536, 851968, 14, 131072, 786432, 14, 196608, 786432, 13, 262144, 786432, 14, 327680, 786432, 13, 393216, 786432, 14, 458752, 786432, 13, 524288, 786432, 14, 589824, 786432, 13, 655360, 786432, 14, 720896, 786432, 12, 1, 851968, 11, 65537, 851968, 13, 131073, 786432, 13, 196609, 786432, 14, 262145, 851968, 14, 327681, 851968, 13, 393217, 851968, 14, 458753, 851968, 13, 524289, 786432, 13, 589825, 851968, 13, 655361, 851968, 14, 720897, 851968, 12, 65538, 851968, 11, 131074, 851968, 13, 196610, 851968, 14, 262146, 851968, 12, 327682, 851968, 11, 393218, 851968, 12, 458754, 851968, 11, 524290, 851968, 13, 589826, 851968, 14, 655362, 851968, 12, 131075, 851968, 11, 196611, 851968, 12, 524291, 851968, 11, 589827, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_26c6h"]
+tile_data = PackedInt32Array(0, 786432, 14, 65536, 786432, 12, 1, 851968, 14, 65537, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_41uh6"]
+tile_data = PackedInt32Array(0, 851968, 13, 65536, 786432, 12, 1, 851968, 11, 65537, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_s8aw1"]
+tile_data = PackedInt32Array(0, 786432, 11, 65536, 786432, 12, 1, 786432, 13, 65537, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_iqrnt"]
+tile_data = PackedInt32Array(0, 786432, 11, 65536, 786432, 12, 131072, 786432, 11, 196608, 786432, 12, 262144, 786432, 11, 327680, 786432, 12, 393216, 786432, 11, 458752, 786432, 12, 524288, 786432, 11, 589824, 786432, 12, 1, 851968, 11, 65537, 851968, 13, 131073, 786432, 13, 196609, 851968, 13, 262145, 786432, 13, 327681, 851968, 13, 393217, 786432, 13, 458753, 851968, 13, 524289, 786432, 13, 589825, 851968, 12, 65538, 851968, 11, 131074, 851968, 12, 196610, 851968, 11, 262146, 851968, 12, 327682, 851968, 11, 393218, 851968, 12, 458754, 851968, 11, 524290, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_ubsca"]
+tile_data = PackedInt32Array(0, 786432, 11, 1, 851968, 11)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_6ykqj"]
+tile_data = PackedInt32Array(131072, 786432, 14, 196608, 786432, 12, 65537, 786432, 11, 131073, 851968, 14, 196609, 851968, 12, 2, 786432, 11, 65538, 786432, 13, 131074, 786432, 14, 196610, 786432, 12, 3, 851968, 11, 65539, 851968, 13, 131075, 851968, 14, 196611, 851968, 12, 65540, 851968, 11, 131076, 786432, 14, 196612, 786432, 12, 131077, 851968, 14, 196613, 851968, 12)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_ax36c"]
+tile_data = PackedInt32Array(131072, 786432, 11, 196608, 786432, 12, 65537, 786432, 11, 131073, 786432, 13, 196609, 786432, 14, 262145, 786432, 12, 2, 786432, 11, 65538, 786432, 13, 131074, 851968, 13, 196610, 851968, 14, 262146, 851968, 13)
+
 [sub_resource type="TileMapPattern" id="TileMapPattern_82pyw"]
 tile_data = PackedInt32Array(0, 393216, 11, 65536, 393216, 12, 131072, 393216, 14, 1, 458752, 11, 65537, 458752, 12, 131073, 458752, 13, 2, 524288, 11, 65538, 524288, 12, 131074, 458752, 14)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_lysno"]
+tile_data = PackedInt32Array(0, 393216, 4, 65536, 393216, 5, 131072, 393216, 7, 196608, 393216, 8, 1, 458752, 4, 65537, 458752, 5, 131073, 589824, 7, 196609, 720896, 7, 2, 524288, 4, 65538, 524288, 5, 131074, 524288, 7, 196610, 524288, 8)
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_8f6ry"]
 tile_data = PackedInt32Array(0, 393216, 4, 65536, 393216, 5, 131072, 393216, 6, 1, 458752, 4, 65537, 458752, 5, 131073, 458752, 6, 2, 524288, 4, 65538, 524288, 5, 131074, 524288, 6)
@@ -26,6 +59,12 @@ tile_data = PackedInt32Array(0, 720896, 12, 65536, 720896, 13)
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_8gmnm"]
 tile_data = PackedInt32Array(0, 393216, 4, 65536, 393216, 5, 131072, 393216, 7, 196608, 393216, 8, 1, 458752, 4, 65537, 458752, 5, 131073, 589824, 7, 196609, 458752, 6, 2, 458752, 4, 65538, 458752, 5, 131074, 458752, 7, 196610, 458752, 8, 3, 458752, 4, 65539, 458752, 5, 131075, 458752, 7, 196611, 458752, 8, 4, 524288, 4, 65540, 524288, 5, 131076, 524288, 7, 196612, 524288, 8)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_ykf61"]
+tile_data = PackedInt32Array(0, 786432, 13, 65536, 786432, 14, 1, 851968, 13, 65537, 851968, 14)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_aj87o"]
+tile_data = PackedInt32Array(0, 786432, 13, 65536, 786432, 14, 131072, 786432, 12, 1, 851968, 13, 65537, 851968, 14, 131073, 851968, 12, 2, 786432, 13, 65538, 786432, 14, 131074, 786432, 12, 3, 851968, 13, 65539, 851968, 14, 131075, 851968, 12)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xpige"]
 texture = ExtResource("1_yf3xe")
@@ -181,8 +220,11 @@ texture = ExtResource("1_yf3xe")
 4:4/0 = 0
 5:4/0 = 0
 6:4/0 = 0
+6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 7:4/0 = 0
+7:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 8:4/0 = 0
+8:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 9:4/0 = 0
 10:4/0 = 0
 11:4/0 = 0
@@ -498,16 +540,23 @@ texture = ExtResource("1_yf3xe")
 5:11/0 = 0
 5:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -4, 8, -4, 8, 4, -8, 4)
 6:11/0 = 0
+6:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 7:11/0 = 0
+7:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 8:11/0 = 0
+8:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, 4, -8, 4, -8, 8, 8, 8)
 9:11/0 = 0
 9:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 10:11/0 = 0
 11:11/0 = 0
 12:11/0 = 0
+12:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -4, 0, 0, -4, 8, 8, 8)
 13:11/0 = 0
+13:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -4, 0, 0, 4, 8, -8, 8)
 14:11/0 = 0
+14:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -4, 0, 0, -4, 8, 8, 8)
 15:11/0 = 0
+15:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -4, 0, 0, 4, 8, -8, 8)
 0:12/0 = 0
 0:12/0/terrain_set = 0
 0:12/0/terrain = 2
@@ -553,13 +602,13 @@ texture = ExtResource("1_yf3xe")
 11:12/0 = 0
 11:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 12:12/0 = 0
-12:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -8, 0.17985916, -1.0791512, -2.6978798, 5.3957634, 8, 8)
+12:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(4, -8, 8, -8, 8, 8, 0, 4)
 13:12/0 = 0
-13:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.17985916, -1.0791512, 2.6978798, 5.3957634, -8, 8)
+13:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -4, -8, 0, 4, -8, 8)
 14:12/0 = 0
-14:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -8, 0.17985916, -1.0791512, -2.6978798, 5.3957634, 8, 8)
+14:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -8, 4, -8, 0, 4, 8, 8)
 15:12/0 = 0
-15:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.17985916, -1.0791512, 2.6978798, 5.3957634, -8, 8)
+15:12/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -4, -8, 0, 4, -8, 8)
 0:13/0 = 0
 0:13/0/terrain_set = 0
 0:13/0/terrain = 2
@@ -622,9 +671,13 @@ texture = ExtResource("1_yf3xe")
 11:13/0 = 0
 11:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 12:13/0 = 0
+12:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 13:13/0 = 0
+13:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 14:13/0 = 0
+14:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 15:13/0 = 0
+15:13/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:14/0 = 0
 0:14/0/terrain_set = 0
 0:14/0/terrain = 2
@@ -677,9 +730,13 @@ texture = ExtResource("1_yf3xe")
 10:14/0 = 0
 11:14/0 = 0
 12:14/0 = 0
+12:14/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 13:14/0 = 0
+13:14/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 14:14/0 = 0
+14:14/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 15:14/0 = 0
+15:14/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:15/0 = 0
 1:15/0 = 0
 2:15/0 = 0
@@ -728,3 +785,16 @@ pattern_4 = SubResource("TileMapPattern_ini87")
 pattern_5 = SubResource("TileMapPattern_c8l18")
 pattern_6 = SubResource("TileMapPattern_imwnh")
 pattern_7 = SubResource("TileMapPattern_8gmnm")
+pattern_8 = SubResource("TileMapPattern_ykf61")
+pattern_9 = SubResource("TileMapPattern_aj87o")
+pattern_10 = SubResource("TileMapPattern_2r1rc")
+pattern_11 = SubResource("TileMapPattern_3hcrj")
+pattern_12 = SubResource("TileMapPattern_c57fd")
+pattern_13 = SubResource("TileMapPattern_26c6h")
+pattern_14 = SubResource("TileMapPattern_41uh6")
+pattern_15 = SubResource("TileMapPattern_s8aw1")
+pattern_16 = SubResource("TileMapPattern_iqrnt")
+pattern_17 = SubResource("TileMapPattern_ubsca")
+pattern_18 = SubResource("TileMapPattern_6ykqj")
+pattern_19 = SubResource("TileMapPattern_ax36c")
+pattern_20 = SubResource("TileMapPattern_lysno")
