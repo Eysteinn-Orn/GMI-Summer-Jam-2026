@@ -14,6 +14,7 @@ enum GameState {
 @export_range(1.0, 1800.0, 1.0) var total_time: float = 90.0
 @export_range(1, 64, 1) var required_keys: int = 4
 @export_range(1.0, 1000.0, 1.0) var collection_radius: float = 56.0
+@export_range(0.05, 2.0, 0.05) var key_check_interval: float = 0.1
 
 @export var player_path: NodePath
 @export var ui_path: NodePath
@@ -33,6 +34,7 @@ var _keys_container: Node = null
 var _goal_marker: Node2D = null
 var _collected_key_ids: Dictionary = {}
 var _registered_keys: Array[RigidBody2D] = []
+var _key_check_elapsed: float = 0.0
 
 func _ready() -> void:
 	time_left = total_time
@@ -49,8 +51,15 @@ func _process(delta: float) -> void:
 		return
 
 	if _is_player_dead():
-		_lose_game("health")
+		_lose_game("you fried")
 		return
+
+	_key_check_elapsed += delta
+	if _key_check_elapsed >= key_check_interval:
+		_key_check_elapsed = 0.0
+		_check_keys_in_goal_radius()
+		if state != GameState.RUNNING:
+			return
 
 	time_left = maxf(0.0, time_left - delta)
 	timer_changed.emit(time_left, total_time)
@@ -58,7 +67,7 @@ func _process(delta: float) -> void:
 		_ui.update_time_state(time_left, total_time)
 
 	if is_zero_approx(time_left):
-		_lose_game("time")
+		_lose_game("you ran out of time")
 
 func _register_keys() -> void:
 	_registered_keys.clear()
@@ -69,13 +78,9 @@ func _register_keys() -> void:
 	for child in _keys_container.get_children():
 		if not child is RigidBody2D:
 			continue
-		if not child.has_signal("drag_released"):
-			continue
 
 		var key := child as RigidBody2D
 		_registered_keys.append(key)
-		if not key.drag_released.is_connected(_on_key_drag_released):
-			key.drag_released.connect(_on_key_drag_released)
 
 func _seed_center_keys_as_collected() -> void:
 	collected_keys = 0
@@ -84,10 +89,9 @@ func _seed_center_keys_as_collected() -> void:
 		if _is_in_goal_radius(key.global_position):
 			_mark_key_collected(key)
 
-func _on_key_drag_released(key: RigidBody2D) -> void:
-	if state != GameState.RUNNING:
-		return
-	_try_collect_key(key)
+func _check_keys_in_goal_radius() -> void:
+	for key in _registered_keys:
+		_try_collect_key(key)
 
 func _try_collect_key(key: RigidBody2D) -> void:
 	if not is_instance_valid(key):
@@ -154,7 +158,11 @@ func _lose_game(reason: String) -> void:
 func _transition_to_outcome(scene_path: String) -> void:
 	if scene_path.is_empty():
 		return
-	if not has_node("/root/SceneLoader"):
-		push_warning("GameManager: SceneLoader autoload was not found; cannot load outcome scene.")
+	if has_node("/root/SceneLoader"):
+		SceneLoader.load_scene(scene_path)
 		return
-	SceneLoader.load_scene(scene_path)
+
+	push_warning("GameManager: SceneLoader autoload was not found; falling back to change_scene_to_file.")
+	var err := get_tree().change_scene_to_file(scene_path)
+	if err != OK:
+		push_error("GameManager: Failed to change scene to '%s' (error %d)." % [scene_path, err])

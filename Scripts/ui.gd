@@ -60,8 +60,6 @@ var total_level_time: float = LVL_TIME
 func _ready() -> void:
 	update_time_state(LVL_TIME, LVL_TIME)
 	set_keys_progress(0, 4)
-
-func _ready() -> void:
 	print("music: play")
 	SFX.destroy_sounds("graveyard")
 	SFX.create_sound("graveyard", -8.0, 0.0, true)

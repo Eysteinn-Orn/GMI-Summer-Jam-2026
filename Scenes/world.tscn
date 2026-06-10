@@ -1,15 +1,15 @@
 [gd_scene format=4 uid="uid://d2y852kokepd6"]
 
-[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://scenes/vampire/vampire.tscn" id="2_5a7ea"]
-[ext_resource type="PackedScene" uid="uid://cdvaekgr2ftk5" path="res://scenes/camera_zones.tscn" id="2_fo5ed"]
-[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://scenes/moon/moon.tscn" id="3_8j60k"]
+[ext_resource type="PackedScene" uid="uid://cscd2vrqmp8ls" path="res://Scenes/vampire/vampire.tscn" id="2_5a7ea"]
+[ext_resource type="PackedScene" uid="uid://cdvaekgr2ftk5" path="res://Scenes/camera_zones.tscn" id="2_fo5ed"]
+[ext_resource type="PackedScene" uid="uid://gya1aixo1sal" path="res://Scenes/moon/moon.tscn" id="3_8j60k"]
 [ext_resource type="TileSet" uid="uid://cqmbl5h61bjis" path="res://Assets/tilesets/graveyard.tres" id="3_o06y3"]
-[ext_resource type="PackedScene" uid="uid://drlcinvpa7kx7" path="res://scenes/ui.tscn" id="6_5ukr8"]
-[ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://scenes/objects/key.tscn" id="6_o06y3"]
-[ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://scenes/npc/npc1.tscn" id="7_npc1"]
-[ext_resource type="PackedScene" uid="uid://b8npc2aaaaaa2" path="res://scenes/npc/npc2.tscn" id="8_npc2"]
+[ext_resource type="PackedScene" uid="uid://drlcinvpa7kx7" path="res://Scenes/ui.tscn" id="6_5ukr8"]
+[ext_resource type="PackedScene" uid="uid://b3x30xwhy1n7a" path="res://Scenes/objects/key.tscn" id="6_o06y3"]
+[ext_resource type="PackedScene" uid="uid://b8npc1aaaaaa1" path="res://Scenes/npc/npc1.tscn" id="7_npc1"]
+[ext_resource type="PackedScene" uid="uid://b8npc2aaaaaa2" path="res://Scenes/npc/npc2.tscn" id="8_npc2"]
 [ext_resource type="Texture2D" uid="uid://ixgv1telm3pq" path="res://Assets/sprites/camera_grid.png" id="9_5v1tr"]
-[ext_resource type="Script" uid="uid://cmotv7471nen6" path="res://scripts/game_manager.gd" id="10_8r1xv"]
+[ext_resource type="Script" uid="uid://cmotv7471nen6" path="res://Scripts/game_manager.gd" id="10_8r1xv"]
 
 [node name="World" type="Node2D" unique_id=780093096]
 
@@ -18,7 +18,7 @@ position = Vector2(0, -49)
 
 [node name="GameManager" type="Node" parent="." unique_id=915542131]
 script = ExtResource("10_8r1xv")
-required_keys = 1
+required_keys = 2
 collection_radius = 230.0
 player_path = NodePath("../Walls/Vampire")
 ui_path = NodePath("../CanvasLayer")
