@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+signal drag_released(object: RigidBody2D)
+
 @export var drag_force := 2000.0
 @export var max_speed := 160.0
 @export var drag_linear_damp := 8.0
@@ -34,6 +36,7 @@ func end_drag() -> void:
 	if _prev_linear_damp > 0.0:
 		linear_damp = _prev_linear_damp
 		_prev_linear_damp = 0.0
+	drag_released.emit(self)
 
 func drag_to(target: Vector2, delta: float) -> void:
 	_update_smoothed_target(target, delta)
