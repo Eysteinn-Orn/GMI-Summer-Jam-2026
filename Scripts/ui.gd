@@ -32,7 +32,7 @@ const SUN_TEXTURES : Array[CompressedTexture2D] = [
 ]
 
 const SHADOW_START : float = 50
-const SHADOW_END   : float = 10
+const SHADOW_END   : float = 20
 const SHADOW_DIF   : float = SHADOW_END - SHADOW_START
 const MOON_START : Vector2 = Vector2(20.0, 906.0)
 const MOON_END   : Vector2 = Vector2(146.0, 906.0)
@@ -60,6 +60,15 @@ var total_level_time: float = LVL_TIME
 func _ready() -> void:
 	update_time_state(LVL_TIME, LVL_TIME)
 	set_keys_progress(0, 4)
+
+func _ready() -> void:
+	print("music: play")
+	SFX.destroy_sounds("graveyard")
+	SFX.create_sound("graveyard", -8.0, 0.0, true)
+
+func _exit_tree() -> void:
+	print("music: stop")
+	SFX.destroy_sounds("graveyard")
 
 func sec_to_str(sec : int) -> String:
 	var minutes : int = floor(float(sec) / 60.0)

@@ -3,6 +3,7 @@ extends Node
 @export var sound_files : Dictionary[String, AudioStream]
 ## For accessing all sounds of the same key by said key.
 @onready var audio_stream_players : Dictionary[String, Array]
+var intro_done : bool = false
 
 ## Remove a sound, terminating it's audio.
 func remove_sound(instance: AudioStreamPlayer) -> void:
@@ -18,10 +19,16 @@ func remove_sound(instance: AudioStreamPlayer) -> void:
 ## Play a sound by it's key. Returns the instance node.
 ##
 ## [param sound] references an AudioStream in [member sound_files].
-func create_sound(sound: String, db: float = 0.0, start_time = 0.0) -> AudioStreamPlayer:
+func create_sound(
+	sound: String,
+	db: float = 0.0,
+	start_time = 0.0,
+	is_music : bool = false
+	) -> AudioStreamPlayer:
 	var instance = AudioStreamPlayer.new()
 	var i : int = 1
-	instance.bus = &"SFX"
+	if is_music: instance.bus = &"Music" 
+	else: instance.bus = &"SFX"
 	if (sound_files.has(sound)):
 		instance.stream = sound_files[sound]
 	else:

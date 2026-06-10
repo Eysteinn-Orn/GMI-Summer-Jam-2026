@@ -19,6 +19,31 @@ const MOON_PATHS := [
 	"res://Assets/sprites/eclipse/MoonRenderTest01_F04.png",
 	"res://Assets/sprites/eclipse/MoonRenderTest01_F05.png",
 ]
+const VAMP_PATHS := [
+	"res://Assets/sprites/vampire/Vamp_64_V01.png",
+	"res://Assets/sprites/vampire/Vamp_64_V02.png",
+	"res://Assets/sprites/vampire/Vamp_64_V03.png",
+	"res://Assets/sprites/vampire/Vamp_64_V04.png",
+	"res://Assets/sprites/vampire/Vamp_64_V05.png",
+	"res://Assets/sprites/vampire/Vamp_64_V06.png",
+	"res://Assets/sprites/vampire/Vamp_64_V07.png",
+	"res://Assets/sprites/vampire/Vamp_64_V08.png",
+]
+const AWAKENING_BG_PATH := "res://Assets/sprites/eclipse/awakening_bg.png"
+
+const MOTION_BLUR_SHADER := "
+shader_type canvas_item;
+uniform sampler2D screen_tex : hint_screen_texture, filter_linear;
+uniform float strength = 0.0;
+void fragment() {
+	vec4 col = vec4(0.0);
+	for (int i = 0; i < 12; i++) {
+		float t = float(i) / 11.0 - 0.5;
+		col += texture(screen_tex, SCREEN_UV + vec2(0.0, t * strength));
+	}
+	COLOR = col / 12.0;
+}
+"
 
 const VIEW_W := 1920.0
 const VIEW_H := 1080.0
@@ -31,59 +56,107 @@ const MOON_END := Vector2(SUN_POS.x, MOON_Y)
 const SKY_DAY := Color(0.45, 0.72, 0.95)
 const SKY_ECLIPSED := Color(0.02, 0.02, 0.08)
 
+# Awakening view: bg scaled to cover the viewport, vampire by the temple door
+const BG_SCALE := VIEW_W / 424.0
+const VAMP_POS := Vector2(1160, 820)
+const VAMP_SCALE := 3.0
+
+var _world: Control
 var _sun: Sprite2D
 var _moon: Sprite2D
+var _vamp: Sprite2D
 var _sun_frames: Array[Texture2D] = []
 var _moon_frames: Array[Texture2D] = []
+var _vamp_frames: Array[Texture2D] = []
 var _sun_raging := false
 var _sun_frame_time := 0.18
 var _moon_frame_time := 0.32
+var _vamp_frame_time := 0.15
 var _moon_locked := false
 var _sun_acc := 0.0
 var _moon_acc := 0.0
+var _vamp_acc := 0.0
 var _sun_idx := 0
 var _moon_idx := 0
+var _vamp_idx := 0
 
 var _sun_bubble: Control
 var _moon_bubble: Control
+var _vamp_bubble: Control
 var _sky: ColorRect
+var _blur_mat: ShaderMaterial
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
+	_world = Control.new()
+	_world.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_world)
+
 	_sky = ColorRect.new()
 	_sky.color = SKY_DAY
-	_sky.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_sky.size = Vector2(VIEW_W, VIEW_H)
 	_sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_sky)
+	_world.add_child(_sky)
 
 	for p in SUN_BASE_PATHS:
 		_sun_frames.append(load(p))
 	for p in MOON_PATHS:
 		_moon_frames.append(load(p))
+	for p in VAMP_PATHS:
+		_vamp_frames.append(load(p))
 
 	_sun = Sprite2D.new()
 	_sun.texture = _sun_frames[0]
 	_sun.position = SUN_POS
 	_sun.scale = Vector2(SUN_SCALE, SUN_SCALE)
-	add_child(_sun)
+	_world.add_child(_sun)
 
 	_moon = Sprite2D.new()
 	_moon.texture = _moon_frames[0]
 	_moon.position = MOON_START
 	_moon.scale = Vector2(MOON_SCALE, MOON_SCALE)
-	add_child(_moon)
+	_world.add_child(_moon)
+
+	# Awakening view, one screen below the eclipse view
+	var bg := Sprite2D.new()
+	bg.texture = load(AWAKENING_BG_PATH)
+	bg.centered = false
+	bg.position = Vector2(0, VIEW_H)
+	bg.scale = Vector2(BG_SCALE, BG_SCALE)
+	_world.add_child(bg)
+
+	_vamp = Sprite2D.new()
+	_vamp.texture = _vamp_frames[0]
+	_vamp.position = Vector2(VAMP_POS.x, VIEW_H + VAMP_POS.y)
+	_vamp.scale = Vector2(VAMP_SCALE, VAMP_SCALE)
+	_world.add_child(_vamp)
 
 	_sun_bubble = _make_bubble(Color(1, 1, 0.85), Color.BLACK)
-	add_child(_sun_bubble)
+	_world.add_child(_sun_bubble)
 	_sun_bubble.visible = false
 
 	_moon_bubble = _make_bubble(Color(0.85, 0.9, 1.0), Color.BLACK)
-	add_child(_moon_bubble)
+	_world.add_child(_moon_bubble)
 	_moon_bubble.visible = false
 
+	_vamp_bubble = _make_bubble(Color(0.18, 0.1, 0.25), Color(0.95, 0.9, 1.0))
+	_world.add_child(_vamp_bubble)
+	_vamp_bubble.visible = false
+
+	_blur_mat = ShaderMaterial.new()
+	var sh := Shader.new()
+	sh.code = MOTION_BLUR_SHADER
+	_blur_mat.shader = sh
+	_blur_mat.set_shader_parameter("strength", 0.0)
+	var blur := ColorRect.new()
+	blur.material = _blur_mat
+	blur.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blur.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(blur)
+
 	var back := Button.new()
-	back.text = "Back"
+	back.text = "Skip"
 	back.position = Vector2(24, 24)
 	back.custom_minimum_size = Vector2(120, 40)
 	back.pressed.connect(_on_back_pressed)
@@ -139,6 +212,12 @@ func _process(delta: float) -> void:
 			_moon_idx = (_moon_idx + 1) % _moon_frames.size()
 			_moon.texture = _moon_frames[_moon_idx]
 
+	_vamp_acc += delta
+	if _vamp_acc >= _vamp_frame_time:
+		_vamp_acc = 0.0
+		_vamp_idx = (_vamp_idx + 1) % _vamp_frames.size()
+		_vamp.texture = _vamp_frames[_vamp_idx]
+
 func _enter_rage() -> void:
 	if _sun_raging:
 		return
@@ -178,7 +257,23 @@ func _run_sequence() -> void:
 	_moon.texture = _moon_frames[_moon_frames.size() - 1]
 	await _say(_moon_bubble, _moon.position + Vector2(0, -200), "I'm ECLIPSIIIING!", 4.0)
 
+	# Dwell on the eclipse, then the camera drops down to the temple
+	await get_tree().create_timer(1.5).timeout
+	var pan := create_tween()
+	pan.tween_property(_world, "position:y", -VIEW_H, 1.1).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	var blur := create_tween()
+	blur.tween_property(_blur_mat, "shader_parameter/strength", 0.2, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	blur.tween_property(_blur_mat, "shader_parameter/strength", 0.0, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await pan.finished
+
+	await get_tree().create_timer(0.8).timeout
+	SFX.destroy_sounds("motif")
+	SFX.create_sound("motif", 0.0, 0.0, true)
+	await _say(_vamp_bubble, _vamp.position + Vector2(0, -120), "An eclipse? Now I awaken!", 4.0)
+	_on_back_pressed()
+
 func _on_back_pressed() -> void:
+	SFX.intro_done = true
 	queue_free()
 
 func _unhandled_input(event: InputEvent) -> void:

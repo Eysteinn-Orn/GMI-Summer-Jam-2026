@@ -27,6 +27,23 @@
 [ext_resource type="AudioStream" uid="uid://c5tmgtg4csou7" path="res://Assets/sounds/keys-down-02.wav" id="25_8pdrr"]
 [ext_resource type="AudioStream" uid="uid://d0ub3ilui3yq4" path="res://Assets/sounds/keys-down-03.wav" id="26_7wrvl"]
 [ext_resource type="AudioStream" uid="uid://13snle5lq7ij" path="res://Assets/sounds/keys-down-04.wav" id="27_ilaeh"]
+[ext_resource type="AudioStream" uid="uid://bvmroot3231y4" path="res://Assets/sounds/intro.wav" id="28_e2ibl"]
+[ext_resource type="AudioStream" uid="uid://dj5osikvwerk5" path="res://Assets/sounds/graveyard.wav" id="29_b07iv"]
+[ext_resource type="AudioStream" uid="uid://djc3n20cuiqaa" path="res://Assets/sounds/cutscene_motif.wav" id="30_fvg2c"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_52dpf"]
+streams_count = 4
+stream_0/stream = ExtResource("24_hb6uf")
+stream_1/stream = ExtResource("25_8pdrr")
+stream_2/stream = ExtResource("26_7wrvl")
+stream_3/stream = ExtResource("27_ilaeh")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mvbhv"]
+streams_count = 4
+stream_0/stream = ExtResource("20_y78yn")
+stream_1/stream = ExtResource("21_e2ibl")
+stream_2/stream = ExtResource("22_b07iv")
+stream_3/stream = ExtResource("23_fvg2c")
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_wyfeo"]
 random_pitch = 1.0594631
@@ -86,25 +103,14 @@ stream_1/stream = SubResource("AudioStreamWAV_wyfeo")
 stream_2/stream = SubResource("AudioStreamWAV_08tfe")
 stream_3/stream = ExtResource("7_lw6xy")
 
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mvbhv"]
-streams_count = 4
-stream_0/stream = ExtResource("20_y78yn")
-stream_1/stream = ExtResource("21_e2ibl")
-stream_2/stream = ExtResource("22_b07iv")
-stream_3/stream = ExtResource("23_fvg2c")
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_52dpf"]
-streams_count = 4
-stream_0/stream = ExtResource("24_hb6uf")
-stream_1/stream = ExtResource("25_8pdrr")
-stream_2/stream = ExtResource("26_7wrvl")
-stream_3/stream = ExtResource("27_ilaeh")
-
 [node name="SoundManager" type="Node" unique_id=1927049681]
 script = ExtResource("1_32i44")
 sound_files = Dictionary[String, AudioStream]({
+"graveyard": ExtResource("29_b07iv"),
+"intro": ExtResource("28_e2ibl"),
 "key_down": SubResource("AudioStreamRandomizer_52dpf"),
 "key_up": SubResource("AudioStreamRandomizer_mvbhv"),
+"motif": ExtResource("30_fvg2c"),
 "step": SubResource("AudioStreamRandomizer_wyfeo"),
 "vamp_burning": ExtResource("5_t5182"),
 "vamp_dead": SubResource("AudioStreamRandomizer_2lq4n"),
