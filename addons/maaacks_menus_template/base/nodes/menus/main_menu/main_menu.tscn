@@ -11,8 +11,8 @@
 [ext_resource type="Script" uid="uid://bkwlopi4qn32o" path="res://addons/maaacks_menus_template/base/nodes/labels/config_name_label.gd" id="7_j7612"]
 
 [sub_resource type="Gradient" id="Gradient_bh8h2"]
-offsets = PackedFloat32Array(0, 0.09731544, 0.48657718, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.09997686, 0.09997686, 0.09997686, 0.90002316, 0.80536914, 0.80536914, 0.80536914, 0.19463086, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.23825504, 0.6107383, 1)
+colors = PackedColorArray(0.02, 0.02, 0.08, 1, 0.054630868, 0.07637584, 0.15006712, 1, 0.21138516, 0.33155727, 0.46722114, 1, 0.45, 0.72, 0.95, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_erbqk"]
 gradient = SubResource("Gradient_bh8h2")

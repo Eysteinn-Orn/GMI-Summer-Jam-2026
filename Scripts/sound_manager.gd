@@ -3,6 +3,7 @@ extends Node
 @export var sound_files : Dictionary[String, AudioStream]
 ## For accessing all sounds of the same key by said key.
 @onready var audio_stream_players : Dictionary[String, Array]
+var intro_done : bool = false
 
 ## Remove a sound, terminating it's audio.
 func remove_sound(instance: AudioStreamPlayer) -> void:

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bteiiqvw6myuu"]
 
-[ext_resource type="Script" path="res://menus/scenes/menus/main_menu/eclipse_anim.gd" id="1_eclipse"]
+[ext_resource type="Script" uid="uid://c1afaottt2kog" path="res://menus/scenes/menus/main_menu/eclipse_anim.gd" id="1_eclipse"]
 
-[node name="EclipseAnim" type="Control"]
+[node name="EclipseAnim" type="Control" unique_id=1470148679]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

@@ -29,6 +29,7 @@
 [ext_resource type="AudioStream" uid="uid://13snle5lq7ij" path="res://Assets/sounds/keys-down-04.wav" id="27_ilaeh"]
 [ext_resource type="AudioStream" uid="uid://bvmroot3231y4" path="res://Assets/sounds/intro.wav" id="28_e2ibl"]
 [ext_resource type="AudioStream" uid="uid://dj5osikvwerk5" path="res://Assets/sounds/graveyard.wav" id="29_b07iv"]
+[ext_resource type="AudioStream" uid="uid://djc3n20cuiqaa" path="res://Assets/sounds/cutscene_motif.wav" id="30_fvg2c"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_52dpf"]
 streams_count = 4
@@ -109,6 +110,7 @@ sound_files = Dictionary[String, AudioStream]({
 "intro": ExtResource("28_e2ibl"),
 "key_down": SubResource("AudioStreamRandomizer_52dpf"),
 "key_up": SubResource("AudioStreamRandomizer_mvbhv"),
+"motif": ExtResource("30_fvg2c"),
 "step": SubResource("AudioStreamRandomizer_wyfeo"),
 "vamp_burning": ExtResource("5_t5182"),
 "vamp_dead": SubResource("AudioStreamRandomizer_2lq4n"),
