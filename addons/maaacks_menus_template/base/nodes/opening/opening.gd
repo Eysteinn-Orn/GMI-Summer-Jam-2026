@@ -115,6 +115,8 @@ func _show_next_image(animated : bool = true) -> void:
 	_wait_and_fade_out(texture_rect)
 
 func _ready() -> void:
+	SFX.destroy_sounds("intro")
+	SFX.create_sound("intro", 0.0, 0.0, true)
 	SceneLoader.load_scene(get_next_scene_path(), true)
 	_add_textures_to_container(images)
 	_transition_in()

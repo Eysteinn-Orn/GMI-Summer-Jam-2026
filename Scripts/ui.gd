@@ -55,6 +55,15 @@ var hb_wobble_time : float = 0.0
 var lvl_progress   : float = 0.0
 var lvl_time       : float = LVL_TIME
 
+func _ready() -> void:
+	print("music: play")
+	SFX.destroy_sounds("graveyard")
+	SFX.create_sound("graveyard", -8.0, 0.0, true)
+
+func _exit_tree() -> void:
+	print("music: stop")
+	SFX.destroy_sounds("graveyard")
+
 func sec_to_str(sec : int) -> String:
 	var minutes : int = floor(float(sec) / 60.0)
 	var sec_left : int = sec - minutes * 60
