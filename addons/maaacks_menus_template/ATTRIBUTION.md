@@ -1,5 +1,11 @@
 # Attribution
 ## Collaborators
+### Ari 
+### Elfar
+### Eysteinn Örn Jónsson
+### Herbie
+### Lilja
+### Seifur Logi
 
 ### Godot Menus Template
 ![Maaack Plugin Icon](/addons/maaacks_menus_template/assets/plugin_logo/logo.png)  
