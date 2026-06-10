@@ -39,3 +39,6 @@ func _on_eclipse_anim_button_pressed() -> void:
 func _ready() -> void:
 	super._ready()
 	animation_state_machine = $MenuAnimationTree.get("parameters/playback")
+
+func _exit_tree() -> void:
+	SFX.destroy_sounds("intro")
