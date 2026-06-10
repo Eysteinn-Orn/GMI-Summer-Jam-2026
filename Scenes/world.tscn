@@ -18,8 +18,8 @@ position = Vector2(0, -49)
 
 [node name="GameManager" type="Node" parent="." unique_id=915542131]
 script = ExtResource("10_8r1xv")
-required_keys = 2
 collection_radius = 230.0
+key_check_interval = 0.8
 player_path = NodePath("../Walls/Vampire")
 ui_path = NodePath("../CanvasLayer")
 keys_container_path = NodePath("../Walls/Interactibles")
