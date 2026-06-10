@@ -42,6 +42,9 @@ tile_data = PackedInt32Array(131072, 786432, 11, 196608, 786432, 12, 65537, 7864
 [sub_resource type="TileMapPattern" id="TileMapPattern_82pyw"]
 tile_data = PackedInt32Array(0, 393216, 11, 65536, 393216, 12, 131072, 393216, 14, 1, 458752, 11, 65537, 458752, 12, 131073, 458752, 13, 2, 524288, 11, 65538, 524288, 12, 131074, 458752, 14)
 
+[sub_resource type="TileMapPattern" id="TileMapPattern_lysno"]
+tile_data = PackedInt32Array(0, 393216, 4, 65536, 393216, 5, 131072, 393216, 7, 196608, 393216, 8, 1, 458752, 4, 65537, 458752, 5, 131073, 589824, 7, 196609, 720896, 7, 2, 524288, 4, 65538, 524288, 5, 131074, 524288, 7, 196610, 524288, 8)
+
 [sub_resource type="TileMapPattern" id="TileMapPattern_8f6ry"]
 tile_data = PackedInt32Array(0, 393216, 4, 65536, 393216, 5, 131072, 393216, 6, 1, 458752, 4, 65537, 458752, 5, 131073, 458752, 6, 2, 524288, 4, 65538, 524288, 5, 131074, 524288, 6)
 
@@ -549,9 +552,11 @@ texture = ExtResource("1_yf3xe")
 12:11/0 = 0
 12:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -4, 0, 0, -4, 8, 8, 8)
 13:11/0 = 0
+13:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -4, 0, 0, 4, 8, -8, 8)
 14:11/0 = 0
 14:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -4, 0, 0, -4, 8, 8, 8)
 15:11/0 = 0
+15:11/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -4, 0, 0, 4, 8, -8, 8)
 0:12/0 = 0
 0:12/0/terrain_set = 0
 0:12/0/terrain = 2
@@ -792,3 +797,4 @@ pattern_16 = SubResource("TileMapPattern_iqrnt")
 pattern_17 = SubResource("TileMapPattern_ubsca")
 pattern_18 = SubResource("TileMapPattern_6ykqj")
 pattern_19 = SubResource("TileMapPattern_ax36c")
+pattern_20 = SubResource("TileMapPattern_lysno")
