@@ -32,7 +32,7 @@ const SUN_TEXTURES : Array[CompressedTexture2D] = [
 ]
 
 const SHADOW_START : float = 50
-const SHADOW_END   : float = 10
+const SHADOW_END   : float = 20
 const SHADOW_DIF   : float = SHADOW_END - SHADOW_START
 const MOON_START : Vector2 = Vector2(20.0, 906.0)
 const MOON_END   : Vector2 = Vector2(146.0, 906.0)

@@ -156,7 +156,7 @@ func _ready() -> void:
 	add_child(blur)
 
 	var back := Button.new()
-	back.text = "Back"
+	back.text = "Skip"
 	back.position = Vector2(24, 24)
 	back.custom_minimum_size = Vector2(120, 40)
 	back.pressed.connect(_on_back_pressed)
@@ -267,9 +267,13 @@ func _run_sequence() -> void:
 	await pan.finished
 
 	await get_tree().create_timer(0.8).timeout
+	SFX.destroy_sounds("motif")
+	SFX.create_sound("motif", 0.0, 0.0, true)
 	await _say(_vamp_bubble, _vamp.position + Vector2(0, -120), "An eclipse? Now I awaken!", 4.0)
+	_on_back_pressed()
 
 func _on_back_pressed() -> void:
+	SFX.intro_done = true
 	queue_free()
 
 func _unhandled_input(event: InputEvent) -> void:

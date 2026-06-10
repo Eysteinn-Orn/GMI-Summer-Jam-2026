@@ -7,6 +7,9 @@ var animation_state_machine : AnimationNodeStateMachinePlayback
 func intro_done() -> void:
 	animation_state_machine.travel("OpenMainMenu")
 
+func check_cutscene() -> void:
+	if !SFX.intro_done: _on_eclipse_anim_button_pressed()
+
 func _is_in_intro() -> bool:
 	return animation_state_machine.get_current_node() == "Intro"
 
