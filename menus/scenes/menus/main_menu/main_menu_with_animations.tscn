@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_8i6b8"]
 [ext_resource type="PackedScene" uid="uid://cx2v8gytdtwqj" path="res://menus/scenes/menus/main_menu/custom_credits.tscn" id="4_ytpwg"]
 [ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_ytpwg"]
+[ext_resource type="Texture2D" uid="uid://cdhv4qxmxo6ta" path="res://Assets/sprites/TitleScreen_Vampy2_low.webp" id="6_t55r5"]
+[ext_resource type="Texture2D" uid="uid://dka5xba76efb3" path="res://Assets/sprites/Sun_n_Moon_Title_Low.webp" id="7_cgy0s"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Intro"
@@ -336,6 +338,9 @@ modulate = Color(1, 1, 1, 0)
 [node name="SubTitleContainer" parent="MenuContainer/SubTitleMargin" parent_id_path=PackedInt32Array(1510335937) index="0" unique_id=930520368]
 modulate = Color(1, 1, 1, 0)
 
+[node name="SubTitleLabel" parent="MenuContainer/SubTitleMargin/SubTitleContainer" index="0" unique_id=1037003361]
+text = "Collect the keys, escape the sun!"
+
 [node name="MenuButtonsContainer" parent="MenuContainer/MenuButtonsMargin" parent_id_path=PackedInt32Array(210553886) index="0" unique_id=116448484]
 modulate = Color(1, 1, 1, 0)
 
@@ -370,6 +375,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
+
+[node name="TitleScreenVampy2Low" type="Sprite2D" parent="." index="9" unique_id=1429033532]
+position = Vector2(561.43744, 746.125)
+scale = Vector2(8.264879, 8.264881)
+texture = ExtResource("6_t55r5")
+
+[node name="SunNMoonTitleLow" type="Sprite2D" parent="." index="10" unique_id=1098690840]
+position = Vector2(1493, 760.9999)
+scale = Vector2(9.358492, 9.358491)
+texture = ExtResource("7_cgy0s")
 
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/EclipseAnimButton" to="." method="_on_eclipse_anim_button_pressed"]
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]

@@ -42,6 +42,8 @@ func _on_eclipse_anim_button_pressed() -> void:
 func _ready() -> void:
 	super._ready()
 	animation_state_machine = $MenuAnimationTree.get("parameters/playback")
+	if !SFX.intro_done:
+		_open_sub_menu(preload("res://menus/scenes/menus/main_menu/eclipse_anim.tscn"))
 
 func _exit_tree() -> void:
 	SFX.destroy_sounds("intro")

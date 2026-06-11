@@ -49,7 +49,7 @@ func create_sound(
 ## Destroy sound by some key, or all of them if no key is provided.
 ##
 ## [param whitelist] destroys all sounds *but* the specified sound if true.
-func destroy_sounds(sound: String, whitelist: bool = false) -> void:
+func destroy_sounds(sound: String = "", whitelist: bool = false) -> void:
 	if !sound or (!audio_stream_players.has(sound) and whitelist):
 		for instance in get_children(): 
 			instance.queue_free()

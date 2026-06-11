@@ -5,6 +5,8 @@ var prev_prev_hop := 0.1
 var prev_hop := 0.0
 
 
+@onready var drag_interactor: DragInteractor = $DragInteractor
+@onready var sprite: Sprite2D = $Sprite2D
 @onready var animation_tree: AnimationTree = %AnimationTree
 @export var speed = 200.0
 @export var jump_velocity = -500.0
@@ -12,8 +14,6 @@ var prev_hop := 0.0
 @export var hop_speed := 12.0
 @export var max_health = 10
 @export var health = 10
-
-@onready var sprite: Sprite2D = $Sprite2D
 @export var ui : CanvasLayer
 
 func _physics_process(delta):

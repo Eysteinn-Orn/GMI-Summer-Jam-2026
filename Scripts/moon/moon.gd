@@ -85,10 +85,10 @@ func dissipate_shadow() -> void:
 	shadow_dissipate_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	shadow_dissipate_tween.tween_property(shadow_shape.shape, "radius", 0.0, duration)
 	shadow_dissipate_tween.parallel().tween_property(darkness, "core_radius", 0.0, duration)
-	shadow_dissipate_tween.finished.connect(func(): shadow_dissipate_tween = null)
+	shadow_dissipate_tween.finished.connect(func(): shadow_dissipate_tween = null; darkness.visible = false)
 
 func _on_body_entered(body):
-	if body == player:
+	if body == player and !_shadow_dissipated:
 		player_inside = true
 		print("Entered shadow")
 
@@ -126,8 +126,6 @@ func update_health(delta : float) -> void:
 			if player.health <= 0:
 				player.health = 0
 				burning = false
-				SFX.destroy_sounds("vamp_dead")
-				SFX.create_sound("vamp_dead", -4.0)
 				print("Vampy has 0 health")
 			else: 
 				burning = true
@@ -163,3 +161,6 @@ func update_health(delta : float) -> void:
 				SFX.destroy_sounds("vamp_heal")
 				SFX.create_sound("vamp_heal")
 				print("Healing damage")
+
+func _exit_tree() -> void:
+	SFX.destroy_sounds()
