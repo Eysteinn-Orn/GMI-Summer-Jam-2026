@@ -23,17 +23,15 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.0
 bbcode_enabled = true
-text = "[font_size=96]Sunlight Survivors[/font_size]
+text = "[font_size=96]Vampy's Big Eclipse[/font_size]
 
-[font_size=64]Programming[/font_size]
-Eysteinn Örn
-Elfonski
+[font_size=64]Collaborators[/font_size]
 Ari Páll Agnarsson
-
-[font_size=64]Art[/font_size]
-Pixel Art: LiljaThor
-3D Art: [url=https://seifur_logi.artstation.com]Seifur Logi[/url]
-UI/UX and Sound: Herbie James"
+Eysteinn Örn Jónsson
+Elfar Oliver Sigurðarson
+Herbie James
+Lilja Þórs
+Seifur Logi"
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1046730340]

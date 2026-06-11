@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c6k5nnpbypshi"]
 
 [ext_resource type="Script" uid="uid://bhgs1upaahk3y" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b7rmsdpjnudr3" path="res://Assets/logos/Vampys-Big-Eclipse-Logo.png" id="4_7hknb"]
 [ext_resource type="FontFile" uid="uid://bi38c86op1y7x" path="res://Assets/10k Game Assets/Font Assets (181)/CI GameDev (1)/ci-gamedev-font.ttf" id="4_dnqxm"]
 [ext_resource type="Script" uid="uid://1nf36h0gms3q" path="res://addons/maaacks_menus_template/base/nodes/utilities/capture_focus.gd" id="4_l1ebe"]
 [ext_resource type="PackedScene" uid="uid://bkcsjsk2ciff" path="res://addons/maaacks_menus_template/base/nodes/music_players/background_music_player.tscn" id="4_w8sbm"]
@@ -8,11 +9,10 @@
 [ext_resource type="Script" uid="uid://dmkubt2nsnsbn" path="res://addons/maaacks_menus_template/base/nodes/labels/config_version_label.gd" id="6_pdiij"]
 [ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="7_7hknb"]
 [ext_resource type="PackedScene" uid="uid://cwt4p3bufkke5" path="res://addons/maaacks_menus_template/base/nodes/windows/confirmation_overlaid_window.tscn" id="7_im16j"]
-[ext_resource type="Script" uid="uid://bkwlopi4qn32o" path="res://addons/maaacks_menus_template/base/nodes/labels/config_name_label.gd" id="7_j7612"]
 
 [sub_resource type="Gradient" id="Gradient_bh8h2"]
-offsets = PackedFloat32Array(0, 0.23825504, 0.6107383, 1)
-colors = PackedColorArray(0.02, 0.02, 0.08, 1, 0.054630868, 0.07637584, 0.15006712, 1, 0.21138516, 0.33155727, 0.46722114, 1, 0.45, 0.72, 0.95, 1)
+offsets = PackedFloat32Array(0, 0.23825504, 0.60223645, 1)
+colors = PackedColorArray(0.02, 0.02, 0.08, 1, 0.054630868, 0.07637584, 0.15006712, 1, 0.34015387, 0.11340364, 0.42279884, 1, 0.9996858, 0.5225036, 0.6147516, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_erbqk"]
 gradient = SubResource("Gradient_bh8h2")
@@ -64,18 +64,17 @@ theme_override_constants/margin_top = 24
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="MenuContainer/TitleMargin/TitleContainer" unique_id=359406872]
+[node name="TextureRect" type="TextureRect" parent="MenuContainer/TitleMargin/TitleContainer" unique_id=759677772]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 67.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -839.0
+offset_top = 46.0
+offset_right = 793.0
+offset_bottom = 262.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("4_dnqxm")
-theme_override_font_sizes/font_size = 96
-text = "GMI-Summer-2026"
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("7_j7612")
+texture = ExtResource("4_7hknb")
 
 [node name="SubTitleMargin" type="MarginContainer" parent="MenuContainer" unique_id=1510335937]
 layout_mode = 2
@@ -87,25 +86,33 @@ mouse_filter = 2
 
 [node name="SubTitleLabel" type="Label" parent="MenuContainer/SubTitleMargin/SubTitleContainer" unique_id=1037003361]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 48.0
-offset_bottom = 115.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -177.5
+offset_top = -309.0
+offset_right = 177.5
+offset_bottom = -242.0
 grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/font = ExtResource("4_dnqxm")
 theme_override_font_sizes/font_size = 48
-text = "GMI-Summer-2026"
+text = "Collect the keys"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MenuButtonsMargin" type="MarginContainer" parent="MenuContainer" unique_id=210553886]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 4
+size_flags_vertical = 6
 theme_override_constants/margin_top = 136
 theme_override_constants/margin_bottom = 8
 
 [node name="MenuButtonsContainer" type="Control" parent="MenuContainer/MenuButtonsMargin" unique_id=116448484]
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 
 [node name="MenuButtonsBoxContainer" type="BoxContainer" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer" unique_id=2017477786]
@@ -116,10 +123,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -104.0
-offset_right = 64.0
-offset_bottom = 104.0
+offset_left = -92.5
+offset_right = 92.5
+offset_bottom = 320.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -153,6 +159,7 @@ theme = ExtResource("7_7hknb")
 text = "Exit"
 
 [node name="VersionMargin" type="MarginContainer" parent="." unique_id=1732528471]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

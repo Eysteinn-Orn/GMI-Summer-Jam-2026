@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://cmd7ab05rfoxj"]
+
+[ext_resource type="Script" uid="uid://dsxik188fb01e" path="res://menus/scenes/end_game/outcome_screen.gd" id="1_t118d"]
+[ext_resource type="FontFile" uid="uid://bi38c86op1y7x" path="res://Assets/10k Game Assets/Font Assets (181)/CI GameDev (1)/ci-gamedev-font.ttf" id="2_p410q"]
+
+[node name="GameOverScreen" type="Control" unique_id=1099874138]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_t118d")
+title_text = "GAME OVER"
+subtitle_text = "The statues stayed locked... try collecting all keys before your pet rock "
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1259263696]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.117647, 0.0313726, 0.0313726, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1405547406]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer" unique_id=2142320703]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel" unique_id=1835149423]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer" unique_id=1667602677]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_p410q")
+theme_override_font_sizes/font_size = 88
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer" unique_id=831547703]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_p410q")
+theme_override_font_sizes/font_size = 34
+text = "The statues stayed locked... try collecting all keys faster."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="CenterContainer/Panel/VBoxContainer" unique_id=979841378]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="RetryButton" type="Button" parent="CenterContainer/Panel/VBoxContainer/Buttons" unique_id=1399388160]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 72)
+layout_mode = 2
+text = "Try Again"
+
+[node name="MenuButton" type="Button" parent="CenterContainer/Panel/VBoxContainer/Buttons" unique_id=514324483]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 72)
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="pressed" from="CenterContainer/Panel/VBoxContainer/Buttons/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="CenterContainer/Panel/VBoxContainer/Buttons/MenuButton" to="." method="_on_menu_button_pressed"]

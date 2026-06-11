@@ -5,14 +5,16 @@
 [ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_qe0nm"]
 [ext_resource type="PackedScene" uid="uid://cyhl7uqhsfg51" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_mov4g"]
 [ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_i8spl"]
+[ext_resource type="FontFile" uid="uid://6fb6twy2s76p" path="res://Assets/fonts/Jacquard12-Regular.ttf" id="5_qe0nm"]
 
 [node name="MainMenu" unique_id=869232425 instance=ExtResource("1_6pasy")]
 script = ExtResource("2_i8spl")
+game_scene_path = "uid://d2y852kokepd6"
 options_packed_scene = ExtResource("3_qe0nm")
 credits_packed_scene = ExtResource("4_mov4g")
 
 [node name="TitleLabel" parent="MenuContainer/TitleMargin/TitleContainer" parent_id_path=PackedInt32Array(556427956) index="0" unique_id=359406872]
-text = "GMI-Summer-2026"
+theme_override_fonts/font = ExtResource("5_qe0nm")
 
 [node name="MenuButtonsBoxContainer" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer" parent_id_path=PackedInt32Array(116448484) index="0" unique_id=2017477786]
 offset_left = -171.0

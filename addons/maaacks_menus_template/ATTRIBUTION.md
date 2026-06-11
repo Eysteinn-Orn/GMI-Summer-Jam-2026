@@ -1,5 +1,11 @@
 # Attribution
 ## Collaborators
+### Ari Páll Agnarsson
+### Elfar Oliver Sigurðarson
+### Eysteinn Örn Jónsson
+### Herbie James
+### Lilja Þors
+### Seifur Logi
 
 ### Godot Menus Template
 ![Maaack Plugin Icon](/addons/maaacks_menus_template/assets/plugin_logo/logo.png)  
