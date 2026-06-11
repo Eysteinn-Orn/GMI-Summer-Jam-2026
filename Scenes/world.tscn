@@ -14,11 +14,11 @@
 [node name="World" type="Node2D" unique_id=780093096]
 
 [node name="KeyGoalCenter" type="Node2D" parent="." unique_id=734266507]
-position = Vector2(0, -49)
+position = Vector2(0, -20)
 
 [node name="GameManager" type="Node" parent="." unique_id=915542131]
 script = ExtResource("10_8r1xv")
-collection_radius = 230.0
+collection_radius = 100.0
 key_check_interval = 0.8
 player_path = NodePath("../Walls/Vampire")
 ui_path = NodePath("../CanvasLayer")
@@ -57,7 +57,7 @@ physics_interpolation_mode = 1
 y_sort_enabled = true
 
 [node name="Key" parent="Walls/Interactibles" unique_id=1953636594 instance=ExtResource("6_o06y3")]
-position = Vector2(0, -49)
+position = Vector2(122, -59)
 drag_force = 500.0
 max_speed = 5.0
 
