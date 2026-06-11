@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://v8b34gi6y4x4" path="res://menus/scenes/credits/scrollable_credits.tscn" id="3_h2dw7"]
 
 [node name="MainMenuCreditsOverlaidWindow" unique_id=1453761674 instance=ExtResource("1_nuhlj")]
+process_mode = 3
 anchors_preset = 15
 anchor_left = 0.0
 anchor_top = 0.0
@@ -16,6 +17,7 @@ offset_right = 0.0
 offset_bottom = 0.0
 script = ExtResource("2_o2qx8")
 packed_scene = ExtResource("3_h2dw7")
+pauses_game = true
 
 [node name="TitleMargin" parent="ContentContainer/BoxContainer" parent_id_path=PackedInt32Array(394030069) index="0" unique_id=1262022916]
 visible = false

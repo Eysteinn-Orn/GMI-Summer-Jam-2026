@@ -9,6 +9,7 @@ const HEAL_DELAY : float = 4.0
 # Delay between damage triggers
 const HEAL_RATE  : float = 1.0
 const STOP_SMOOTH_TIME = 0.18
+const DISSIPATE_DURATION : float = 1.0
 
 @onready var shadow_shape: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var darkness: Node2D = $Darkness
@@ -16,9 +17,11 @@ const STOP_SMOOTH_TIME = 0.18
 @export var jump_velocity : float = -500.0
 @export var stop_radius   : float = 20.0
 @export var stop_smooth_time      = STOP_SMOOTH_TIME
+@export var dissipate_duration: float = DISSIPATE_DURATION
 @export var player        : Node  = null
 @export var ui : CanvasLayer
 var stop_tween: Tween
+var shadow_dissipate_tween: Tween
 var player_inside   : bool    = false
 var mouse_direction : Vector2 = Vector2.ZERO
 var sun_timer       : float   = 0.0
@@ -30,13 +33,17 @@ var current_damage  : int     = 0
 var healing         : bool    = false
 var current_heal    : int     = 0
 var lvl_progress    : float   = 0
+var _shadow_dissipated: bool  = false
 
 func _physics_process(delta):
 	var to_mouse = get_global_mouse_position() - global_position
 	var distance_to_mouse = to_mouse.length()
-	darkness.core_radius = shadow_shape.shape.radius
-	stop_radius = shadow_shape.shape.radius / 5
-	stop_smooth_time = STOP_SMOOTH_TIME * (shadow_shape.shape.radius / 60)
+	var shadow_radius := 0.0
+	if shadow_shape and shadow_shape.shape:
+		shadow_radius = shadow_shape.shape.radius
+	darkness.core_radius = shadow_radius
+	stop_radius = shadow_radius / 5
+	stop_smooth_time = STOP_SMOOTH_TIME * (shadow_radius / 60)
 	if distance_to_mouse > stop_radius:
 		if is_instance_valid(stop_tween):
 			stop_tween.kill()
@@ -54,6 +61,31 @@ func _physics_process(delta):
 	if player:
 		update_health(delta)
 	move_and_slide()
+
+func is_shadow_dissipated() -> bool:
+	return _shadow_dissipated
+
+func dissipate_shadow() -> void:
+	if _shadow_dissipated:
+		return
+	_shadow_dissipated = true
+	player_inside = false
+	healing = false
+	moon_timer = 0.0
+	current_heal = 0
+
+	if is_instance_valid(shadow_dissipate_tween):
+		shadow_dissipate_tween.kill()
+
+	if not shadow_shape or not shadow_shape.shape:
+		darkness.core_radius = 0.0
+		return
+
+	var duration := maxf(0.01, dissipate_duration)
+	shadow_dissipate_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	shadow_dissipate_tween.tween_property(shadow_shape.shape, "radius", 0.0, duration)
+	shadow_dissipate_tween.parallel().tween_property(darkness, "core_radius", 0.0, duration)
+	shadow_dissipate_tween.finished.connect(func(): shadow_dissipate_tween = null)
 
 func _on_body_entered(body):
 	if body == player:

@@ -12,6 +12,7 @@ extends Node
 
 var current: Node = null
 var _last_facing_dir := Vector2.DOWN
+var _focused_candidates: Array[Node] = []
 
 func _ready() -> void:
 	assert(body and grab_area and drag_anchor)
@@ -23,10 +24,15 @@ func _physics_process(delta: float) -> void:
 	elif current != null:
 		_release()
 
+	_update_drag_focus_candidates()
+
 	_update_facing_targets()
 
 	if current and current.has_method("drag_to"):
 		current.drag_to(drag_anchor.global_position, delta)
+
+func _exit_tree() -> void:
+	_clear_drag_focus()
 
 func _try_grab() -> void:
 	var best: Node = null
@@ -46,6 +52,36 @@ func _release() -> void:
 	if current and current.has_method("end_drag"):
 		current.end_drag()
 	current = null
+
+func _update_drag_focus_candidates() -> void:
+	if current != null:
+		_clear_drag_focus()
+		return
+
+	var next_focused: Array[Node] = []
+	for candidate in grab_area.get_overlapping_bodies():
+		if candidate == body:
+			continue
+		if not candidate.has_method("begin_drag"):
+			continue
+
+		next_focused.append(candidate)
+		if not _focused_candidates.has(candidate) and candidate.has_method("set_drag_focus"):
+			candidate.set_drag_focus(true)
+
+	for previous in _focused_candidates:
+		if previous == null:
+			continue
+		if not next_focused.has(previous) and previous.has_method("set_drag_focus"):
+			previous.set_drag_focus(false)
+
+	_focused_candidates = next_focused
+
+func _clear_drag_focus() -> void:
+	for previous in _focused_candidates:
+		if previous and previous.has_method("set_drag_focus"):
+			previous.set_drag_focus(false)
+	_focused_candidates.clear()
 
 func _update_facing_targets() -> void:
 	if body.velocity.length() > move_threshold:

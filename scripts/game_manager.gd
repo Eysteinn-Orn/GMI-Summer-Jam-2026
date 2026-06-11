@@ -20,6 +20,7 @@ enum GameState {
 @export var ui_path: NodePath
 @export var keys_container_path: NodePath
 @export var goal_marker_path: NodePath
+@export var moon_path: NodePath
 
 @export_file("*.tscn") var win_scene_path: String = "res://menus/scenes/end_game/victory.tscn"
 @export_file("*.tscn") var lose_scene_path: String = "res://menus/scenes/end_game/game_over.tscn"
@@ -32,9 +33,11 @@ var _player: Node = null
 var _ui: Node = null
 var _keys_container: Node = null
 var _goal_marker: Node2D = null
+var _moon: Node = null
 var _collected_key_ids: Dictionary = {}
 var _registered_keys: Array[RigidBody2D] = []
 var _key_check_elapsed: float = 0.0
+var _timer_expired: bool = false
 
 func _ready() -> void:
 	time_left = total_time
@@ -42,6 +45,7 @@ func _ready() -> void:
 	_ui = get_node_or_null(ui_path)
 	_keys_container = get_node_or_null(keys_container_path)
 	_goal_marker = get_node_or_null(goal_marker_path) as Node2D
+	_moon = _resolve_moon_node()
 	_register_keys()
 	_seed_center_keys_as_collected()
 	call_deferred("_emit_ui_state")
@@ -61,13 +65,14 @@ func _process(delta: float) -> void:
 		if state != GameState.RUNNING:
 			return
 
-	time_left = maxf(0.0, time_left - delta)
-	timer_changed.emit(time_left, total_time)
-	if _ui and _ui.has_method("update_time_state"):
-		_ui.update_time_state(time_left, total_time)
+	if not _timer_expired:
+		time_left = maxf(0.0, time_left - delta)
+		timer_changed.emit(time_left, total_time)
+		if _ui and _ui.has_method("update_time_state"):
+			_ui.update_time_state(time_left, total_time)
 
-	if is_zero_approx(time_left):
-		_lose_game("you ran out of time")
+		if is_zero_approx(time_left):
+			_on_timer_expired()
 
 func _register_keys() -> void:
 	_registered_keys.clear()
@@ -136,6 +141,43 @@ func _emit_ui_state() -> void:
 		_ui.set_keys_progress(collected_keys, required_keys)
 	if _ui and _ui.has_method("update_time_state"):
 		_ui.update_time_state(time_left, total_time)
+
+func _on_timer_expired() -> void:
+	if _timer_expired:
+		return
+	_timer_expired = true
+	time_left = 0.0
+	timer_changed.emit(time_left, total_time)
+	if _ui and _ui.has_method("update_time_state"):
+		_ui.update_time_state(time_left, total_time)
+	_dissipate_shadow()
+
+func _dissipate_shadow() -> void:
+	if not is_instance_valid(_moon):
+		_moon = _resolve_moon_node()
+
+	if not is_instance_valid(_moon):
+		push_warning("GameManager: Moon node not found; cannot dissipate shadow on timeout.")
+		return
+
+	if _moon.has_method("dissipate_shadow"):
+		_moon.dissipate_shadow()
+		return
+
+	push_warning("GameManager: Moon node has no dissipate_shadow() method.")
+
+func _resolve_moon_node() -> Node:
+	var moon := get_node_or_null(moon_path)
+	if moon:
+		return moon
+
+	var parent := get_parent()
+	if parent:
+		moon = parent.find_child("Moon", true, false)
+		if moon:
+			return moon
+
+	return null
 
 func _win_game() -> void:
 	if state != GameState.RUNNING:

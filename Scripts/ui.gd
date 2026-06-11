@@ -119,7 +119,11 @@ func _apply_time_visuals() -> void:
 	moon_icon.position = MOON_START + MOON_DIF * lvl_progress
 	level_time.position.x = moon_icon.position.x
 	if moon and moon.shadow_shape and moon.shadow_shape.shape:
-		moon.shadow_shape.shape.radius = SHADOW_START + (SHADOW_DIF * lvl_progress)
+		var can_resize_shadow := true
+		if moon.has_method("is_shadow_dissipated") and moon.is_shadow_dissipated():
+			can_resize_shadow = false
+		if can_resize_shadow:
+			moon.shadow_shape.shape.radius = SHADOW_START + (SHADOW_DIF * lvl_progress)
 	moon_icon.scale = Vector2(1 - (lvl_progress / 4), 1 - (lvl_progress / 4))
 	background.texture.gradient.colors[2] = (
 		ECLIPSE_CLR_START + ECLIPSE_CLR_DIF * lvl_progress

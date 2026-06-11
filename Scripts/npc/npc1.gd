@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const SPACEBAR_ICON := preload("res://Assets/10k Game Assets/Pixel Art (4770)/Control Prompts (628)/Light (314)/keyboard_space_2.png")
+
 @export var speed := 50.0
 @export var hop_height := 8.0
 @export var hop_speed := 12.0
@@ -9,6 +11,10 @@ extends CharacterBody2D
 @export var drag_speed := 220.0
 @export var drag_smooth_time := 0.08
 @export var retarget_threshold := 2.0
+@export var focus_highlight_color := Color(1.0, 0.95, 0.55, 1.0)
+@export var focus_highlight_blend := 0.5
+@export var focus_prompt_offset := Vector2(0.0, -18.0)
+@export var focus_prompt_scale := Vector2.ONE
 
 @onready var animation_tree: AnimationTree = %AnimationTree
 @onready var sprite: Sprite2D = $Sprite2D
@@ -22,11 +28,22 @@ var _bubble_t := 0.0
 var _bubble_visible := false
 var dragged_by: Node = null
 var smoothed_target := Vector2.ZERO
+var _is_drag_focused := false
+var _base_sprite_modulate := Color.WHITE
+var _focus_prompt: Sprite2D = null
 
 func _ready() -> void:
 	_origin_x = position.x
 	smoothed_target = global_position
 	bubble.visible = false
+	_base_sprite_modulate = sprite.modulate
+	_focus_prompt = Sprite2D.new()
+	_focus_prompt.texture = SPACEBAR_ICON
+	_focus_prompt.position = focus_prompt_offset
+	_focus_prompt.scale = focus_prompt_scale
+	_focus_prompt.z_index = 10
+	_focus_prompt.visible = false
+	add_child(_focus_prompt)
 
 func _physics_process(delta: float) -> void:
 	if dragged_by != null:
@@ -53,6 +70,7 @@ func begin_drag(by: Node) -> bool:
 		return false
 	if draggable_component and not draggable_component.begin_drag(by):
 		return false
+	set_drag_focus(false)
 
 	dragged_by = by
 	smoothed_target = global_position
@@ -112,3 +130,17 @@ func _update_bubble(delta: float) -> void:
 		bubble.visible = true
 		_bubble_visible = true
 		_bubble_t = 0.0
+
+func set_drag_focus(is_focused: bool) -> void:
+	var should_focus := is_focused and dragged_by == null
+	if _is_drag_focused == should_focus:
+		return
+
+	_is_drag_focused = should_focus
+	if _is_drag_focused:
+		sprite.modulate = _base_sprite_modulate.lerp(focus_highlight_color, clamp(focus_highlight_blend, 0.0, 1.0))
+	else:
+		sprite.modulate = _base_sprite_modulate
+
+	if _focus_prompt:
+		_focus_prompt.visible = _is_drag_focused
