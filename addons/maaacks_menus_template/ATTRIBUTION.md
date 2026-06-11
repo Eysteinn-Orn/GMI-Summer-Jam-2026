@@ -1,9 +1,9 @@
 # Attribution
 ## Collaborators
-### Ari 
+### Ari Páll Agnarsson
 ### Elfar Oliver Sigurðarson
 ### Eysteinn Örn Jónsson
-### Herbie
+### Herbie James
 ### Lilja Þors
 ### Seifur Logi
 
