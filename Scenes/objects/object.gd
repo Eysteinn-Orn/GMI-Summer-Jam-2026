@@ -23,12 +23,15 @@ var _is_drag_focused := false
 var _base_sprite_modulate := Color.WHITE
 var _focus_prompt: Sprite2D = null
 var registered : bool = false
+var index_pos  : Vector2 = Vector2()
 
-func _process(_delta : float) -> void:
+func _process(delta : float) -> void:
 	if registered:
 		for child in get_children():
 			if child is Sprite2D and child.name != "Sprite2D":
 				child.queue_free()
+		global_position.x = move_toward(global_position.x, 8* index_pos.x, 400* delta)
+		global_position.y = move_toward(global_position.y, 8* index_pos.y, 400* delta)
 
 func _ready() -> void:
 	if sprite:

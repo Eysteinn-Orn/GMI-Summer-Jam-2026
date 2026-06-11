@@ -11,6 +11,15 @@ enum GameState {
 	LOST,
 }
 
+const KEY_POS : Dictionary[int, Vector2] = {
+	1 : Vector2(-108, 411),
+	2 : Vector2(-504, 353),
+	3 : Vector2(514, -209),
+	4 : Vector2(-650, -280),
+	5 : Vector2(-16, -301),
+	6 : Vector2(-598, 8)
+}
+
 @export_range(1.0, 1800.0, 1.0) var total_time: float = 90.0
 @export_range(1, 64, 1) var required_keys: int = 4
 @export_range(1.0, 1000.0, 1.0) var collection_radius: float = 56.0
@@ -28,6 +37,7 @@ enum GameState {
 var state: GameState = GameState.RUNNING
 var time_left: float = 0.0
 var collected_keys: int = 0
+var key_start_positions : Array[int] = []
 
 var _player: Node = null
 var _ui: Node = null
@@ -86,6 +96,18 @@ func _register_keys() -> void:
 
 		var key := child as RigidBody2D
 		_registered_keys.append(key)
+		if !key.name == "Key":
+			position_key(key)
+		print(key.name, " at ", key.global_position)
+
+func position_key(key : RigidBody2D) -> void:
+	var valid_positions = [1,2,3,4,5,6]
+	var pos_index : int
+	for e in key_start_positions:
+		valid_positions.erase(e)
+	pos_index = valid_positions[randi_range(0, valid_positions.size() - 1)]
+	key_start_positions.append(pos_index)
+	key.global_position = KEY_POS[pos_index]
 
 func _seed_center_keys_as_collected() -> void:
 	collected_keys = 0
@@ -115,10 +137,15 @@ func _try_collect_key(key: RigidBody2D) -> void:
 
 func _mark_key_collected(key: RigidBody2D) -> void:
 	_player.drag_interactor._release()
-	key.registered = true
 	var key_id := key.get_instance_id()
 	_collected_key_ids[key_id] = true
 	collected_keys += 1
+	key.registered = true
+	match collected_keys:
+		1: key.index_pos = Vector2(-1,-1)
+		2: key.index_pos = Vector2( 1,-1)
+		3: key.index_pos = Vector2(-1, 1)
+		_: key.index_pos = Vector2( 1, 1)
 
 func _is_in_goal_radius(position: Vector2) -> bool:
 	return position.distance_to(_get_goal_position()) <= collection_radius
