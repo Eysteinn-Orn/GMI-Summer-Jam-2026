@@ -5,7 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_qe0nm"]
 [ext_resource type="PackedScene" uid="uid://cyhl7uqhsfg51" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_mov4g"]
 [ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_i8spl"]
-[ext_resource type="FontFile" uid="uid://6fb6twy2s76p" path="res://Assets/fonts/Jacquard12-Regular.ttf" id="5_qe0nm"]
+[ext_resource type="Texture2D" uid="uid://exu2nk17odo" path="res://Assets/sprites/VampHappy03.webp" id="6_mov4g"]
+[ext_resource type="Texture2D" uid="uid://dka5xba76efb3" path="res://Assets/sprites/Sun_n_Moon_Title_Low.webp" id="7_2k3dp"]
 
 [node name="MainMenu" unique_id=869232425 instance=ExtResource("1_6pasy")]
 script = ExtResource("2_i8spl")
@@ -13,8 +14,8 @@ game_scene_path = "uid://d2y852kokepd6"
 options_packed_scene = ExtResource("3_qe0nm")
 credits_packed_scene = ExtResource("4_mov4g")
 
-[node name="TitleLabel" parent="MenuContainer/TitleMargin/TitleContainer" parent_id_path=PackedInt32Array(556427956) index="0" unique_id=359406872]
-theme_override_fonts/font = ExtResource("5_qe0nm")
+[node name="SubTitleLabel" parent="MenuContainer/SubTitleMargin/SubTitleContainer" parent_id_path=PackedInt32Array(930520368) index="0" unique_id=1037003361]
+text = "Collect the keys, escape the sun!"
 
 [node name="MenuButtonsBoxContainer" parent="MenuContainer/MenuButtonsMargin/MenuButtonsContainer" parent_id_path=PackedInt32Array(116448484) index="0" unique_id=2017477786]
 offset_left = -171.0
@@ -33,6 +34,16 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("5_i8spl")
 text = "Level Select"
+
+[node name="TitleScreenVampy2Low" type="Sprite2D" parent="." index="6" unique_id=407155096]
+position = Vector2(561.43744, 746.125)
+scale = Vector2(8.264879, 8.264881)
+texture = ExtResource("6_mov4g")
+
+[node name="SunNMoonTitleLow" type="Sprite2D" parent="." index="7" unique_id=739122547]
+position = Vector2(1493, 760.9999)
+scale = Vector2(9.358492, 9.358491)
+texture = ExtResource("7_2k3dp")
 
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/EclipseAnimButton" to="." method="_on_eclipse_anim_button_pressed"]
 [connection signal="pressed" from="MenuContainer/MenuButtonsMargin/MenuButtonsContainer/MenuButtonsBoxContainer/LevelSelectButton" to="." method="_on_level_select_button_pressed"]

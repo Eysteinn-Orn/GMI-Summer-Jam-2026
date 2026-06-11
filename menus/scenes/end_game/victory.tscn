@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dsxik188fb01e" path="res://menus/scenes/end_game/outcome_screen.gd" id="1_f8grh"]
 [ext_resource type="FontFile" uid="uid://bi38c86op1y7x" path="res://Assets/10k Game Assets/Font Assets (181)/CI GameDev (1)/ci-gamedev-font.ttf" id="2_2rrjv"]
+[ext_resource type="Texture2D" uid="uid://exu2nk17odo" path="res://Assets/sprites/VampHappy03.webp" id="2_misfp"]
+[ext_resource type="Texture2D" uid="uid://bq54cs15ligyt" path="res://Assets/sprites/eclipse/MoonRenderTest01_F05.png" id="3_lpovl"]
 
 [node name="VictoryScreen" type="Control" unique_id=229466328]
 layout_mode = 3
@@ -13,7 +15,7 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_f8grh")
 title_text = "VICTORY"
-subtitle_text = "You brought every key to the altar before sunrise."
+subtitle_text = "The altar shifts aside... revealing beneath a secret mausoleum free from the acursed sun!"
 retry_scene_path = "uid://d2y852kokepd6"
 main_menu_scene_path = "uid://b1p24cwql2we2"
 
@@ -24,7 +26,29 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0666667, 0.0823529, 0.113725, 1)
+color = Color(0, 0, 0, 1)
+
+[node name="VampyText" type="TextureRect" parent="." unique_id=1573064803]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -48.375
+offset_right = 269.04163
+offset_bottom = 98.375
+grow_vertical = 2
+scale = Vector2(4, 4)
+texture = ExtResource("2_misfp")
+
+[node name="SunORMoonText" type="TextureRect" parent="." unique_id=2080901705]
+layout_mode = 0
+offset_left = 1207.0
+offset_top = -311.0
+offset_right = 2653.1504
+offset_bottom = 704.0
+texture = ExtResource("3_lpovl")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1448647470]
 layout_mode = 1
@@ -54,7 +78,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_2rrjv")
 theme_override_font_sizes/font_size = 34
-text = "You brought every key to the altar before sunrise."
+text = "The altar shifts aside... revealing beneath a secret mausoleum free from the acursed sun!"
 horizontal_alignment = 1
 autowrap_mode = 2
 

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cscd2vrqmp8ls"]
 
 [ext_resource type="Script" uid="uid://c3bb25pd2gt3m" path="res://Scripts/vampire/vampy.gd" id="1_yq822"]
-[ext_resource type="Texture2D" uid="uid://cqw4xbiuvdc1t" path="res://Assets/sprites/vampire.png" id="2_yq822"]
+[ext_resource type="Texture2D" uid="uid://cqw4xbiuvdc1t" path="res://Assets/sprites/vampire.PNG" id="2_yq822"]
 [ext_resource type="Script" uid="uid://blepgip8a8vc6" path="res://Scripts/components/drag_interactor.gd" id="3_wptyn"]
 
 [sub_resource type="Animation" id="Animation_yq822"]

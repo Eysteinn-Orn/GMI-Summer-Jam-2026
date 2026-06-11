@@ -114,6 +114,8 @@ func _try_collect_key(key: RigidBody2D) -> void:
 		_win_game()
 
 func _mark_key_collected(key: RigidBody2D) -> void:
+	_player.drag_interactor._release()
+	key.registered = true
 	var key_id := key.get_instance_id()
 	_collected_key_ids[key_id] = true
 	collected_keys += 1

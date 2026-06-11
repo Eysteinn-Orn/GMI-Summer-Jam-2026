@@ -13,7 +13,6 @@ const SPACEBAR_ICON := preload("res://Assets/10k Game Assets/Pixel Art (4770)/Co
 @export var focus_highlight_blend := 0.5
 @export var focus_prompt_offset := Vector2(0.0, -12.0)
 @export var focus_prompt_scale := Vector2.ONE
-
 @onready var draggable_component: Draggable = get_node_or_null("Draggable")
 @onready var sprite: Sprite2D = get_node_or_null("Sprite2D")
 
@@ -23,6 +22,13 @@ var _prev_linear_damp := 0.0
 var _is_drag_focused := false
 var _base_sprite_modulate := Color.WHITE
 var _focus_prompt: Sprite2D = null
+var registered : bool = false
+
+func _process(_delta : float) -> void:
+	if registered:
+		for child in get_children():
+			if child is Sprite2D and child.name != "Sprite2D":
+				child.queue_free()
 
 func _ready() -> void:
 	if sprite:
@@ -36,7 +42,7 @@ func _ready() -> void:
 	add_child(_focus_prompt)
 
 func begin_drag(by: Node) -> bool:
-	if dragged_by:
+	if dragged_by or registered:
 		return false
 	if draggable_component and not draggable_component.begin_drag(by):
 		return false

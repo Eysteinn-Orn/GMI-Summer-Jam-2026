@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqw4xbiuvdc1t"
-path="res://.godot/imported/vampire.PNG-8c2f3336c49899d31f96b48e223432a1.ctex"
+uid="uid://cux5d5k3p8i4n"
+path="res://.godot/imported/VampHappy04.webp-aa2e98c8a7db07964f1fef89ea0c1da3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/sprites/vampire.PNG"
-dest_files=["res://.godot/imported/vampire.PNG-8c2f3336c49899d31f96b48e223432a1.ctex"]
+source_file="res://Assets/sprites/VampHappy04.webp"
+dest_files=["res://.godot/imported/VampHappy04.webp-aa2e98c8a7db07964f1fef89ea0c1da3.ctex"]
 
 [params]
 
