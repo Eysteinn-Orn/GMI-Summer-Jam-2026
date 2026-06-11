@@ -1,10 +1,10 @@
 # Attribution
 ## Collaborators
 ### Ari 
-### Elfar
+### Elfar Oliver Sigurðarson
 ### Eysteinn Örn Jónsson
 ### Herbie
-### Lilja
+### Lilja Þors
 ### Seifur Logi
 
 ### Godot Menus Template
