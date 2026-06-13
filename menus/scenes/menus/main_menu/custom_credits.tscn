@@ -31,7 +31,11 @@ Eysteinn Örn Jónsson
 Elfar Oliver Sigurðarson
 Herbie James
 Lilja Þórs
-Seifur Logi"
+Seifur Logi
+
+Assets and Addons:
+Maaacks Menus Addon
+10k Game Asset Pack from Chequered Ink"
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1046730340]

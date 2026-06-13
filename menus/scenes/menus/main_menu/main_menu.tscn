@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c6k5nnpbypshi" path="res://addons/maaacks_menus_template/base/nodes/menus/main_menu/main_menu.tscn" id="1_6pasy"]
 [ext_resource type="Script" uid="uid://du05h8dxxg7ho" path="res://menus/scenes/menus/main_menu/main_menu.gd" id="2_i8spl"]
 [ext_resource type="PackedScene" uid="uid://bj4w33kjrwok8" path="res://menus/scenes/windows/main_menu_options_window.tscn" id="3_qe0nm"]
-[ext_resource type="PackedScene" uid="uid://cyhl7uqhsfg51" path="res://menus/scenes/windows/main_menu_credits_window.tscn" id="4_mov4g"]
+[ext_resource type="PackedScene" uid="uid://cx2v8gytdtwqj" path="res://menus/scenes/menus/main_menu/custom_credits.tscn" id="4_mov4g"]
 [ext_resource type="Theme" uid="uid://d14flsqjo1286" path="res://Assets/themes/main.tres" id="5_i8spl"]
 [ext_resource type="Texture2D" uid="uid://exu2nk17odo" path="res://Assets/sprites/VampHappy03.webp" id="6_mov4g"]
 [ext_resource type="Texture2D" uid="uid://dka5xba76efb3" path="res://Assets/sprites/Sun_n_Moon_Title_Low.webp" id="7_2k3dp"]

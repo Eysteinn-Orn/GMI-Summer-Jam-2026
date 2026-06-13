@@ -17,6 +17,8 @@ script = ExtResource("1_t118d")
 title_text = "GAME OVER"
 subtitle_text = "The statues stayed locked... and Vampy burned TO A CRISP!
 Gather all 4 keys before the eclipse ends."
+retry_scene_path = "uid://d2y852kokepd6"
+main_menu_scene_path = "uid://c4bd0jxcs7g46"
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=1259263696]
 layout_mode = 1

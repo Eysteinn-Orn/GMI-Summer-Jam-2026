@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="GMI-Summer-2026"
+config/name="Vampy's Big Eclipse"
 run/main_scene="res://menus/scenes/opening/opening.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"

@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c5dhcenn6emgj"]
 
-[ext_resource type="PackedScene" path="res://addons/maaacks_menus_template/base/nodes/windows/overlaid_window.tscn" id="1_lqur3"]
-[ext_resource type="Script" path="res://menus/scenes/windows/pause_menu.gd" id="2_h3gat"]
-[ext_resource type="PackedScene" path="res://menus/scenes/windows/pause_menu_options_window.tscn" id="3_qnib3"]
-[ext_resource type="PackedScene" path="res://addons/maaacks_menus_template/base/nodes/windows/confirmation_overlaid_window.tscn" id="4_25tgp"]
+[ext_resource type="PackedScene" uid="uid://6gdbfi0172ji" path="res://addons/maaacks_menus_template/base/nodes/windows/overlaid_window.tscn" id="1_lqur3"]
+[ext_resource type="Script" uid="uid://bruujtwla1for" path="res://menus/scenes/windows/pause_menu.gd" id="2_h3gat"]
+[ext_resource type="PackedScene" uid="uid://ceue7x0626wp8" path="res://menus/scenes/windows/pause_menu_options_window.tscn" id="3_qnib3"]
+[ext_resource type="PackedScene" uid="uid://cwt4p3bufkke5" path="res://addons/maaacks_menus_template/base/nodes/windows/confirmation_overlaid_window.tscn" id="4_25tgp"]
 
 [node name="PauseMenu" unique_id=156357199 instance=ExtResource("1_lqur3")]
 process_mode = 3
@@ -16,7 +16,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 script = ExtResource("2_h3gat")
 options_menu_scene = ExtResource("3_qnib3")
-main_menu_scene_path = ""
+main_menu_scene_path = "uid://c4bd0jxcs7g46"
 restart_confirmation_node_path = NodePath("RestartConfirmation")
 main_menu_confirmation_node_path = NodePath("MainMenuConfirmation")
 exit_confirmation_node_path = NodePath("ExitConfirmation")
